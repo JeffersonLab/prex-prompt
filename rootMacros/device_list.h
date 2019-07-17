@@ -16,13 +16,14 @@ TFile *japanOutput;
 vector<const char*> vBCM={"bcm_an_us", "bcm_an_ds", 
 			  "bcm_an_ds3","bcm0l02"};
 
-vector<const char*> vBPM={"bpm4a","bpm4e","bpm8","bpm12","bpm14"};
-
+vector<const char*> vBPM={"bpm4a","bpm4e","bpm11","bpm12","bpm16"};
+// BPM 11 was 14 before 7/16/2019
+// BPM 16 was 8 before 7/16/2019
 vector<const char*> vBPMXY={"bpm4aX","bpm4aY",
 			    "bpm4eX","bpm4eY",
-			    "bpm8X","bpm8Y",
+			    "bpm11X","bpm11Y", 
 			    "bpm12X","bpm12Y",
-			    "bpm14X","bpm14Y"};
+			    "bpm16X","bpm16Y"};
 
 
 vector<const char*> vDitherBPM={"bpm4aX","bpm4aY",

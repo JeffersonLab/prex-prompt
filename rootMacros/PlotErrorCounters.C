@@ -25,15 +25,18 @@ void PlotErrorCounters(){
   
     TString bpm4a_array[4]={"bpm4aXM","bpm4aXP","bpm4aYP","bpm4aYM"};
     TString bpm4e_array[4]={"bpm4eXM","bpm4eXP","bpm4eYP","bpm4eYM"};
-    TString bpm8_array[4]={"bpm8XM","bpm8XP","bpm8YP","bpm8YM"};
+    // BPM 16 was 8 before 7/16/2019
+    // TString bpm8_array[4]={"bpm8XM","bpm8XP","bpm8YP","bpm8YM"};
+    TString bpm11_array[4]={"bpm11XM","bpm11XP","bpm11YP","bpm11YM"};
     TString bpm12_array[4]={"bpm12XM","bpm12XP","bpm12YP","bpm12YM"};
-    TString bpm14_array[4]={"bpm14XM","bpm14XP","bpm14YP","bpm14YM"};
-
+    // BPM 11 was 14 before 7/16/2019
+    // TString bpm14_array[4]={"bpm14XM","bpm14XP","bpm14YP","bpm14YM"};
+    TString bpm16_array[4]={"bpm16XM","bpm16XP","bpm16YP","bpm16YM"};
   
     TString* channels[7]={sam_array,sam_array+4,
 			  bpm4a_array,bpm4e_array,
-			  bpm12_array,bpm14_array,
-			  bpm8_array};
+			  bpm12_array,bpm11_array,
+			  bpm16_array};
 
     for(int i=0;i<4;i++){
       c2->cd(i+1);
