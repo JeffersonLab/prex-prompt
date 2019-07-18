@@ -14,9 +14,9 @@ void CheckBCMdd(TString treeName){
   TCanvas *c3 = new TCanvas("c3","c3",2400,600);
   c3->cd();
   
-  vector<const char*> vBCM1={"bcm_an_us","bcm_an_us","bcm_an_ds","bcm_dg_us"};
-  vector<const char*> vBCM2={"bcm_an_ds","bcm_an_ds3","bcm_an_ds3","bcm_dg_ds"};
-  Int_t nplot = 4;
+  vector<const char*> vBCM1={"bcm_an_us","bcm_an_us","bcm_an_ds","bcm_dg_us","bcm_dg_us","bcm_dg_us","bcm_dg_ds"};
+  vector<const char*> vBCM2={"bcm_an_ds","bcm_an_ds3","bcm_an_ds3","bcm_dg_ds","bcm_an_ds3","bcm_an_ds","bcm_an_us"};
+  Int_t nplot = vBCM1.size();
   for(int ibcm=0; ibcm<nplot;ibcm++){
 
     c3->Clear("D");
