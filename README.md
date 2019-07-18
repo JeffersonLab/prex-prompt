@@ -1,6 +1,6 @@
 # PREX-II Prompt Analysis
 
-So far, the auto-prompt is running as a background process, checks newly finised DAQ run periodically and launches JAPAN. Therefore only a few people in this world really need to run prompt analysis by hand under certain circumstances. Just in case they need the instruction: 
+So far, the auto-prompt is running as a background process, checks newly finished DAQ run periodically and launches JAPAN. Therefore only a few people in this world really need to run prompt analysis by hand under certain circumstances. Just in case they need the instruction: 
 
 ### What in here
 * First pass JAPAN analysis
