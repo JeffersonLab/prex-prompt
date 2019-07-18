@@ -135,14 +135,18 @@ void PlotSummary(TString filename){
     CheckNormalizedDetector();
   else
     CheckDetector();
+
   PlotPairTree(vMainDet);
   CheckDetectorCorrelation();
-  gSystem->Exec(Form("convert $(ls -rt %s*maindet*.png) %srun%s_summary_main_detector.pdf",
+  gSystem->Exec(Form("convert $(ls -rt %s*maindet*.png %s*pairTree*[ud]s[lr]*.png)  %srun%s_summary_main_detector.pdf",
+  		     output_path.Data(),
   		     output_path.Data(),
 		     output_path.Data(),
   		     run_seg.Data()));
 
-  gSystem->Exec(Form("rm %s*maindet*.png",output_path.Data()));
+  gSystem->Exec(Form("rm %s*maindet*.png %s*[ud]s[lr]*.png",
+		     output_path.Data(),
+		     output_path.Data()));
   
 
   //===== SAM Plots =======
