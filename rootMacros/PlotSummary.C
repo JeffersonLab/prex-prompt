@@ -40,7 +40,7 @@
 
 #include "PlotErrorCounters.C"
 #include "Integrated.C"
-
+#include "PlotPairTree.C"
 void PlotSummary(TString filename){
 
   Bool_t isNormalized=kTRUE;
@@ -63,6 +63,13 @@ void PlotSummary(TString filename){
   TTree *mul_tree = (TTree*)gROOT->FindObject("mul");
   if (mul_tree==NULL){
     std::cout << "WARNING:  The multiplet tree was not found for file "
+	      << filename << "!" << std::endl;
+    return;
+  }
+
+  TTree *pair_tree = (TTree*)gROOT->FindObject("pr");
+  if (pair_tree==NULL){
+    std::cout << "WARNING:  The pair tree was not found for file "
 	      << filename << "!" << std::endl;
     return;
   }
@@ -101,8 +108,9 @@ void PlotSummary(TString filename){
   
   //===== BCM  Plots =====
   CheckBCM();
-  CheckBCMdd();
-
+  CheckBCMdd("mul");
+  PlotPairTree(vBCM);
+  CheckBCMdd("pr");
   gSystem->Exec(Form("convert $(ls -rt %s*bcm*.png) %srun%s_summary_bcm.pdf",
   		     output_path.Data(),
 		     output_path.Data(),
@@ -112,6 +120,7 @@ void PlotSummary(TString filename){
 
   //===== BPM Plots =======
   CheckBPM();
+  PlotPairTree(vBPMXY);
   PlotBPMDiffCorrelation();
 
   gSystem->Exec(Form("convert $(ls -rt %s*bpm*.png ) %srun%s_summary_bpm.pdf",
@@ -126,7 +135,7 @@ void PlotSummary(TString filename){
     CheckNormalizedDetector();
   else
     CheckDetector();
-
+  PlotPairTree(vMainDet);
   CheckDetectorCorrelation();
   gSystem->Exec(Form("convert $(ls -rt %s*maindet*.png) %srun%s_summary_main_detector.pdf",
   		     output_path.Data(),
@@ -141,7 +150,8 @@ void PlotSummary(TString filename){
     CheckNormalizedSAM();
   else
     CheckSAM();
-
+  PlotPairTree(vSAM);
+  PlotPairTree(vSAMUnity);
   CheckSAMCorrelation();
   gSystem->Exec(Form("convert $(ls -rt %s*sam*.png) %srun%s_summary_sam.pdf",
   		     output_path.Data(),

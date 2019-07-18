@@ -5,28 +5,27 @@
 #include "device_list.h"
 
 void CheckBCMdd(const char* bcm1 , const char* bcm2, TString treeName);  //interface to panguin
-void CheckBCMdd(); // interface to summary plot
+void CheckBCMdd(TString treeName="mul"); // interface to summary plot
 
-void CheckBCMdd(){
+void CheckBCMdd(TString treeName){
 
   Int_t nbcm = vBCM.size();
-
-  TString treeName = "mul";
 
   TCanvas *c3 = new TCanvas("c3","c3",2400,600);
   c3->cd();
   
-  vector<const char*> vBCM1={"bcm_an_us","bcm_an_us","bcm_an_ds"};
-  vector<const char*> vBCM2={"bcm_an_ds","bcm_an_ds3","bcm_an_ds3"};
-  Int_t nplot = 3;
+  vector<const char*> vBCM1={"bcm_an_us","bcm_an_us","bcm_an_ds","bcm_dg_us"};
+  vector<const char*> vBCM2={"bcm_an_ds","bcm_an_ds3","bcm_an_ds3","bcm_dg_ds"};
+  Int_t nplot = 4;
   for(int ibcm=0; ibcm<nplot;ibcm++){
 
     c3->Clear("D");
     c3->cd();
     CheckBCMdd(vBCM1[ibcm],vBCM2[ibcm],treeName);
 
-    plot_title = Form("run%s_asym_%s_vs_asym_%s.png",
-		      run_seg.Data(),vBCM1[ibcm],vBCM2[ibcm]);
+    plot_title = Form("run%s_asym_%s_vs_asym_%s_%s.png",
+		      run_seg.Data(),vBCM1[ibcm],vBCM2[ibcm],
+		      treeName.Data());
     TText *label = new TText(0.0,0.01,plot_title);      
     label->SetNDC();
     c3->cd();
