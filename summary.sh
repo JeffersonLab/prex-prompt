@@ -4,7 +4,7 @@ runnum=$1
 level="Prompt"
 shopt -s extglob
 # find split file
-rootfile_list=$(ls -1 ./japanOutput/prex$level\_pass2_$runnum.!(*jlab.org*).root);
+rootfile_list=$(ls -1 ./japanOutput/prex$level\_pass1_$runnum.!(*jlab.org*).root);
 shopt -u extglob
 
 for rootfile  in $rootfile_list
@@ -12,20 +12,27 @@ do
     # strip out [run.seg]
 
     trim=${rootfile%.root}
-    run_dot_seg=${trim#*pass2_}
+    run_dot_seg=${trim#*pass1_}
     run_num=${run_dot_seg%.*}
     run_seg=${run_dot_seg/./_}
 
+    redfile='./results/prexPrompt_'${run_seg}'_regress_postpan.root';
+    
     if [ ! -d ./SummaryPlots/run$run_seg ]; then
 	mkdir ./SummaryPlots/run$run_seg;
     fi
-
+    
+    root -b -q -l './rootMacros/GetRunCharge.C("'$rootfile'")';
     root -b -q -l './rootMacros/PlotSummary.C("'$rootfile'")';
+    root -b -q -l './postpan/rootmacros/PlotSummary_postpan.C("'$redfile'")';
+
+    pdfunite $(ls -rt ./SummaryPlots/run$run_seg/*_summary_*.pdf) \
+	./SummaryPlots/run$run_seg/run${run_seg}_all.pdf
 
     if [ ! -d ./hallaweb_online/summary/run$run_seg ]; then
 	mkdir ./hallaweb_online/summary/run$run_seg;
     fi
-
+    
     cp  ./SummaryPlots/run$run_seg/* \
 	./hallaweb_online/summary/run$run_seg/;
 

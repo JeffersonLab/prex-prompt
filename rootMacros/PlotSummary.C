@@ -166,32 +166,32 @@ void PlotSummary(TString filename){
 
   //===== Check Regression =====   
 
-  TTree *mulc_lrb_tree = (TTree*)gROOT->FindObject("mulc_lrb");
-  if (mulc_lrb_tree==NULL){
-    std::cout << "WARNING: The LRB correction tree was not found for file "
-	      << filename << "!" << std::endl;
-  }
-  else{
-    RegressionSummary();
-    CheckRegression();
-    if(isNormalized)
-      CheckNormalizedComboSAM();
-    else
-      CheckComboSAM();
+  // TTree *mulc_lrb_tree = (TTree*)gROOT->FindObject("mulc_lrb");
+  // if (mulc_lrb_tree==NULL){
+  //   std::cout << "WARNING: The LRB correction tree was not found for file "
+  // 	      << filename << "!" << std::endl;
+  // }
+  // else{
+  //   RegressionSummary();
+  //   CheckRegression();
+  //   if(isNormalized)
+  //     CheckNormalizedComboSAM();
+  //   else
+  //     CheckComboSAM();
     
-    if(isNormalized)
-      CheckRegNormDetector();
-    else
-      CheckRegressedDetector();
+  //   if(isNormalized)
+  //     CheckRegNormDetector();
+  //   else
+  //     CheckRegressedDetector();
 
-    gSystem->Exec(Form("convert $(ls -rt %s*ratecheck*.png) %srun%s_summary_ratecheck.pdf",
-		       output_path.Data(),
-		       output_path.Data(),
-		       run_seg.Data()));
+  //   gSystem->Exec(Form("convert $(ls -rt %s*ratecheck*.png) %srun%s_summary_ratecheck.pdf",
+  // 		       output_path.Data(),
+  // 		       output_path.Data(),
+  // 		       run_seg.Data()));
 
-    gSystem->Exec(Form("rm %s*ratecheck*.png",output_path.Data()));
+  //   gSystem->Exec(Form("rm %s*ratecheck*.png",output_path.Data()));
 
-  }
+  // }
 
   // ===== Integrated Convergence 
   Integrated();
@@ -211,9 +211,9 @@ void PlotSummary(TString filename){
 		     output_path.Data(),
 		     run_seg.Data())); 
 
-  gSystem->Exec(Form("pdfunite $(ls -rt %s/*_summary_*.pdf) %s/run%s_all.pdf",
-		     output_path.Data(),
-  		     output_path.Data(),run_seg.Data()));
+  // gSystem->Exec(Form("pdfunite $(ls -rt %s/*_summary_*.pdf) %s/run%s_all.pdf",
+  // 		     output_path.Data(),
+  // 		     output_path.Data(),run_seg.Data()));
 
 }
 
