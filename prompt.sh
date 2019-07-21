@@ -35,16 +35,15 @@ timenow=$(date +"%Y-%m%d-%H%M");
 #JAPAN Second Pass
 timenow=$(date +"%Y-%m%d-%H%M");
 
+# Make Summary Plots/Text and sync to HallA onlineWeb
+# now make plots from pass1 and postpan output
+./summary.sh $runnum;
+
 ./qwparity -r $runnum -c prex_prompt.conf \
     --rootfile-stem prexPrompt_pass2_ \
     --QwLog.loglevel-file 2 \
     --QwLog.logfile ./LogFiles/QwLog_run$runnum\_prompt_pass2_$timenow.txt ;
 
-
 # BeamMod Data Extraction (FIXME)
 # BeamMod Instant Slope Calculation (FIXME)
 # BeamMod Instant correction and summary (FIXME)
-
-# Make Summary Plots/Text and sync to HallA onlineWeb
-./summary.sh $runnum;
-    
