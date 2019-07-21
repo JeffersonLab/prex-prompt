@@ -41,14 +41,28 @@ void PlotSummary_postpan(TString filename){
   run_seg = run_seg.ReplaceAll('.','_');
   output_path = Form("./SummaryPlots/run%s/",run_seg.Data());
 
+  
   // ===Check mulc_lrb before making plots
   // CheckComboSAM_postpan();
   // CheckBPM();
   // CheckRegNormDetector_postpan();
   //  PlotPairTree(CheckRegression_postpan);
-  CheckNormalizedComboSAM_postpan(); 
-  CheckRegression_postpan();
-  CheckRegNormDetector_postpan();
+  TTree *red_tree = (TTree*)gROOT->FindObject("reg");
+  if (red_tree==NULL){
+    std::cout << "WARNING:  The ReD tree was not found for file "
+	      << filename << "!" << std::endl;
+    return;
+  }
+  
+  if (red_tree->GetEntries("ok_cut")==0){
+    std::cout << "WARNING:  The ReD tree has no good events in file "
+	      << filename << "!" << std::endl;
+  }
+  else{
+    CheckNormalizedComboSAM_postpan(); 
+    CheckRegression_postpan();
+    CheckRegNormDetector_postpan();
+  }
   //CheckRegressedDetector_postpan();
 }
 

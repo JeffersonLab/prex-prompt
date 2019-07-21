@@ -12,8 +12,8 @@ void CheckNormalizedComboSAM_postpan(){
   vector<TString> vSAMU = {"reg_asym_sam2","reg_asym_sam6","reg_asym_sam4","reg_asym_sam8"};
   vector<TString> vSAMV = {"reg_asym_sam1","reg_asym_sam5","reg_asym_sam3","reg_asym_sam7"};
 
-  CheckNormalizedComboSAM_postpan(vSAMU,"reg_asym_sam2648","ok_cut");  // FIXME : It should be device_Error_Code  (Maybe ... )
-  CheckNormalizedComboSAM_postpan(vSAMV,"reg_asym_sam1537","ok_cut");
+  CheckNormalizedComboSAM_postpan(vSAMU,"sam2648","ok_cut");  // FIXME : It should be device_Error_Code  (Maybe ... )
+  CheckNormalizedComboSAM_postpan(vSAMV,"sam1537","ok_cut");
 
 }
 void CheckNormalizedComboSAM_postpan(vector<TString> vDet, TString tag, TString user_cut){
