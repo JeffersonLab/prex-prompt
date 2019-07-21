@@ -30,7 +30,7 @@ void CheckBPM(){
   TGraph* g_buff;
   
   pad_buff=cwiresum->cd(1);  
-  mul_tree->SetAlias("Aq","asym_bcm_an_ds3");
+  mul_tree->SetAlias("Aq","asym_bcm_an_ds");
   mul_tree->Draw("Aq/ppm",mul_cut);
   TH1D* h1d_buff = (TH1D*)pad_buff->FindObject("htemp");
   Double_t Aq_mean = h1d_buff->GetMean();

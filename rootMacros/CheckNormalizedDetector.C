@@ -22,7 +22,7 @@ void CheckNormalizedDetector(){
   TH2D *h2d_buff;
   TVirtualPad* pad_buff;
   TGraph* g_buff;
-  evt_tree->SetAlias("CurMon","(bcm_an_ds3>2.5 ? bcm_an_ds3 : 1)");
+  evt_tree->SetAlias("CurMon","(bcm_an_ds>2.5 ? bcm_an_ds : 1)");
   for(int idet=0;idet<ndet;idet++){
     const char* device_name = vMainDet[idet];
     

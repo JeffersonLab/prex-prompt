@@ -9,7 +9,7 @@ void CheckPairSAM(Int_t run_num,TString suffix){
   tree->SetAlias("reg_A6", "1e6*reg_asym_sam6");
   tree->SetAlias("reg_A4", "1e6*reg_asym_sam4");
   tree->SetAlias("reg_A8", "1e6*reg_asym_sam8");
-  tree->SetAlias("Aq", "1e6*asym_bcm_an_ds3");
+  tree->SetAlias("AqDS", "1e6*asym_bcm_an_ds");
   tree->SetAlias("AqUS", "1e6*asym_bcm_an_us");
   TString user_cut ="ok_cut";  
   TString filename;
@@ -17,13 +17,13 @@ void CheckPairSAM(Int_t run_num,TString suffix){
   TCanvas *c0 = new TCanvas("c0","c0",2400,1200);
   c0->Divide(4,2);
   c0->cd(1);
-  tree->Draw("reg_A2:Aq","ok_cut");
+  tree->Draw("reg_A2:AqDS","ok_cut");
   c0->cd(2);
-  tree->Draw("reg_A6:Aq","ok_cut");
+  tree->Draw("reg_A6:AqDS","ok_cut");
   c0->cd(3);
-  tree->Draw("reg_A4:Aq","ok_cut");
+  tree->Draw("reg_A4:AqDS","ok_cut");
   c0->cd(4);
-  tree->Draw("reg_A8:Aq","ok_cut");
+  tree->Draw("reg_A8:AqDS","ok_cut");
 
   gStyle->SetOptStat(0);
   gStyle->SetOptFit(1);
@@ -34,34 +34,34 @@ void CheckPairSAM(Int_t run_num,TString suffix){
   Double_t low, up;
 
 
-  tree->Draw("reg_A2:Aq>>ha2","ok_cut","prof");
+  tree->Draw("reg_A2:AqDS>>ha2","ok_cut","prof");
   hfit = (TH2D*)gDirectory->FindObject("ha2");
   low = hfit->GetMean()-2*hfit->GetRMS();
   up = hfit->GetMean()+2*hfit->GetRMS();
   hfit->Fit("pol1","QR","",low,up);
 
   c0->cd(6);
-  tree->Draw("reg_A6:Aq>>ha6","ok_cut","prof");
+  tree->Draw("reg_A6:AqDS>>ha6","ok_cut","prof");
   hfit = (TH2D*)gDirectory->FindObject("ha6");
   low = hfit->GetMean()-2*hfit->GetRMS();
   up = hfit->GetMean()+2*hfit->GetRMS();
   hfit->Fit("pol1","QR","",low,up);
 
   c0->cd(7);
-  tree->Draw("reg_A4:Aq>>ha4","ok_cut","prof");
+  tree->Draw("reg_A4:AqDS>>ha4","ok_cut","prof");
   hfit = (TH2D*)gDirectory->FindObject("ha4");
   low = hfit->GetMean()-2*hfit->GetRMS();
   up = hfit->GetMean()+2*hfit->GetRMS();
   hfit->Fit("pol1","QR","",low,up);
 
   c0->cd(8);
-  tree->Draw("reg_A8:Aq>>ha8","ok_cut","prof");
+  tree->Draw("reg_A8:AqDS>>ha8","ok_cut","prof");
   hfit = (TH2D*)gDirectory->FindObject("ha8");
   low = hfit->GetMean()-2*hfit->GetRMS();
   up = hfit->GetMean()+2*hfit->GetRMS();
   hfit->Fit("pol1","QR","",low,up);
   
-  filename = Form("run%d_paired_sam_Aq_%s.png",run_num,suffix.Data());
+  filename = Form("run%d_paired_sam_AqDS_%s.png",run_num,suffix.Data());
   label = new TText(0.0,0.01,filename);     
   label->SetTextSize(0.03);
   label->SetNDC();

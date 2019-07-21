@@ -22,7 +22,7 @@ void CheckNormalizedComboSAM(vector<TString> vDet, TString tag, TString user_cut
   TTree *mulc_tree = (TTree*)gROOT ->FindObject("mulc_lrb");
   mulc_tree->AddFriend(mul_tree);
 
-  mulc_tree->SetAlias("AqDS", "asym_bcm_an_ds3");
+  mulc_tree->SetAlias("AqDS", "asym_bcm_an_ds");
   mulc_tree->SetAlias("AqUS", "asym_bcm_an_us");
   mulc_tree->SetAlias("AverageLumi",
 		      Form("(%s+%s+%s+%s)/4",

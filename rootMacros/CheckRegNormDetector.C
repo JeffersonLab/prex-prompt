@@ -13,7 +13,7 @@ void CheckRegNormDetector(){
   TTree *mul_tree = (TTree*)gROOT->FindObject("mul");
   TTree *mulc_lrb_tree = (TTree*)gROOT->FindObject("mulc_lrb");
   mul_tree->AddFriend(mulc_lrb_tree);
-  mul_tree->SetAlias("AqDS3","asym_bcm_an_ds3");
+  mul_tree->SetAlias("AqDS","asym_bcm_an_ds");
   mul_tree->SetAlias("AqUS","asym_bcm_an_us");
 
   TCanvas *c1 = new TCanvas("c1","c1",2400,1600);
@@ -202,11 +202,11 @@ void CheckRegNormDetector(){
   TString user_cut = "ErrorFlag==0";
   for(int i=0;i<4;i++){
     c0->cd(i+1);
-    mul_tree->Draw(Form("cor_%s/ppm:AqDS3/ppm",vMainDet[i])
+    mul_tree->Draw(Form("cor_%s/ppm:AqDS/ppm",vMainDet[i])
 		    ,user_cut);
     c0->cd(i+5);
     TString hist_name = "hds" +TString(vMainDet[i]);
-    mul_tree->Draw(Form("cor_%s/ppm:AqDS3/ppm>>%s",
+    mul_tree->Draw(Form("cor_%s/ppm:AqDS/ppm>>%s",
 			 vMainDet[i],hist_name.Data()),
 		    user_cut,"prof");
     hfit = (TH2D*)gDirectory->FindObject(hist_name);
@@ -216,7 +216,7 @@ void CheckRegNormDetector(){
       hfit->Fit("pol1","QR","",low,up);
     }
   } 
-  filename = Form("run%s_main_vs_AqDS3_ratecheck_reg.png",
+  filename = Form("run%s_main_vs_AqDS_ratecheck_reg.png",
 		  run_seg.Data());
   label = new TText(0.0,0.01,filename);     
   label->SetTextSize(0.03);
