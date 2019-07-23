@@ -44,6 +44,12 @@ timenow=$(date +"%Y-%m%d-%H%M");
     --QwLog.loglevel-file 2 \
     --QwLog.logfile ./LogFiles/QwLog_run$runnum\_prompt_pass2_$timenow.txt ;
 
+# Do aggregation after the second pass of japan is done. Assume all slug aggregation is done by the WAC
+
+#Aggregator pass 0
+timenow=$(date +"%Y-%m%d-%H%M");
+./aggregator.sh $runnum >& ./LogFiles/Camguin_run$runnum\_$timenow.txt &;
+
 # BeamMod Data Extraction (FIXME)
 # BeamMod Instant Slope Calculation (FIXME)
 # BeamMod Instant correction and summary (FIXME)
