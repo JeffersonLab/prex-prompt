@@ -48,7 +48,7 @@ timenow=$(date +"%Y-%m%d-%H%M");
 
 #Aggregator pass 0
 timenow=$(date +"%Y-%m%d-%H%M");
-./aggregator.sh $runnum >& ./LogFiles/Camguin_run$runnum\_$timenow.txt &;
+./aggregator.sh $runnum >& ./LogFiles/Camguin_run$runnum\_$timenow.txt &
 
 # BeamMod Data Extraction (FIXME)
 # BeamMod Instant Slope Calculation (FIXME)
