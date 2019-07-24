@@ -41,6 +41,7 @@
 #include "PlotErrorCounters.C"
 #include "Integrated.C"
 #include "PlotPairTree.C"
+#include "CheckWireSum.C"
 void PlotSummary(TString filename){
 
   Bool_t isNormalized=kTRUE;
@@ -120,6 +121,7 @@ void PlotSummary(TString filename){
 
   //===== BPM Plots =======
   CheckBPM();
+  CheckWireSum();
   PlotPairTree(vBPMXY);
   PlotBPMDiffCorrelation();
 

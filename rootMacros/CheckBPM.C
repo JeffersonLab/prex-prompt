@@ -45,7 +45,7 @@ void CheckBPM(){
       cbpm->cd(4*ix+1);
       evt_tree->Draw(Form("%s/mm:Entry$",device_name),"ErrorFlag==0","");
     
-      pad_buff=cbpm->cd(4*ix+2);
+/*      pad_buff=cbpm->cd(4*ix+2);
       evt_tree->Draw(Form("%s/mm",device_name),"ErrorFlag==0");
       h_buff=(TH1D*)pad_buff->FindObject("htemp");
       h_buff->SetName("evtTree");
@@ -55,6 +55,18 @@ void CheckBPM(){
       h_buff=(TH1D*)pad_buff->FindObject("htemp");
       if(h_buff!=0)
 	h_buff->SetLineColor(kRed);
+*/
+      pad_buff=cbpm->cd(4*ix+2);
+      mul_tree->Draw(Form("diff_%s/um:pattern_number",device_name),"ErrorFlag==0");
+//      h_buff=(TH1D*)pad_buff->FindObject("htemp");
+//      h_buff->SetName("evtTree");
+//      evt_tree->Draw(Form("%s",device_name),
+//		     Form("ErrorFlag==0 && %s.Device_Error_Code!=0",device_name),
+//		     "same");
+//      h_buff=(TH1D*)pad_buff->FindObject("htemp");
+//      if(h_buff!=0)
+//	h_buff->SetLineColor(kRed);
+
 
       pad_buff=cbpm->cd(4*ix+3);
       mul_tree->Draw(Form("diff_%s/um:pattern_number",
