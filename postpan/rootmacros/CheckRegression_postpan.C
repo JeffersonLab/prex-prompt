@@ -80,7 +80,9 @@ void CheckRegression_postpan(){
   vector<TString> vSAMU = {"asym_sam2","asym_sam4","asym_sam6","asym_sam8"};
   vector<TString> vSAMV = {"asym_sam1","asym_sam3","asym_sam5","asym_sam7"};
   vector<TString> vMain = {"asym_usl","asym_dsl","asym_usr","asym_dsr"};
-  vector<TString> IVlist = {"diff_bpm4aX","diff_bpm4aY","diff_bpm4eX","diff_bpm4eY","diff_bpm12X"};
+//  vector<TString> IVlist = {"diff_bpm4aX","diff_bpm4aY","diff_bpm4eX","diff_bpm4eY","diff_bpm12X"};
+//As suggested in RC meeting 07/24/2019 bpm4e is replaced with bpm4ec and bpm12X with bpm11X
+  vector<TString> IVlist = {"diff_bpm4aX","diff_bpm4aY","diff_bpm4ecX","diff_bpm4ecY","diff_bpm11X"};
   // then check if they exist in LRB DVlist, otherwise erase them from plot queue
 //  CheckVariables(vMain, DVlist);
 //  CheckVariables(vSAMU, DVlist);
