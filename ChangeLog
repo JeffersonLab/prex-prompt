@@ -8,4 +8,8 @@ I hope it is now, because we switched to use operation on 21JUN2019. ---pking
 == 2019-07-10
   Adding Postpan and scripts -- Tao Y
 
-	
+== 2019-07-16
+  Devi added Collector scripts for making a long TChain of Post Pan files
+
+== 2019-07-24
+  Devi changed the auto_postpan.sh prompt script to use the new regression set

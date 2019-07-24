@@ -22,7 +22,8 @@ do
 
     ./postpan/redana \
     	-f $rootfile \
-    	-c ./postpan/conf/combo_reg.conf ;
+    	#-c ./postpan/conf/combo_reg.conf ;
+    	-c ./postpan/conf/combo_reg.3583-.conf ; # From run 3583- use the 3583-.conf file, manually runranged
 
     # if [ ! -d ./hallaweb_online/summary/run$run_seg ]; then
     # 	mkdir ./hallaweb_online/summary/run$run_seg;
