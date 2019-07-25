@@ -1,43 +1,28 @@
-void DitAlias(TString rootfilenName){
+/*
+  Example 
+  in prompt/beam-mod/ directory
+  root -b 
+
+ */
+void AliasGenerator(TString rootfilenName, Int_t slug_id=11, TCut user_cut="run!=3500"){
   
 // In order 4aX, 4aY, 4eX, 4eY, 12X
 // slope unit: fraction / mm
 // ** which is  1e-3(ppm/um)
-  TFile* japanOutput = TFile::Open(rootfilenName);
-  double slope_usl[5]={-144.14e-3, 
-		       1e-3, 
-		       71.345e-3, 
-		       -14.104e-3,
-		       56.145e-3};
-  double slope_usr[5]={-108.03e-3,
-		       0.1818e-3, 
-		       -22.7314e-3, 
-		       -11.3323e-3 ,
-		       57.0824e-3};
-  double slope_dsl[5]={-147.066e-3,
-		       0.832e-3,
-		       75.594e-3,
-		       -13.646e-3,
-		       56.439e-3};
-  double slope_dsr[5]={-118.3035e-3,
-		       0.4085e-3,
-		       -14.3978e-3,
-		       -12.8514e-3,
-		       61.5153e-3 };
-  
+  TFile* slopefile = TFile::Open(Form("rootfiles/dit_slopes_slug%d.root",
+				      slug_id));
 
   TString maindet_array[]={"asym_usl","asym_usr",
 			    "asym_dsl","asym_dsr"};
-
-  double* slopes[]={slope_usl,slope_usr,
-		    slope_dsl,slope_dsr};
-
   TString bpm_array[5]={"diff_bpm4aX","diff_bpm4aY",
 			"diff_bpm4eX","diff_bpm4eY",
 			"diff_bpm12X"};
   
   Int_t ndet = sizeof(maindet_array)/sizeof(*maindet_array);
   Int_t nmon = sizeof(bpm_array)/sizeof(*bpm_array);
+  double slopes[ndet][nmon];
+  
+  TFile* japanOutput = TFile::Open(rootfilenName);
   TTree *mul_tree = (TTree*)japanOutput->Get("mul");
   if(mul_tree==NULL){
     cout << "Error: " 

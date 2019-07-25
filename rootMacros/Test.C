@@ -26,7 +26,10 @@
 #include "PlotErrorCounters.C"
 #include "Integrated.C"
 #include "CheckRegressedDetector.C"
-
+#include "CheckRegNormDetector.C"
+#include "RegressionSummary.C"
+#include "PlotPairTree.C"
+#include "CheckWireSum.C"
 void Test(TString filename){
   japanOutput = TFile::Open(filename);
   Ssiz_t pfirst = filename.Last('_')+1;
@@ -38,7 +41,9 @@ void Test(TString filename){
 
   // ===Check mulc_lrb before making plots
   // CheckComboSAM();
-  CheckRegressedDetector();
-
+  // CheckBPM();
+  // CheckRegNormDetector();
+//  PlotPairTree(vBPMXY);
+  CheckWireSum();
 }
 

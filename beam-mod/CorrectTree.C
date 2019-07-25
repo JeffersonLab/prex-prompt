@@ -1,5 +1,5 @@
 /*
-Updated based on Catherine's DitAlias 
+Updated based on Tao and Catherine's DitAlias 
 
 -- Example  from shell terminal:
 $  root -b 'CorrectTree(3433)'
@@ -19,6 +19,7 @@ void CorrectTree(Int_t run_number=0, Int_t seg_number=0 ){
   if(slug_id==-1){
     cout << " -- Slug Number not Found " << endl;
     cout << " -- Correction Aborted " << endl;
+    return;
   }
 
   //  Get Slopes From Dit slope Files
