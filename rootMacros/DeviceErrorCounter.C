@@ -51,18 +51,18 @@ void DeviceErrorCounter(TString device){
 				   kErrorFlag_EventCut_L,
 				   kErrorFlag_EventCut_U};
 
-  ErrorSelection[0] = Form("%s.Device_Error_Code==0  && ErrorFlag==0 ",
+  ErrorSelection[0] = Form("%s.Device_Error_Code==0 ",
 			   device.Data());
 
   if(ErrorSelection[0]==0)
     return;
   else{
     for(int i= 1; i<nErrorTypes ; i++)
-      ErrorSelection[i] = Form("(%s.Device_Error_Code & %d )== %d  && ErrorFlag==0 ",
+      ErrorSelection[i] = Form("(%s.Device_Error_Code & %d )== %d ",
 			       device.Data(),ErrorCode[i],ErrorCode[i]); 
     // Device Error Counter that survives Global ErrorFlag
 
-    Double_t nTotal = evt_tree->Draw(device,"ErrorFlag==0","goff");
+    Double_t nTotal = evt_tree->Draw(device,"","goff");
     for(int i=0;i<nErrorTypes;i++){
       int ibin = nErrorTypes-i;
       ErrorCounter[i] = evt_tree->Draw(device,ErrorSelection[i],"goff");

@@ -18,7 +18,7 @@ void PlotErrorCounters(){
   plot_title = Form("run%s_ErrorCounter_global.png",run_seg.Data());
   c1->SaveAs(output_path+ plot_title);
 
-  if(kStatus){
+  //  if(kStatus){
     TString sam_array[8]={"sam1","sam2","sam3","sam4",
 			  "sam5","sam6","sam7","sam8"};
     TString bcm_array[4]={"bcm_an_us","bcm_an_ds","bcm_an_ds3","bcm0l02"};
@@ -53,7 +53,7 @@ void PlotErrorCounters(){
       plot_title = Form("run%s_ErrorCounter_%d.png",run_seg.Data(),ich);
       c2->SaveAs(output_path+ plot_title);
     }
-  } // END of if there is any good event
+    //  } // END of if there is any good event
 
   TString pdf_filename = Form("run%s_ErrorCounters.pdf",run_seg.Data());
   gSystem->Exec(Form("convert $(ls -rt %srun%s*ErrorCounter*.png) %s%s",
