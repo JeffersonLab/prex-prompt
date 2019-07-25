@@ -15,78 +15,17 @@ vector<TString> FormCorrectionVector(vector<TString> inputDV);
 
 void CheckRegression_postpan(){
 
-  // Get DV and IV list from slope files
- // TString run_dot_seg = run_seg;
- // run_dot_seg = run_dot_seg.ReplaceAll('_','.'); 
 
-/*  TString slopefile_name = Form("../../LRBoutput/blueR%snew.slope.root",run_dot_seg.Data());
-  TFile* slopefile = TFile::Open(slopefile_name);
   
-  if(slopefile==NULL){
-    cout << " Error: "
-	 << " blueR slope rootfile " << slopefile_name
-	 << " doesn't exist " << endl;
-    return;
-  }
-  
-  TH1D* hist_iv = (TH1D*)slopefile->Get("IVname");
-  TH1D* hist_dv = (TH1D*)slopefile->Get("DVname");
-
-  if(hist_iv==NULL || hist_dv==NULL){
-    cout << " Error: "
-	 << " DV or IV list is not found " << endl;
-    return;
-  }
-
-  vector< TString > IVlist;
-  vector< TString > DVlist;
-  
-  TAxis *ivAxis = hist_iv->GetXaxis();
-  TAxis *dvAxis = hist_dv->GetXaxis();
-  
-  Int_t nIV_lrb = ivAxis->GetLast(); // " returns fNBins if range not specified "
-  Int_t nDV_lrb = dvAxis->GetLast();
-
-  if(nIV_lrb==0 || nDV_lrb==0){
-    cout << " Error: "
-	 << " DV or IV list is empty " << endl;
-    return;
-  }
-
-  for(int i=0;i<nIV_lrb;i++){
-    const char* c_buff = ivAxis->GetBinLabel(i+1);
-    IVlist.push_back(TString(c_buff));
-  }
-
-  for(int i=0;i<nDV_lrb;i++){
-    const char* c_buff = dvAxis->GetBinLabel(i+1);
-    DVlist.push_back(TString(c_buff));
-  }
-  
-  slopefile->Close();
-
-  results->cd();
-  // 
-  TString blueRCut = "ErrorFlag==0";
-  for(int i=0;i<nDV_lrb;i++){
-    blueRCut +=Form("&& %s.Device_Error_Code==0",DVlist[i].Data());
-  }
-  for(int i=0;i<nIV_lrb;i++){
-    blueRCut +=Form("&& %s.Device_Error_Code==0",IVlist[i].Data());
-  }
-*/
   TString draw_opts[] = {"COLZ","fit","scat"};
 
   vector<TString> vSAMU = {"asym_sam2","asym_sam4","asym_sam6","asym_sam8"};
   vector<TString> vSAMV = {"asym_sam1","asym_sam3","asym_sam5","asym_sam7"};
   vector<TString> vMain = {"asym_usl","asym_dsl","asym_usr","asym_dsr"};
-//  vector<TString> IVlist = {"diff_bpm4aX","diff_bpm4aY","diff_bpm4eX","diff_bpm4eY","diff_bpm12X"};
-//As suggested in RC meeting 07/24/2019 bpm4e is replaced with bpm4ec and bpm12X with bpm11X
-  vector<TString> IVlist = {"diff_bpm4aX","diff_bpm4aY","diff_bpm4ecX","diff_bpm4ecY","diff_bpm11X"};
-  // then check if they exist in LRB DVlist, otherwise erase them from plot queue
-//  CheckVariables(vMain, DVlist);
-//  CheckVariables(vSAMU, DVlist);
-//  CheckVariables(vSAMV, DVlist);
+
+  // vector<TString> IVlist = {"diff_bpm4aX","diff_bpm4aY","diff_bpm4ecX","diff_bpm4ecY","diff_bpm11X"};
+  
+  vector<TString> IVlist = *(vector<TString>*)results->Get("IVNames"); // Getting IV list from postpan output
 
   vector<vector<TString> > vDV_plot ={vSAMU,
 				      vSAMV,

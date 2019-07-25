@@ -59,8 +59,8 @@ void PlotSummary_postpan(TString filename){
 	      << filename << "!" << std::endl;
   }
   else{
-    CheckNormalizedComboSAM_postpan(); 
     CheckRegression_postpan();
+    CheckNormalizedComboSAM_postpan(); 
     CheckRegNormDetector_postpan();
   }
   //CheckRegressedDetector_postpan();
