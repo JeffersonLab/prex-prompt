@@ -1,8 +1,8 @@
-void DitAlias_Catherine(TString rootfilenName, TString ditherfileName, Int_t runnum){
+void DitAlias_Catherine(TString rootfilenName, TString ditherfileName, Int_t runnum = -1){
 //rootfilenName = the japan output file that you want to perform corrections on (pass1 or pass2)
 //ditherfileName = the dither root file whose slopes will be used to perform corrections
 //runnum = the run number of the slopes you want to use to perform calculations. 
-//If runnum is not in the dither root file, then all of the slopes from that slug (except the outlier "blacklisted" runs) will be averaged and then used for correction
+//Default: uses the average slopes of the slug. If runnum is not in the dither root file (ie -1), then all of the slopes from that slug (except the outlier "blacklisted" runs) will be averaged and then used for correction
 
   //Try to open the trees 
   TFile* japanOutput = TFile::Open(rootfilenName);
@@ -111,5 +111,8 @@ void DitAlias_Catherine(TString rootfilenName, TString ditherfileName, Int_t run
     mul_tree->Draw(Form("dit_%s*%f",maindet_array[idet].Data(), 1.0e6), "ErrorFlag==0");
   }
 
+  c_uncorr -> SaveAs("plots/Run"+runnum+"_UncorrectedRMS.pdf");
+  c_corr -> SaveAs("plots/Run"+runnum+"_CorrectedRMS_run"+runnum+"Slopes.pdf");
+  c_corr -> SaveAs("plots/Run"+runnum+"_CorrectedRMS_slug"+_+"AvgSlopes.pdf");
 
 }

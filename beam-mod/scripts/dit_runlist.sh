@@ -11,4 +11,4 @@ while IFS= read -r line; do
     ./auto-dit.sh $runnum;
 done < $1
 
-mv dit_slopes.root dit_slopes_$tag.root
+mv dit_slopes.root ~/PREX/prompt/beam-mod/rootfiles/dit_slopes_$tag.root
