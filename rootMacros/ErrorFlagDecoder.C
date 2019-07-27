@@ -26,17 +26,17 @@ Bool_t ErrorFlagDecoder(){
 
   static const UInt_t kBModFFBErrorFlag = 0x1000; // in Decimal 4096 (2^12) to identify the FFB OFF periods for Energy modulation
   static const UInt_t kBModErrorFlag = 0x8000; // in Decimal 32768 (2^15) to identify the single event cut is failed for a BMod channel
-
-  static const UInt_t kEventCutMode3 = 0x10000;  // in Decimal 65536 to identify the mode 3 where we only flag event cut failed events 
+  static const UInt_t kErrorFlag_Helicity = 0x20000;  // Any type of helicity decoding problem
+  static const UInt_t kErrorFlag_BurpCut =   0x800000;// in Decimal 2^23 to identify a burp cut failure
   static const UInt_t kBeamStabilityError= 0x10000000;//in Decimal 2^28(268435456) to identify the a stability cut
-  static const UInt_t kBeamTripError= 0x8000000;// in Decimal 2^27(134217728) to identify the an event within a beam trip range set by ring parameters
-  static const UInt_t kStabilityCut = 0x1000000;// in Decimal 2^24 (16777216) to identify the single event cut is a stability cut. NOT IN USE CURRENTLY
-
+  static const UInt_t kBeamTripError     =  0x8000000;// in Decimal 2^27(134217728) to identify the an event within a beam trip range set by ring parameters
+  static const UInt_t kStabilityCut      =  0x1000000;// in Decimal 2^24 (16777216) to i
+  static const UInt_t kBadEventRangeError= 0x80000000;//in Decimal 2^31 to identify an event range we don't like anymore
 
 
   TTree* evt_tree = (TTree*)gROOT->FindObject("evt");
 
-  const Int_t nErrorTypes = 13; // 12+1; Shifted by 1 for Good counts
+  const Int_t nErrorTypes = 15; // 12+1; Shifted by 1 for Good counts
   TH1D *hdec = new TH1D("hdec"," Global Error Flag Counter",nErrorTypes,0,nErrorTypes); 
   TH1D *htotal = new TH1D("htotal","Global Error Flag Counter",nErrorTypes,0,nErrorTypes); 
   Int_t ErrorCounter[nErrorTypes];
@@ -54,10 +54,12 @@ Bool_t ErrorFlagDecoder(){
 				     "PMT Failure",
 				     "FFB OFF for Energy Mod",
 				     "BMod Channel Failure",
-				     "Mode 3",
+				     "Hecility Error",
+				     "Burp Cut",
 				     "Stability Error",
 				     "Beam Trip",
-				     "Stability Cut"};
+				     "Stability Cut",
+				     "Bad Event Range"};
 
   UInt_t ErrorCode[nErrorTypes] = {0,
 				   kErrorFlag_EventCut_L,
@@ -68,10 +70,12 @@ Bool_t ErrorFlagDecoder(){
 				   kPMTErrorFlag,
 				   kBModFFBErrorFlag,
 				   kBModErrorFlag,
-				   kEventCutMode3,
+				   kErrorFlag_Helicity,
+				   kErrorFlag_BurpCut,
 				   kBeamStabilityError,
 				   kBeamTripError,
-				   kStabilityCut};
+				   kStabilityCut,
+				   kBadEventRangeError};
 
 
   Double_t nTotal = evt_tree->Draw("ErrorFlag","","goff");
