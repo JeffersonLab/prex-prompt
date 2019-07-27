@@ -32,7 +32,7 @@ void CorrectTree(Int_t run_number=0, Int_t seg_number=0 ){
 			"diff_bpm4aY",
 			"diff_bpm4eX",
 			"diff_bpm4eY",
-			"diff_bpm12X"};
+			"diff_bpm11X"};
   TString rootfile_name = Form("~/PREX/prompt/japanOutput/prexPrompt_pass1_%d.%03d.root",
   			       run_number,seg_number);
   TFile *japanOutput = TFile::Open(rootfile_name);
@@ -67,7 +67,7 @@ void CorrectTree(Int_t run_number=0, Int_t seg_number=0 ){
   //Build variable names
   //dit tree variable names go like "dv_iv", for example: "usr_4eX"
   TString maindet_array[4]={"usl","usr","dsl","dsr"};
-  TString bpm_array[5]={"4aX","4aY","4eX","4eY","12X"};
+  TString bpm_array[5]={"4aX","4aY","4eX","4eY","11X"};
   const Int_t ndet = sizeof(maindet_array)/sizeof(*maindet_array);
   const Int_t nmon= sizeof(bpm_array)/sizeof(*bpm_array);
 
@@ -199,7 +199,9 @@ void CorrectTree(Int_t run_number=0, Int_t seg_number=0 ){
   
   japanOutput->Close();
   output->cd();
+  cout << " -- Writing Dithering Corrected Tree "<< endl;
   dit_tree->Write();
+  cout << " -- Closing " << output_path+outputName << endl;
   output->Close();
 }
 

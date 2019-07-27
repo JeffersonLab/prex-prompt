@@ -11,6 +11,9 @@
 #include <sstream>
 #include <iostream>
 #include<TRandom.h>
+
+#include "QuerySlugNumber.C"
+
 void invertMatrix_maindet(int runNo=0){
   Int_t msize=5;
   char inputfile1[300];
@@ -344,12 +347,16 @@ void invertMatrix_maindet(int runNo=0){
   Cdsr.Print();
 
   TString det_array[]={"usl","usr","dsl","dsr"};
-  TString bpm_array[]={"4aX","4eX","12X","4aY","4eY"};
+  TString bpm_array[]={"4aX","4eX","11X","4aY","4eY"};
   Double_t slope[4][5];
   Int_t run_number = runNo;
-  TFile* ditfile = TFile::Open("dit_slopes.root","UPDATE");
+  Int_t slug_number = QuerySlugNumber(run_number);
+  TString output_path = "~/PREX/prompt/beam-mod/rootfiles/";
+  TString slopeFilename = Form("dit_slopes_slug%d.root",slug_number);
+  
+  TFile* ditfile = TFile::Open(output_path+slopeFilename,"UPDATE");
   if(ditfile==NULL)
-    ditfile = TFile::Open("dit_slopes.root","RECREATE");
+    ditfile = TFile::Open(output_path+slopeFilename,"RECREATE");
   
   TTree* dit_tree = (TTree*)ditfile->Get("dit");
   int evt;

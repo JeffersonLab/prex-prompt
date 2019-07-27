@@ -90,7 +90,7 @@ int japan_plot_beammod_BPMS_cyc(int runNo=0) {
   const int nCoil =7;
   TString wire[nCoil]={"bmod_trim1","bmod_trim2","bmod_trim3","bmod_trim4","bmod_trim5","bmod_trim6","bmod_trim7"};
   TString bpmName; // A BUFF
-  TString bpm_array[] = {"bpm4aX","bpm4eX","bpm4aY","bpm4eY","bpm12X"};
+  TString bpm_array[] = {"bpm4aX","bpm4eX","bpm4aY","bpm4eY","bpm11X"};
   const int nBPM = 5;
 
   double sens[nBPM][nCoil];

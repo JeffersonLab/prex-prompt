@@ -34,7 +34,7 @@ void DitAlias_Catherine(TString rootfilenName, TString ditherfileName, Int_t run
   //Build variable names
   //  //dit tree variable names go like "dv_iv", for example: "usr_4eX"
   TString maindet_array[4]={"usl","usr","dsl","dsr"};
-  TString bpm_array[5]={"4aX","4aY","4eX","4eY","12X"};
+  TString bpm_array[5]={"4aX","4aY","4eX","4eY","11X"};
   Int_t ndet = sizeof(maindet_array)/sizeof(*maindet_array);
   Int_t nmon= sizeof(bpm_array)/sizeof(*bpm_array);
 
