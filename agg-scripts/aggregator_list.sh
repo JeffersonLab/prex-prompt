@@ -1,5 +1,5 @@
 #!/bin/bash
-cd Aggregator/wrapper/
+cd ~/PREX/prompt/Aggregator/wrapper/
 ../setup_camguin.sh
-python loop-oneRun.py -r ${1} -f input.txt -F 1 # Do miniruns
-python loop-oneRun.py -r ${1} -f input.txt -F 0 # Do full runs
+python loop.py -r ${1} -f input.txt -F 1 -s ${2} # Do miniruns
+python loop.py -r ${1} -f input.txt -F 0 -s ${2} # Do full runs
