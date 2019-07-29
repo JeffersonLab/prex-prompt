@@ -8,17 +8,19 @@
 
 void PlotErrorCounters(){
   TString plot_title;
-
+  TStopwatch tsw;
   TCanvas* c1 = new TCanvas("c1","c1",2400,1200);
   TCanvas* c2 = new TCanvas("c2","c2",2400,1800);
   c2->Divide(2,2);
 
   c1->cd();
+  tsw.Start();
   Bool_t kStatus = ErrorFlagDecoder();
   plot_title = Form("run%s_ErrorCounter_global.png",run_seg.Data());
   c1->SaveAs(output_path+ plot_title);
-
+  cout << "--"; tsw.Print(); cout << endl;
   //  if(kStatus){
+  TString maindet_array[4]={"usl","usr","dsl","dsr"};
     TString sam_array[8]={"sam1","sam2","sam3","sam4",
 			  "sam5","sam6","sam7","sam8"};
     TString bcm_array[4]={"bcm_an_us","bcm_an_ds","bcm_an_ds3","bcm0l02"};
@@ -33,22 +35,27 @@ void PlotErrorCounters(){
     // TString bpm14_array[4]={"bpm14XM","bpm14XP","bpm14YP","bpm14YM"};
     TString bpm16_array[4]={"bpm16XM","bpm16XP","bpm16YP","bpm16YM"};
   
-    TString* channels[7]={sam_array,sam_array+4,
+    TString* channels[9]={maindet_array,
+			  sam_array,sam_array+4,
 			  bpm4a_array,bpm4e_array,
 			  bpm12_array,bpm11_array,
 			  bpm16_array};
-
+    tsw.Start();
     for(int i=0;i<4;i++){
       c2->cd(i+1);
       DeviceErrorCounter(bcm_array[i]);
+      cout << "-- Device: " << bcm_array[i] << " Done in "; tsw.Print();  tsw.Start();
     }
     plot_title = Form("run%s_ErrorCounter_bcm.png",run_seg.Data());
     c2->SaveAs(output_path+ plot_title);
-
+    
     for(int ich=0;ich<7;ich++){
+      tsw.Start();
       for(int i=0;i<4;i++){
 	c2->cd(i+1);
 	DeviceErrorCounter(channels[ich][i]);
+	cout << "-- Device: " << channels[ich][i]<< " Done in ";
+	tsw.Print(); tsw.Start();
       }
       plot_title = Form("run%s_ErrorCounter_%d.png",run_seg.Data(),ich);
       c2->SaveAs(output_path+ plot_title);

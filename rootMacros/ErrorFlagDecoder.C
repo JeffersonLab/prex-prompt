@@ -86,7 +86,7 @@ Bool_t ErrorFlagDecoder(){
 
   for(int i=0;i<nErrorTypes;i++){
     int ibin = nErrorTypes-i;
-    ErrorCounter[i] = evt_tree->Draw("ErrorFlag",ErrorSelection[i],"goff");
+    ErrorCounter[i] = evt_tree->GetEntries(ErrorSelection[i]);
     ErrorRatio[i] = (Double_t)ErrorCounter[i]/nTotal;
     hdec->SetBinContent(ibin,ErrorCounter[i]);
     htotal->GetXaxis()->SetBinLabel(ibin,ErrorLabel[i]);
