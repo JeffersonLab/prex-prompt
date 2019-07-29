@@ -23,8 +23,8 @@ void CheckNormalizedComboSAM_postpan(vector<TString> vDet, TString tag, TString 
 //  reg_tree->AddFriend(mul_tree);
   reg_tree->SetAlias("ppm","1e-6");
   reg_tree->SetAlias("um","1e-3");
-  reg_tree->SetAlias("AqDS", "asym_bcm_an_ds3");
-  reg_tree->SetAlias("AqUS", "asym_bcm_an_us");
+  reg_tree->SetAlias("AqDS", "asym_bcm_dg_ds");
+  reg_tree->SetAlias("AqUS", "asym_bcm_dg_us");
   reg_tree->SetAlias("AverageLumi",
 		      Form("(%s+%s+%s+%s)/4",
 			   vDet[0].Data(),vDet[1].Data(),vDet[2].Data(),vDet[3].Data()));

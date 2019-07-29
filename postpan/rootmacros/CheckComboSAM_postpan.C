@@ -22,8 +22,8 @@ void CheckComboSAM(vector<TString> vDet, TString tag, TString user_cut){
   TTree *mulc_tree = (TTree*)gROOT ->FindObject("mulc_lrb");
   mulc_tree->AddFriend(mul_tree);
 
-  mulc_tree->SetAlias("AqDS", "asym_bcm_an_ds3");
-  mulc_tree->SetAlias("AqUS", "asym_bcm_an_us");
+  mulc_tree->SetAlias("AqDS", "asym_bcm_dg_ds");
+  mulc_tree->SetAlias("AqUS", "asym_bcm_dg_us");
   mulc_tree->SetAlias("AverageLumi",
 		      Form("(%s+%s+%s+%s)/4",
 			   vDet[0].Data(),vDet[1].Data(),vDet[2].Data(),vDet[3].Data()));

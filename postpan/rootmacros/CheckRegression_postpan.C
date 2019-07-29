@@ -18,7 +18,6 @@ void CheckRegression_postpan(){
 
   
   TString draw_opts[] = {"COLZ","fit","scat"};
-
   vector<TString> vSAMU = {"asym_sam2","asym_sam4","asym_sam6","asym_sam8"};
   vector<TString> vSAMV = {"asym_sam1","asym_sam3","asym_sam5","asym_sam7"};
   vector<TString> vMain = {"asym_usl","asym_dsl","asym_usr","asym_dsr"};
