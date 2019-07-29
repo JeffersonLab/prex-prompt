@@ -22,7 +22,6 @@ do
 	mkdir ./SummaryPlots/run$run_seg;
     fi
     
-    root -b -q -l './rootMacros/GetRunCharge.C("'$rootfile'")';
     root -b -q -l './rootMacros/PlotSummary.C("'$rootfile'")';
     root -b -q -l './postpan/rootmacros/PlotSummary_postpan.C("'$redfile'")';
 
