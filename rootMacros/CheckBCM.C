@@ -23,16 +23,17 @@ void CheckBCM(){
   TGraph* g_buff;
   for(int ibcm=0;ibcm<nbcm;ibcm++){
     const char* device_name = vBCM[ibcm];
-    
     pad_buff = c1->cd(1);
     evt_tree->Draw(Form("%s:Entry$",device_name),"","l");
     g_buff = (TGraph*)pad_buff->FindObject("Graph");
     g_buff->SetName("GraphAll");
     evt_tree->Draw(Form("%s:Entry$",device_name),"ErrorFlag!=0","* same");
     g_buff = (TGraph*)pad_buff->FindObject("Graph");
-    if(g_buff!=0)
+    if(g_buff!=0){
       g_buff->SetMarkerColor(kRed);
-
+      g_buff->SetMarkerSize(0.5);
+      // g_buff->SetMarkerStyle(20);
+    }
     //===================================================
 
     pad_buff=c1->cd(2);
@@ -77,7 +78,7 @@ void CheckBCM(){
       if(h_buff!=0)
 	h_buff->SetLineColor(kRed);
     }
-    
+
     plot_title = Form("run%s_%s.png",
 		      run_seg.Data(),
 		      device_name);
@@ -89,7 +90,6 @@ void CheckBCM(){
     t1->Draw("same");
     c1->SaveAs(output_path+plot_title);
     c1->Clear("D");
-
     delete hAq;
   } // end of BCM loop 
   delete c1;

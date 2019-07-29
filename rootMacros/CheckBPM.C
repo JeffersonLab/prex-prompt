@@ -142,18 +142,62 @@ void CheckBPM(){
     evt_tree->Draw(Form("%sXP.hw_sum_raw/%sXP.num_samples*76.29e-6:Entry$",
 			vBPM[ibpm],vBPM[ibpm]),
 		   "","l");
+    g_buff = (TGraph*)gPad->FindObject("Graph");
+    g_buff->SetName("GraphAll");
+    evt_tree->Draw(Form("%sXP.hw_sum_raw/%sXP.num_samples*76.29e-6:Entry$",
+			vBPM[ibpm],vBPM[ibpm]),
+		   "ErrorFlag!=0","* same");
+    g_buff = (TGraph*)gPad->FindObject("Graph");
+    if(g_buff!=0){
+      g_buff->SetMarkerColor(kRed);
+      g_buff->SetMarkerSize(0.5);
+    }
+
     cwiresum->cd(6);
     evt_tree->Draw(Form("%sXM.hw_sum_raw/%sXM.num_samples*76.29e-6:Entry$",
 			vBPM[ibpm],vBPM[ibpm]),
 		   "","l");
+    g_buff = (TGraph*)gPad->FindObject("Graph");
+    g_buff->SetName("GraphAll");
+    evt_tree->Draw(Form("%sXM.hw_sum_raw/%sXM.num_samples*76.29e-6:Entry$",
+			vBPM[ibpm],vBPM[ibpm]),
+		   "ErrorFlag!=0","* same");
+    g_buff = (TGraph*)gPad->FindObject("Graph");
+    if(g_buff!=0){
+      g_buff->SetMarkerColor(kRed);
+      g_buff->SetMarkerSize(0.5);
+    }
+
     cwiresum->cd(7);
     evt_tree->Draw(Form("%sYP.hw_sum_raw/%sYP.num_samples*76.29e-6:Entry$",
 			vBPM[ibpm],vBPM[ibpm]),
 		   "","l");
+    g_buff = (TGraph*)gPad->FindObject("Graph");
+    g_buff->SetName("GraphAll");
+    evt_tree->Draw(Form("%sYP.hw_sum_raw/%sYP.num_samples*76.29e-6:Entry$",
+			vBPM[ibpm],vBPM[ibpm]),
+		   "ErrorFlag!=0","* same");
+    g_buff = (TGraph*)gPad->FindObject("Graph");
+    if(g_buff!=0){
+      g_buff->SetMarkerColor(kRed);
+      g_buff->SetMarkerSize(0.5);
+    }
+
     cwiresum->cd(8);
     evt_tree->Draw(Form("%sYM.hw_sum_raw/%sYM.num_samples*76.29e-6:Entry$",
 			vBPM[ibpm],vBPM[ibpm]),
 		   "","l");
+    g_buff = (TGraph*)gPad->FindObject("Graph");
+    g_buff->SetName("GraphAll");
+    evt_tree->Draw(Form("%sYM.hw_sum_raw/%sYM.num_samples*76.29e-6:Entry$",
+			vBPM[ibpm],vBPM[ibpm]),
+		   "ErrorFlag!=0","* same");
+    g_buff = (TGraph*)gPad->FindObject("Graph");
+    if(g_buff!=0){
+      g_buff->SetMarkerColor(kRed);
+      g_buff->SetMarkerSize(0.5);
+    }
+
 
     plot_title  = Form("run%s_%s_XY_Awiresum.png",
 		       run_seg.Data(),vBPM[ibpm]);
