@@ -184,6 +184,8 @@ void CorrectTree(Int_t run_number=0, Int_t seg_number=0 ){
       DetArray_dit[iDet].block1 = DetArray[iDet].block1;
       DetArray_dit[iDet].block2 = DetArray[iDet].block2;
       DetArray_dit[iDet].block3 = DetArray[iDet].block3;
+      DetArray_dit[iDet].num_samples = DetArray[iDet].num_samples;
+      DetArray_dit[iDet].Device_Error_Code = DetArray[iDet].Device_Error_Code;
 
       Double_t correction = 0.0;
       for(int iMon=0;iMon<nMon;iMon++){
