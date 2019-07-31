@@ -78,5 +78,14 @@ void DeviceErrorCounter(TString device){
     hdec->GetXaxis()->SetLabelSize(0.06);
     hdec->SetFillColor(49);
     hdec->Draw("hbar");
+
+    TText* RatioText[nErrorTypes];
+    for(int i=0;i<nErrorTypes;i++){
+      TString mytext = Form("%.2f %%",ErrorCounter[i]*100.0/nTotal);
+      RatioText[i]= new TText(5,(nErrorTypes-i-1)+0.2,mytext);
+      RatioText[i]->SetNDC(0);
+      RatioText[i]->Draw("same");
+    }
+
    }
 }
