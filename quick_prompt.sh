@@ -1,0 +1,44 @@
+#! /bin/bash
+runnum=$1;
+if [ -z "$runnum" ]
+then
+    echo "Run Number is empty";
+    exit 1;
+fi
+
+#shopt -s extglob
+## find split file
+#slopefile_list=$(ls -1 ./LRBoutput/blueR$runnum*slope.root);
+#shopt -u extglob
+
+#for slopefile in $slopefile_list
+#do
+#    echo "deleting "  $slopefile;
+#    rm -f $slopefile;
+#done
+
+minirun=0
+if [ $# -ge 2 ]
+then
+  echo "Doing minirun $2 (starts at minirun 0, and has 9000 good multiplets per minirun, assume here we are doing 2x as large event ranges, 72000 events long, to compensate for potential beam trips)"
+  minirun=$2
+fi
+startEvts=$((72000*${minirun}))
+endEvts=$((72000*${minirun}+72000))
+if [[ $2 == "-1" ]]
+then
+  startEvts=0
+  endEvts=1000000
+fi
+
+echo "Doing events $startEvts to $endEvts"
+
+./qwparity -r $runnum -c prex.conf \
+    --rootfile-stem quick_ \
+    -e $startEvts:$endEvts;
+
+./fast_postpan.sh $runnum;
+
+./fast_summary.sh $runnum;
+
+evince FastPlots/run${runnum}_000/run${runnum}_000_all.pdf
