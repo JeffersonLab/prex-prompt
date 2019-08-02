@@ -37,7 +37,7 @@ timenow=$(date +"%Y-%m%d-%H%M");
 
 # Make Summary Plots/Text and sync to HallA onlineWeb
 # now make plots from pass1 and postpan output
-./summary.sh $runnum &
+./summary.sh $runnum;
 
 ./qwparity -r $runnum -c prex_prompt.conf \
     --rootfile-stem prexPrompt_pass2_ \

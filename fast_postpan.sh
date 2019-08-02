@@ -7,8 +7,16 @@ then
     exit 1;
 fi    
 
+postpanConf="combo_reg.conf"
+if [ $(($runnum)) -ge 3583 ]
+then
+  postpanConf="combo_reg.3583-3803.conf"
+fi
+if [ $(($runnum)) -ge 3803 ]
+then
+  postpanConf="combo_reg.3803-.conf"
+fi
+
 ./postpan/redana \
 	-f ./japanOutput/quick_${runnum}.000.root \
-	-c ./postpan/conf/combo_reg.3583-.conf ; 
-#	-c ./postpan/conf/combo_reg.conf ;
-# From run 3583- use the 3583-.conf file, manually runranged
+  -c ./postpan/conf/$postpanConf ; 

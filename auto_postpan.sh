@@ -20,9 +20,19 @@ do
     run_num=${run_dot_seg%.*}
     run_seg=${run_dot_seg/./_}
 
+    postpanConf="combo_reg.conf"
+    if [ $(($run_num)) -ge 3583 ]
+    then
+      postpanConf="combo_reg.3583-3803.conf"
+    fi
+    if [ $(($run_num)) -ge 3803 ]
+    then
+      postpanConf="combo_reg.3803-.conf"
+    fi
+
     ./postpan/redana \
     	-f $rootfile \
-    	-c ./postpan/conf/combo_reg.3583-.conf ; 
+    	-c ./postpan/conf/$postpanConf ; 
     #	-c ./postpan/conf/combo_reg.conf ;
     # From run 3583- use the 3583-.conf file, manually runranged
 
