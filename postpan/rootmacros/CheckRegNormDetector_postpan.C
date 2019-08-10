@@ -162,7 +162,7 @@ void CheckRegNormDetector_postpan(){
     h_buff->Fit("pol1","QR","",low,up);
   } 
 
-  c1->cd(5);
+  pad_buff=c1->cd(5);
   reg_tree->Draw("(reg_asym_dsl/ppm-reg_asym_dsr/ppm)/2","ok_cut");
 
   pad_buff=c1->cd(6);
@@ -174,7 +174,7 @@ void CheckRegNormDetector_postpan(){
   c1->cd(7);
   reg_tree->Draw("(reg_asym_dsl/ppm+reg_asym_dsr/ppm)/2","ok_cut");
 
-  c1->cd(8);
+  pad_buff= c1->cd(8);
   reg_tree->Draw("(reg_asym_dsl/ppm+reg_asym_dsr/ppm)/2:Entry$","ok_cut","COL");
   TH2F *h2ddssum_buff = (TH2F*)pad_buff->FindObject("htemp");
   if(h2ddssum_buff!=NULL)

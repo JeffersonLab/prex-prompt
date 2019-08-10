@@ -21,18 +21,19 @@ void CheckRegression_postpan(){
   vector<TString> vSAMU = {"asym_sam2","asym_sam4","asym_sam6","asym_sam8"};
   vector<TString> vSAMV = {"asym_sam1","asym_sam3","asym_sam5","asym_sam7"};
   vector<TString> vMain = {"asym_usl","asym_dsl","asym_usr","asym_dsr"};
+  vector<TString> vAT = {"asym_atl1","asym_atr1","asym_atl2","asym_atr2"};
 
   // vector<TString> IVlist = {"diff_bpm4aX","diff_bpm4aY","diff_bpm4ecX","diff_bpm4ecY","diff_bpm11X"};
   
   vector<TString> IVlist = *(vector<TString>*)results->Get("IVNames"); // Getting IV list from postpan output
 
   vector<vector<TString> > vDV_plot ={vSAMU,
-				      vSAMV,
+				      vSAMV,vAT,
 				      vMain};
   Int_t nplots = vDV_plot.size();
 
   vector<TString> vtag_dv ={"asym_sam2468",
-			    "asym_sam1357",
+			    "asym_sam1357","asym_at",
 			    "asym_maindet"};
   TString blueRCut = "ok_cut";
   TCanvas* c_this = new TCanvas("","",2400,2400);
@@ -93,6 +94,10 @@ void CheckRegression_postpan(){
 		     output_path.Data(),
 		     output_path.Data(),
 		     run_seg.Data()));
+  gSystem->Exec(Form("convert $(ls -rt %s/*regression*_at_*postpan.png) %s/run%s_summary_regression_at.pdf",
+         output_path.Data(),
+         output_path.Data(),
+         run_seg.Data()));
   gSystem->Exec(Form("convert $(ls -rt %s/*regression*maindet*_postpan.png) %s/run%s_summary_regression_maindet.pdf",
 		     output_path.Data(),
 		     output_path.Data(),
@@ -190,21 +195,23 @@ void CheckRegression_postpan(vector<TString > DVar, vector<TString> IVar,
 		      iv_mean[icol]+2*iv_rms[icol]);
 	  pad_buff->Update();
 	  TF1 *f1 = h_buff->GetFunction("pol1");
-	  Double_t slope = f1->GetParameter(1);
-	  TPaveStats* st = (TPaveStats*)h_buff->FindObject("stats");
-	  st->SetOptFit(1);
-	  st->SetOptStat(0);
-	  if(slope<0){
-	    st->SetX2NDC(1.0);
-	    st->SetY2NDC(0.9);
-	    st->SetX1NDC(0.5);
-	    st->SetY1NDC(0.6);
-	  }
-	  else{
-	    st->SetX2NDC(0.5);
-	    st->SetY2NDC(0.6);
-	    st->SetX1NDC(0.0);
-	    st->SetY1NDC(0.9);
+	  if(f1!=NULL){
+	    Double_t slope = f1->GetParameter(1);
+	    TPaveStats* st = (TPaveStats*)h_buff->FindObject("stats");
+	    st->SetOptFit(1);
+	    st->SetOptStat(0);
+	    if(slope<0){
+	      st->SetX2NDC(1.0);
+	      st->SetY2NDC(0.9);
+	      st->SetX1NDC(0.5);
+	      st->SetY1NDC(0.6);
+	    }
+	    else{
+	      st->SetX2NDC(0.5);
+	      st->SetY2NDC(0.6);
+	      st->SetX1NDC(0.0);
+	      st->SetY1NDC(0.9);
+	    }
 	  }
 	}
       }

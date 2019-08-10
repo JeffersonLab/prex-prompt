@@ -13,9 +13,9 @@ void GetRunCharge(TString filename){
   
   TTree* mul_tree = (TTree*)rootfile->Get("mul");
   
-  TString bcm_name = "yield_bcm_an_ds3";
+  TString bcm_name = "yield_bcm_dg_ds";
   
-  TCut goodPatternCut = "ErrorFlag==0 && yield_bcm_an_ds3.Device_Error_Code==0";
+  TCut goodPatternCut = "ErrorFlag==0 && yield_bcm_dg_ds.Device_Error_Code==0";
   Int_t nGoodPatterns = mul_tree->GetEntries(goodPatternCut);
   
   mul_tree->Draw("yield_bcm_an_ds3",goodPatternCut,"goff");

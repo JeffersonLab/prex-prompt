@@ -20,7 +20,7 @@ vector<const char*> vBCM={"bcm_an_us", "bcm_an_ds",
 vector<const char*> vBPM={"bpm4a","bpm4e",
 			  "bpm4ac","bpm4ec",
 			  "bpm11","bpm12","bpm16",
-			  "bpm2i01","bpm2i02","bpm1i02"};
+			  "bpm2i01","bpm2i02","bpm1i02","bpm0i02","bpm0i01a"};
 // BPM 11 was 14 before 7/16/2019
 // BPM 16 was 8 before 7/16/2019
 vector<const char*> vBPMXY={"bpm4aX","bpm4aY",

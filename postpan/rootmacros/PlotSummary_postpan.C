@@ -31,6 +31,7 @@
 #include "RegressionSummary.C"
 #include "PlotPairTree.C"
 #include "CheckNormalizedComboSAM_postpan.C"
+#include "CheckRegNormATDetector_postpan.C"
 
 void PlotSummary_postpan(TString filename){
   results = TFile::Open(filename);
@@ -61,6 +62,7 @@ void PlotSummary_postpan(TString filename){
   else{
     CheckRegression_postpan();
     CheckNormalizedComboSAM_postpan(); 
+    CheckRegNormATDetector_postpan();
     CheckRegNormDetector_postpan();
   }
   //CheckRegressedDetector_postpan();

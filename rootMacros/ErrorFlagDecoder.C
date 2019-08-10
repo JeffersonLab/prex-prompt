@@ -54,7 +54,7 @@ Bool_t ErrorFlagDecoder(){
 				     "PMT Failure",
 				     "FFB OFF for Energy Mod",
 				     "BMod Channel Failure",
-				     "Hecility Error",
+				     "Helicity Error",
 				     "Burp Cut",
 				     "Stability Error",
 				     "Beam Trip",

@@ -24,8 +24,11 @@
 
 #include "CheckDetector.C"
 #include "CheckNormalizedDetector.C"
-
 #include "CheckDetectorCorrelation.C"
+
+#include "CheckAT.C"
+#include "CheckNormalizedAT.C"
+#include "CheckATCorrelation.C"
 
 #include "CheckRegNormDetector.C"
 #include "CheckRegressedDetector.C"
@@ -149,7 +152,21 @@ void PlotSummary(TString filename){
   gSystem->Exec(Form("rm %s*maindet*.png %s*[ud]s[lr]*.png",
 		     output_path.Data(),
 		     output_path.Data()));
-  
+
+   //===== AT Detector Plots =======
+  if(isNormalized)
+    CheckNormalizedAT();		
+  else
+    CheckAT();
+  CheckATCorrelation();
+
+  gSystem->Exec(Form("convert $(ls -rt %s*at*.png)  %srun%s_summary_at_detector.pdf",
+  		     output_path.Data(),
+		     output_path.Data(),
+  		     run_seg.Data()));
+
+  gSystem->Exec(Form("rm %s*at*.png",
+		     output_path.Data()));
 
   //===== SAM Plots =======
   if(isNormalized)
