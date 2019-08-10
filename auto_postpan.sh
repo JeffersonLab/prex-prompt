@@ -23,7 +23,7 @@ do
     postpanConf="combo_reg.conf"
     if [ $(($run_num)) -ge 3583 ]
     then
-      postpanConf="combo_reg.3583-3803.conf"
+      postpanConf="combo_reg.3583-3802.conf"
     fi
     if [ $(($run_num)) -ge 3803 ]
     then

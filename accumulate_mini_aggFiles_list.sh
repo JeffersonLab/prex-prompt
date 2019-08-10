@@ -31,6 +31,7 @@ else
   done
 
   echo Looking at ${minirun_lines[@]}
+  echo Argument is ${2}
   hadd -f ${OUTPUTROOTFILEDIR}/minirun_${2} ${minirun_lines[@]}
   hadd -f ${OUTPUTROOTFILEDIR}/run_${2} ${run_lines[@]}
 

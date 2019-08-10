@@ -20,15 +20,15 @@ fi
 minirun=0
 if [ $# -ge 2 ]
 then
-  echo "Doing minirun $2 (starts at minirun 0, and has 9000 good multiplets per minirun, assume here we are doing 2x as large event ranges, 72000 events long, to compensate for potential beam trips)"
+  echo "Doing minirun $2 (starts at minirun 0, and has 9000 good multiplets per minirun, assume here we are doing 2x as large event ranges, 100000 events long, to compensate for potential beam trips)"
   minirun=$2
 fi
-startEvts=$((72000*${minirun}))
-endEvts=$((72000*${minirun}+72000))
+startEvts=$((100000*${minirun}))
+endEvts=$((100000*${minirun}+100000))
 if [[ $2 == "-1" ]]
 then
   startEvts=0
-  endEvts=1000000
+  endEvts=2000000
 fi
 
 echo "Doing events $startEvts to $endEvts"
