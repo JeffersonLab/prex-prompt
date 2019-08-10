@@ -6,12 +6,18 @@ echo "If you want to get plots then edit the script and set PLOT_FLAG=1, and use
 
 script_dir=/adaqfs/home/apar/pvdb/prex/examples
 
-if [ $# -eq 1 ]; then
+goods="True"
+if [ $# -eq 2 ] 
+then
+    goods=$2
+fi
+
+if [ $# -ge 1 ]; then
     # get charge for the given run range
-    python $script_dir/acc_charge.py --run=$1
+    python $script_dir/acc_charge.py --run=$1 --goodrun=$goods
 else
     # get charge for all production runs
-    python $script_dir/acc_charge.py
+    python $script_dir/acc_charge.py --goodrun=$goods
 fi
 
 # Other examples
