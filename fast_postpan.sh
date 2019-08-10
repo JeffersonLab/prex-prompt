@@ -8,6 +8,10 @@ then
 fi    
 
 postpanConf="combo_reg.conf"
+if [ $(($run_num)) -ge 3390 ]
+then
+  postpanConf="combo_reg.3390-3582.conf"
+fi
 if [ $(($runnum)) -ge 3583 ]
 then
   postpanConf="combo_reg.3583-3802.conf"

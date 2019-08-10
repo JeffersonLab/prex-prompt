@@ -21,6 +21,10 @@ do
     run_seg=${run_dot_seg/./_}
 
     postpanConf="combo_reg.conf"
+    if [ $(($run_num)) -ge 3390 ]
+    then
+      postpanConf="combo_reg.3390-3582.conf"
+    fi
     if [ $(($run_num)) -ge 3583 ]
     then
       postpanConf="combo_reg.3583-3802.conf"
