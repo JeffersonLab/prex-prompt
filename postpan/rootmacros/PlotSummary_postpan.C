@@ -40,7 +40,7 @@ void PlotSummary_postpan(TString filename){
   Ssiz_t plength = plast-pfirst+1;
   run_seg = filename(pfirst,plength);
   run_seg = run_seg.ReplaceAll('.','_');
-  output_path = Form("./SummaryPlots/run%s/",run_seg.Data());
+  output_path = Form("./tmp/run%s/",run_seg.Data());
 
   
   // ===Check mulc_lrb before making plots

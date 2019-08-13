@@ -94,10 +94,12 @@ void CheckRegression_postpan(){
 		     output_path.Data(),
 		     output_path.Data(),
 		     run_seg.Data()));
+
   gSystem->Exec(Form("convert $(ls -rt %s/*regression*_at_*postpan.png) %s/run%s_summary_regression_at.pdf",
          output_path.Data(),
          output_path.Data(),
          run_seg.Data()));
+
   gSystem->Exec(Form("convert $(ls -rt %s/*regression*maindet*_postpan.png) %s/run%s_summary_regression_maindet.pdf",
 		     output_path.Data(),
 		     output_path.Data(),

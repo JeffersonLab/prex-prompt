@@ -55,7 +55,7 @@ void PlotSummary(TString filename){
   Ssiz_t plength = plast-pfirst+1;
   run_seg = filename(pfirst,plength);
   run_seg = run_seg.ReplaceAll('.','_');
-  output_path = Form("./SummaryPlots/run%s/",run_seg.Data());
+  output_path = Form("./tmp/run%s/",run_seg.Data());
 
   //  Make sure we have the trees before proceeding.
   TTree *evt_tree = (TTree*)gROOT->FindObject("evt");
@@ -79,12 +79,12 @@ void PlotSummary(TString filename){
   }
 
   //===== Error Counter from Evt Tree =====   
-  PlotErrorCounters();
 
   if (evt_tree->GetEntries("ErrorFlag==0")==0){
     std::cout << "WARNING:  The event tree has no good events in file "
 	      << filename << "!" << std::endl;
     // Make plots from BCM without ErrorFlag cuts
+    PlotErrorCounters();
     CheckBCM();
     gSystem->Exec(Form("convert $(ls -rt %s*bcm*.png) %srun%s_summary_bcm.pdf",
 		       output_path.Data(),
@@ -215,20 +215,20 @@ void PlotSummary(TString filename){
   // ===== Integrated Convergence 
   Integrated();
   //==== Injector BPMs Dx Dy Dr and Ellipticity ====
-  PlotInjBPMS();
-  PlotInjBPMSAq();
-  PlotInjBPMSDr();
-  PlotInjBPMSAelli();
-  TString pdf_filename = Form("run%s_injector_BPM.pdf",run_seg.Data());
-  gSystem->Exec(Form("convert $(ls -rt %srun%s*injector_BPM*.png) %s%s",
-		     output_path.Data(),
-		     run_seg.Data(),
-		     output_path.Data(),
-		     pdf_filename.Data()));
+  // PlotInjBPMS();
+  // PlotInjBPMSAq();
+  // PlotInjBPMSDr();
+  // PlotInjBPMSAelli();
+  // TString pdf_filename = Form("run%s_injector_BPM.pdf",run_seg.Data());
+  // gSystem->Exec(Form("convert $(ls -rt %srun%s*injector_BPM*.png) %s%s",
+  // 		     output_path.Data(),
+  // 		     run_seg.Data(),
+  // 		     output_path.Data(),
+  // 		     pdf_filename.Data()));
 
-  gSystem->Exec(Form("rm %srun%s*injector_BPM*.png",
-		     output_path.Data(),
-		     run_seg.Data())); 
+  // gSystem->Exec(Form("rm %srun%s*injector_BPM*.png",
+  // 		     output_path.Data(),
+  // 		     run_seg.Data())); 
 
   // gSystem->Exec(Form("pdfunite $(ls -rt %s/*_summary_*.pdf) %s/run%s_all.pdf",
   // 		     output_path.Data(),

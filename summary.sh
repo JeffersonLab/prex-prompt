@@ -18,23 +18,23 @@ do
 
     redfile='./results/prexPrompt_'${run_seg}'_regress_postpan.root';
     
-    if [ ! -d ./SummaryPlots/run$run_seg ]; then
-	mkdir ./SummaryPlots/run$run_seg;
+    if [ ! -d ./tmp/run$run_seg ]; then
+	mkdir ./tmp/run$run_seg;
     fi
     
     root -b -q -l './rootMacros/PlotSummary.C("'$rootfile'")';
     root -b -q -l './postpan/rootmacros/PlotSummary_postpan.C("'$redfile'")';
 
-    pdfunite $(ls -rt ./SummaryPlots/run$run_seg/*_summary_*.pdf) \
-	./SummaryPlots/run$run_seg/run${run_seg}_all.pdf
+    # pdfunite $(ls -rt ./tmp/run$run_seg/*_summary_*.pdf) \
+    # 	./tmp/run$run_seg/run${run_seg}_all.pdf
 
     if [ ! -d ./hallaweb_online/summary/run$run_seg ]; then
 	mkdir ./hallaweb_online/summary/run$run_seg;
     fi
     
-    cp  ./SummaryPlots/run$run_seg/* \
+    mv  ./tmp/run$run_seg/* \
 	./hallaweb_online/summary/run$run_seg/;
-
+    rm  -rf ./tmp/run$run_seg;
     # copying prompt summary
     cp ./japanOutput/summary_*$runnum*.txt \
 	./SummaryText/
