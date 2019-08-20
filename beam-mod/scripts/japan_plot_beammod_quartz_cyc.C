@@ -1,4 +1,4 @@
-#include <TMath.h>
+#include <TMa://prex.jlab.org/wiki/index.php/Performing_Dithering_Correctionsth.h>
 #include <TStyle.h>
 #include <TPaveStats.h>
 #include <TLine.h>
@@ -27,7 +27,7 @@ using namespace std;
 int japan_plot_beammod_quartz_cyc(int runNo=0) { 
   gStyle->SetOptStat(0); 
   char infile[300];
-  sprintf(infile,"$QW_ROOTFILES/prexPrompt_pass2_%d.000.root",runNo);
+  sprintf(infile,"$QW_ROOTFILES/prexPrompt_pass1_%d.000.root",runNo);
   TFile *file1=TFile::Open(infile);
   if(file1==NULL){
     cout << infile << "doesn't exist!!!" << endl;

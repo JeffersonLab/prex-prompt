@@ -27,7 +27,7 @@ using namespace std;
 int japan_plot_beammod_BPMS_cyc(int runNo=0) { 
   gStyle->SetOptStat(0); 
   char infile[300];
-  sprintf(infile,"$QW_ROOTFILES/prexPrompt_pass2_%d.000.root",runNo);
+  sprintf(infile,"$QW_ROOTFILES/prexPrompt_pass1_%d.000.root",runNo);
   TFile *file1= TFile::Open(infile);
   if(file1==NULL){
     cout << infile << "doesn't exist!!!" << endl;
@@ -90,7 +90,7 @@ int japan_plot_beammod_BPMS_cyc(int runNo=0) {
   const int nCoil =7;
   TString wire[nCoil]={"bmod_trim1","bmod_trim2","bmod_trim3","bmod_trim4","bmod_trim5","bmod_trim6","bmod_trim7"};
   TString bpmName; // A BUFF
-  TString bpm_array[] = {"bpm4aX","bpm4eX","bpm4aY","bpm4eY","bpm11X"};
+  TString bpm_array[] = {"bpm4aX","bpm4eX","bpm4aY","bpm4eY","bpm11X+0.4*bpm12X"};
   const int nBPM = 5;
 
   double sens[nBPM][nCoil];
