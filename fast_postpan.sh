@@ -16,9 +16,13 @@ if [ $(($runnum)) -ge 3583 ]
 then
   postpanConf="combo_reg.3583-3802.conf"
 fi
-if [ $(($runnum)) -ge 3803 ]
+if [ $(($run_num)) -ge 3803 ]
 then
-  postpanConf="combo_reg.3803-.conf"
+  postpanConf="combo_reg.3803-4294.conf"
+fi
+if [ $(($run_num)) -ge 4295 ]
+then
+  postpanConf="combo_reg.4295-.conf"
 fi
 
 ./postpan/redana \
