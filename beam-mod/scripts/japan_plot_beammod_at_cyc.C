@@ -24,7 +24,7 @@
 #include <TEntryList.h>
 using namespace std;
 
-int japan_plot_beammod_quartz_cyc(int runNo=0) { 
+int japan_plot_beammod_at_cyc(int runNo=0) { 
   gStyle->SetOptStat(0); 
   char infile[300];
   sprintf(infile,"$QW_ROOTFILES/prexPrompt_pass1_%d.000.root",runNo);
@@ -90,7 +90,7 @@ int japan_plot_beammod_quartz_cyc(int runNo=0) {
   const int nCoil =7;
   TString wire[nCoil]={"bmod_trim1","bmod_trim2","bmod_trim3","bmod_trim4","bmod_trim5","bmod_trim6","bmod_trim7"};
   TString detname; // A BUFF
-  TString det_array[] = {"usl","dsl","usr","dsr"};
+  TString det_array[] = {"atl1","atl2","atr1","atr2"};
   const int nDet = 4;
 
   double sens[nDet][nCoil];
@@ -110,9 +110,12 @@ int japan_plot_beammod_quartz_cyc(int runNo=0) {
       for(int icoil=0;icoil<nCoil;icoil++){
 	int ndata = tree_R->Draw(Form("%s:(%s*%lf)",
 				      detname.Data(),wire[icoil].Data(),chtov),
+				  //Form("(ErrorFlag & 0x7bfe6fff)==0 && bmod_ramp>0 && bmwobj==%d && abs(%s-%f)>20 && bmwcycnum==%f",
+				  //   icoil+1,wire[icoil].Data(),trim_base[icoil],supercyc[i]));
 				 Form("bcm_dg_ds>60 && bmod_ramp>0 && bmwobj==%d && abs(%s-%f)>20 && bmwcycnum==%f",
-				      icoil+1,wire[icoil].Data(),trim_base[icoil],supercyc[i]));
-	if(ndata<50){
+				       icoil+1,wire[icoil].Data(),trim_base[icoil],supercyc[i]));
+    
+      if(ndata<50){
 	  // cout << "-- CycleNumber: " << supercyc[i] <<  endl;
 	  // cout << "-- Coil ID: " << icoil+1 <<  endl;
 	  // cout << "-- NData: " << ndata << endl;;
@@ -178,7 +181,7 @@ int japan_plot_beammod_quartz_cyc(int runNo=0) {
       }
 
   ostringstream sstr0;
-  sstr0<<"./dit_11X12X_txt/Quartz_sensitivity_run"<<runNo<<".txt";
+  sstr0<<"./dit_11X12X_txt/AT_sensitivity_run"<<runNo<<".txt";
   ofstream outfile0(sstr0.str().c_str());
   sstr0.str("");
 
