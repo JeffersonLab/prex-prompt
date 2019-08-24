@@ -7,6 +7,8 @@ prompt_dir="/adaqfs/home/apar/PREX/prompt/";
 todo_list=$prompt_dir/prompt-tmp/rsync_todo.list;
 
 if [ -f $todo_list ]; then 
+    working_list=$prompt_dir/prompt-tmp/rsync_working.list;
+    mv $todo_list $working_list; 
     while IFS= read -r line; do
 	runnum=$line;
 	if [ ! -z "$runnum" ];then
@@ -26,8 +28,8 @@ if [ -f $todo_list ]; then
 	else
 	    echo "Run Number is empty ! " ;
 	fi
-    done < $todo_list;
-    rm -f $todo_list;
+    done < $working_list;
+    rm -f $working_list;
 fi
 
 
