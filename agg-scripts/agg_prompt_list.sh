@@ -1,4 +1,5 @@
 #! /bin/sh
+./delete_list.sh $1
 while IFS= read -r line; do
     runnum=$line;
     timenow=$(date +"%Y-%m%d-%H%M");
