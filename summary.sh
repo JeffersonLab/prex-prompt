@@ -9,7 +9,6 @@ shopt -s extglob
 rootfile_list=$(ls -1 ${scriptDir}/japanOutput/prex$level\_pass1_$runnum.!(*jlab.org*).root);
 shopt -u extglob
 
-alias convert /u/group/halla/parity/software/japan_offline/prompt/prex-prompt/convert
 which convert
 
 for rootfile  in $rootfile_list
