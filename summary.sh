@@ -27,9 +27,6 @@ do
     root -b -q -l './rootMacros/PlotSummary.C("'$rootfile'")';
     root -b -q -l './postpan/rootmacros/PlotSummary_postpan.C("'$redfile'")';
 
-    pdfunite $(ls -rt ./tmp/run$run_seg/*_summary_*.pdf) \
-     	./tmp/run$run_seg/run${run_seg}_all.pdf
-
     if [ ! -d ./hallaweb_online/summary/run$run_seg ]; then
 	mkdir ./hallaweb_online/summary/run$run_seg;
     fi

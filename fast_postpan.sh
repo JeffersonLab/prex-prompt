@@ -26,5 +26,5 @@ then
 fi
 
 ./postpan/redana \
-	-f ./japanOutput/quick_${runnum}.000.root \
-  -c ./postpan/conf/$postpanConf ; 
+    -f ./japanOutput/quick_${runnum}.000.root \
+    -c ./postpan/conf/$postpanConf ; 
