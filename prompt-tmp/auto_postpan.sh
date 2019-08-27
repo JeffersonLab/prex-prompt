@@ -1,0 +1,51 @@
+#! /bin/sh
+runnum=$1;
+
+if [ -z "$runnum" ] 
+then
+    echo "Run Number is empty";
+    exit 1;
+fi    
+
+level="Prompt"
+shopt -s extglob
+# find split file
+rootfile_list=$(ls -1 ./tmp/prex$level\_pass1_$runnum.!(*jlab.org*).root);
+shopt -u extglob
+
+for rootfile  in $rootfile_list
+do
+    trim=${rootfile%.root}
+    run_dot_seg=${trim#*pass1_}
+    run_num=${run_dot_seg%.*}
+    run_seg=${run_dot_seg/./_}
+
+    postpanConf="combo_reg.conf"
+    if [ $(($run_num)) -ge 3390 ]
+    then
+      postpanConf="combo_reg.3390-3582.conf"
+    fi
+    if [ $(($run_num)) -ge 3583 ]
+    then
+      postpanConf="combo_reg.3583-3802.conf"
+    fi
+    if [ $(($run_num)) -ge 3803 ]
+    then
+      postpanConf="combo_reg.3803-.conf"
+    fi
+
+    ./postpan/redana \
+    	-f $rootfile \
+    	-c ./postpan/conf/$postpanConf ; 
+    #	-c ./postpan/conf/combo_reg.conf ;
+    # From run 3583- use the 3583-.conf file, manually runranged
+
+    # if [ ! -d ./hallaweb_online/summary/run$run_seg ]; then
+    # 	mkdir ./hallaweb_online/summary/run$run_seg;
+    # fi
+
+    # cp  ./results/prexPrompt_$run_seg\_postpan_summary.txt \
+    # 	./hallaweb_online/summary/run$run_seg/;
+
+done
+
