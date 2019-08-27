@@ -41,4 +41,4 @@ echo "Doing events $startEvts to $endEvts"
 
 ./fast_summary.sh $runnum;
 
-evince FastPlots/run${runnum}_000/run${runnum}_000_all.pdf
+evince FastPlots/run${runnum}_000/run${runnum}_000_all.pdf &

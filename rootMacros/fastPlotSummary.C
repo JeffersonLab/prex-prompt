@@ -76,7 +76,6 @@ void fastPlotSummary(TString filename){
   }*/
 
   //===== Error Counter from Evt Tree =====   
-  PlotErrorCounters();
 
   /*if (evt_tree->GetEntries("ErrorFlag==0")==0){
     std::cout << "WARNING:  The event tree has no good events in file "

@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/bash
 
 # This script simplifies the producion of plots for a given slug. It runs the scripts to create plots, and copies them to the online directory.
 # It takes two arguments to run.
@@ -22,13 +22,13 @@ lastrun=0
 input="$slugfile"
 while IFS= read -r line
 do
-  if [ $(echo "$line < $firstrun" | bc) == 1  ]
+  if [ $(echo "$line < $firstrun" | bc) -eq 1  ]
     then
         firstrun=$line
         #echo "firstrun $line"
     fi
     
-    if [ $(echo "$line > $lastrun" | bc) == 1  ]
+    if [ $(echo "$line > $lastrun" | bc) -eq 1  ]
     then
         lastrun=$line
         #echo "lastrun $line"
@@ -92,6 +92,11 @@ fi
 
 #make aggregator plots!
 cd /chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan
+
+#~/PREX/prompt/agg-scripts/agg_prompt_list.sh ~/PREX/prompt/agg-scripts/run_list/slug${slug}.list
+#sleep 900
+~/PREX/prompt/Aggregator/drawPostpan/accumulate_mini_aggFiles_list.sh slug$slug
+
 #root -l -b -q copytree_auto.C'('$slug')'
 rm -f /chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile_$slug/grand_aggregator.root
 export CAM_OUTPUTDIR=/chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile_$slug/
