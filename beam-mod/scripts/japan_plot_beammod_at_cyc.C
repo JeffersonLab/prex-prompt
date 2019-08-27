@@ -67,15 +67,15 @@ int japan_plot_beammod_at_cyc(int runNo=0) {
     supercyc_err[i]=0;
     cout<<"supercycslope="<<supercycslope[i]<<endl;
   }
-
-  Double_t trim_base[7] = {1683,1582,1708,1670,1662,1709,1686};
+  Double_t trim_base[7] = {833,782,845,827,822,844,832};
+  //Double_t trim_base[7] = {1683,1582,1708,1670,1662,1709,1686};
   const double trimmin=0.38;
   const double trimmax=0.7;
   const double bpmmax=3;
   const double bpmmin=1;
   const double chtov=1.0e-3;//7.62939453125000000e-05; //10V*(1/pow(2,17))
   const double factor=1.0e+6;
-  
+  const int cutflag=1;
   TF1 *fun = new TF1("fun","[0]+[1]*x",-1e6,1e6);
   Double_t init_par[2] = {0,0};
   fun->SetParameters(init_par);
@@ -86,7 +86,12 @@ int japan_plot_beammod_at_cyc(int runNo=0) {
   int ibin=0;
   double xbincon=0.0;
   int coilnum=0;
-  
+    ostringstream sstr0;
+  sstr0<<"./dit_11X12X_txt/AT_sensitivity_run"<<runNo<<".txt";
+  ofstream outfile0(sstr0.str().c_str());
+  sstr0.str("");
+
+  double tab_width = 20;
   const int nCoil =7;
   TString wire[nCoil]={"bmod_trim1","bmod_trim2","bmod_trim3","bmod_trim4","bmod_trim5","bmod_trim6","bmod_trim7"};
   TString detname; // A BUFF
@@ -112,7 +117,7 @@ int japan_plot_beammod_at_cyc(int runNo=0) {
 				      detname.Data(),wire[icoil].Data(),chtov),
 				  //Form("(ErrorFlag & 0x7bfe6fff)==0 && bmod_ramp>0 && bmwobj==%d && abs(%s-%f)>20 && bmwcycnum==%f",
 				  //   icoil+1,wire[icoil].Data(),trim_base[icoil],supercyc[i]));
-				 Form("bcm_dg_ds>60 && bmod_ramp>0 && bmwobj==%d && abs(%s-%f)>20 && bmwcycnum==%f",
+				 Form("(ErrorFlag&0x5b7e6bff)== 0 && bmod_ramp>0 && bmwobj==%d && abs(%s-%f)>20 && bmwcycnum==%f",
 				       icoil+1,wire[icoil].Data(),trim_base[icoil],supercyc[i]));
     
       if(ndata<50){
@@ -131,7 +136,7 @@ int japan_plot_beammod_at_cyc(int runNo=0) {
 	ndata = tree_R->Draw(Form("(%lf/%lf)*%s:(%s*%lf)",
 				  factor,this_mean, detname.Data(),
 				  wire[icoil].Data(),chtov),
-			     Form("bcm_dg_ds>60 && bmod_ramp>0 && bmwobj==%d && abs(%s-%f)>20 && bmwcycnum==%f",
+			     Form("(ErrorFlag&0x5b7e6bff)== 0 && bmod_ramp>0 && bmwobj==%d && abs(%s-%f)>20 && bmwcycnum==%f",
 				  icoil+1,wire[icoil].Data(),trim_base[icoil],supercyc[i]));
 
 	double this_slope,this_error;
@@ -152,24 +157,12 @@ int japan_plot_beammod_at_cyc(int runNo=0) {
 	  
 	  fNdata[idet][icoil]+=ndata;
 
-	  if(sens_err[idet][icoil]==-1){
 	    sens[idet][icoil]=this_slope;
 	    sens_err[idet][icoil]=this_error;
-	  }
-	  else{
-	    double last_error = sens_err[idet][icoil];
-	    double last_slope = sens[idet][icoil];
-	    double weight = 1.0/pow(last_error,2)+1.0/pow(this_error,2);
-	    sens[idet][icoil]=(1.0/weight)*(last_slope*1.0/pow(last_error,2)+
-					    this_slope*1.0/pow(this_error,2));
-	    sens_err[idet][icoil]=last_error*this_error/sqrt(pow(last_error,2)
-							     +pow(this_error,2));
-	  }
 	}
 
       } // end of coil loop
     } // end of Det loop
-  } // end of Cycle loop
 
   for(int idet=0;idet<nDet;idet++)
     for(int icoil=0;icoil<nCoil;icoil++)
@@ -180,26 +173,22 @@ int japan_plot_beammod_at_cyc(int runNo=0) {
 	return 1;
       }
 
-  ostringstream sstr0;
-  sstr0<<"./dit_11X12X_txt/AT_sensitivity_run"<<runNo<<".txt";
-  ofstream outfile0(sstr0.str().c_str());
-  sstr0.str("");
 
-  double tab_width = 20;
 
   for(int idet=0;idet<nDet;idet++){
-    outfile0<< setw(3) << setiosflags(ios::left) <<  1 // Now , just one output 
-	    << setw(tab_width) << setiosflags(ios::left) <<  det_array[idet];
+   outfile0<< setw(tab_width) << setiosflags(ios::left) << runNo<<setw(tab_width) << setiosflags(ios::left)<<supercyc[i]<<setw(tab_width) << setiosflags(ios::left) <<cutflag	    
+     << setw(tab_width) << setiosflags(ios::left) <<  det_array[idet];
     for(int icoil=0;icoil<nCoil;icoil++){
-      outfile0<< setw(tab_width) << setiosflags(ios::left) 
+      outfile0<<setw(tab_width) << setiosflags(ios::left)
 	      << setprecision(5) << sens[idet][icoil]
 	      << setw(tab_width) << setiosflags(ios::left)
 	      <<  setprecision(3) <<sens_err[idet][icoil]
 	      << setw(tab_width) << setiosflags(ios::left) 
 	      <<  setprecision(4)<< fNdata[idet][icoil];
-    } // end of coil loop
+     } // end of coil loop
     outfile0 << endl;
-  } // end of detector loop
+    } // end of detector loop
+   } // end of Cycle loop
   return 0;
 }
   

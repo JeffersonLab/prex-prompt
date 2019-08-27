@@ -22,13 +22,13 @@
 #include <vector>
 #include <string.h>
 #include <TEntryList.h>
-using namespace std;
+using namespace std; 
 
-int japan_plot_beammod_quartz_cyc(int runNo=0) { 
+int japan_plot_beammod_BPMS_cyc_prompt(int runNo=0) { 
   gStyle->SetOptStat(0); 
   char infile[300];
   sprintf(infile,"$QW_ROOTFILES/prexPrompt_pass1_%d.000.root",runNo);
-  TFile *file1=TFile::Open(infile);
+  TFile *file1= TFile::Open(infile);
   if(file1==NULL){
     cout << infile << "doesn't exist!!!" << endl;
     return 1;
@@ -68,18 +68,25 @@ int japan_plot_beammod_quartz_cyc(int runNo=0) {
     cout<<"supercycslope="<<supercycslope[i]<<endl;
   }
 
-  Double_t trim_base[7] = {1683,1582,1708,1670,1662,1709,1686};
+  //Double_t trim_base[7] = {1683,1582,1708,1670,1662,1709,1686};
+  Double_t trim_base[7] = {833,782,845,827,822,844,832};
   const double trimmin=0.38;
   const double trimmax=0.7;
   const double bpmmax=3;
   const double bpmmin=1;
   const double chtov=1.0e-3;//7.62939453125000000e-05; //10V*(1/pow(2,17))
-  const double factor=1.0e+6;
-  
+  const double factor=1.0e+3;
+  const int cutflag=1;
   TF1 *fun = new TF1("fun","[0]+[1]*x",-1e6,1e6);
   Double_t init_par[2] = {0,0};
   fun->SetParameters(init_par);
 
+  ostringstream sstr0;
+  sstr0<<"./dit_11X12X_txt/BPMs_sensitivity_run"<<runNo<<".txt";
+  ofstream outfile0(sstr0.str().c_str());
+  sstr0.str("");
+
+  double tab_width = 20;
   int xnbins=0.0;
   int ynbins=0;
   double ibincon=0;
@@ -89,28 +96,28 @@ int japan_plot_beammod_quartz_cyc(int runNo=0) {
   
   const int nCoil =7;
   TString wire[nCoil]={"bmod_trim1","bmod_trim2","bmod_trim3","bmod_trim4","bmod_trim5","bmod_trim6","bmod_trim7"};
-  TString detname; // A BUFF
-  TString det_array[] = {"usl","dsl","usr","dsr"};
-  const int nDet = 4;
+  TString bpmName; // A BUFF
+  TString bpm_array[] = {"bpm4aX","bpm4eX","bpm4aY","bpm4eY","bpm11X+0.4*bpm12X"};
+  const int nBPM = 5;
 
-  double sens[nDet][nCoil];
-  double sens_err[nDet][nCoil];
-  double fNdata[nDet][nCoil]; // [idet][icoil]
-  for(int idet=0;idet<nDet;idet++){
+  double sens[nBPM][nCoil];
+  double sens_err[nBPM][nCoil];
+  double fNdata[nBPM][nCoil]; // [ibpm][icoil]
+  for(int ibpm=0;ibpm<nBPM;ibpm++){
     for(int icoil=0;icoil<nCoil;icoil++){
-      sens[idet][icoil] = 0.0;
-      sens_err[idet][icoil] = -1.0;
-      fNdata[idet][icoil]=0.0;
+      sens[ibpm][icoil] = 0.0;
+      sens_err[ibpm][icoil] = -1.0;
+      fNdata[ibpm][icoil]=0.0;
     }
   }
 
   for(int i=0;i<n;i++){
-    for(int idet=0;idet<nDet;idet++){
-      detname= det_array[idet];
+    for(int ibpm=0;ibpm<nBPM;ibpm++){
+      bpmName= bpm_array[ibpm];
       for(int icoil=0;icoil<nCoil;icoil++){
-	int ndata = tree_R->Draw(Form("%s:(%s*%lf)",
-				      detname.Data(),wire[icoil].Data(),chtov),
-				 Form("bcm_dg_ds>60 && bmod_ramp>0 && bmwobj==%d && abs(%s-%f)>20 && bmwcycnum==%f",
+	int ndata = tree_R->Draw(Form("%lf*%s:(%s*%lf)",
+				      factor,bpmName.Data(),wire[icoil].Data(),chtov),
+				 Form("(ErrorFlag&0x5b7e6bff)== 0 && bmod_ramp>0 && bmwobj==%d && abs(%s-%f)>20 && bmwcycnum==%f",
 				      icoil+1,wire[icoil].Data(),trim_base[icoil],supercyc[i]));
 	if(ndata<50){
 	  // cout << "-- CycleNumber: " << supercyc[i] <<  endl;
@@ -120,83 +127,50 @@ int japan_plot_beammod_quartz_cyc(int runNo=0) {
 	}
 	TGraph *g1 = new TGraph(ndata, tree_R->GetV2(),tree_R->GetV1());
 	g1->GetXaxis()->SetTitle(wire[icoil]);
-	g1->GetYaxis()->SetTitle(detname);
+	g1->GetYaxis()->SetTitle(bpmName);
 	g1->GetXaxis()->SetTitleSize(0.05);
 	g1->GetYaxis()->SetTitleSize(0.05);
-	double this_mean= g1->GetMean(2);
-
-	ndata = tree_R->Draw(Form("(%lf/%lf)*%s:(%s*%lf)",
-				  factor,this_mean, detname.Data(),
-				  wire[icoil].Data(),chtov),
-			     Form("bcm_dg_ds>60 && bmod_ramp>0 && bmwobj==%d && abs(%s-%f)>20 && bmwcycnum==%f",
-				  icoil+1,wire[icoil].Data(),trim_base[icoil],supercyc[i]));
 
 	double this_slope,this_error;
 	if(ndata>50){
-	  TGraph* g2 = new TGraph(ndata, tree_R->GetV2(),tree_R->GetV1());
+	  TGraph* g1 = new TGraph(ndata, tree_R->GetV2(),tree_R->GetV1());
 	  fun->SetParameters(init_par);
-	  g2->Fit("fun","Q0");
+	  g1->Fit("fun","Q0");
 	  this_slope = fun->GetParameter(1);
 	  this_error = fun->GetParError(1);
-	  // cout << "Det " << idet 
-	  //      << " vs Coil " << icoil+1<< " : "
-	  //      << this_slope << "+/-" << this_error << endl;
-
-	  g2->GetXaxis()->SetTitle(wire[icoil]);
-	  g2->GetYaxis()->SetTitle(detname);
-	  g2->GetXaxis()->SetTitleSize(0.05);
-	  g2->GetYaxis()->SetTitleSize(0.05);
 	  
-	  fNdata[idet][icoil]+=ndata;
-
-	  if(sens_err[idet][icoil]==-1){
-	    sens[idet][icoil]=this_slope;
-	    sens_err[idet][icoil]=this_error;
-	  }
-	  else{
-	    double last_error = sens_err[idet][icoil];
-	    double last_slope = sens[idet][icoil];
-	    double weight = 1.0/pow(last_error,2)+1.0/pow(this_error,2);
-	    sens[idet][icoil]=(1.0/weight)*(last_slope*1.0/pow(last_error,2)+
-					    this_slope*1.0/pow(this_error,2));
-	    sens_err[idet][icoil]=last_error*this_error/sqrt(pow(last_error,2)
-							     +pow(this_error,2));
-	  }
+	    fNdata[ibpm][icoil]+=ndata;
+	    sens[ibpm][icoil]=this_slope;
+	    sens_err[ibpm][icoil]=this_error;
+	
 	}
 
       } // end of coil loop
     } // end of Det loop
-  } // end of Cycle loop
 
-  for(int idet=0;idet<nDet;idet++)
+  for(int ibpm=0;ibpm<nBPM;ibpm++)
     for(int icoil=0;icoil<nCoil;icoil++)
-      if(sens_err[idet][icoil]==-1){
+      if(sens_err[ibpm][icoil]==-1){
 	cout << "-- Incomplete dithering coil " << icoil 
 	     << " is found. No sensitivity output for this run "
 	     << endl;
 	return 1;
       }
-
-  ostringstream sstr0;
-  sstr0<<"./dit_11X12X_txt/Quartz_sensitivity_run"<<runNo<<".txt";
-  ofstream outfile0(sstr0.str().c_str());
-  sstr0.str("");
-
-  double tab_width = 20;
-
-  for(int idet=0;idet<nDet;idet++){
-    outfile0<< setw(3) << setiosflags(ios::left) <<  1 // Now , just one output 
-	    << setw(tab_width) << setiosflags(ios::left) <<  det_array[idet];
+  
+  for(int ibpm=0;ibpm<nBPM;ibpm++){
+    outfile0<< setw(tab_width) << setiosflags(ios::left) << runNo<<setw(tab_width) << setiosflags(ios::left)<<supercyc[i]<<setw(tab_width) << setiosflags(ios::left) <<cutflag 
+	    << setw(tab_width) << setiosflags(ios::left) <<  bpm_array[ibpm];
     for(int icoil=0;icoil<nCoil;icoil++){
       outfile0<< setw(tab_width) << setiosflags(ios::left) 
-	      << setprecision(5) << sens[idet][icoil]
+	      << setprecision(5) << sens[ibpm][icoil]
 	      << setw(tab_width) << setiosflags(ios::left)
-	      <<  setprecision(3) <<sens_err[idet][icoil]
+	      <<  setprecision(3) <<sens_err[ibpm][icoil]
 	      << setw(tab_width) << setiosflags(ios::left) 
-	      <<  setprecision(4)<< fNdata[idet][icoil];
+	      <<  setprecision(4)<< fNdata[ibpm][icoil];
     } // end of coil loop
     outfile0 << endl;
   } // end of detector loop
+ } //end of cyc loop
   return 0;
-}
   
+}

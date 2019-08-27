@@ -59,8 +59,8 @@ void CorrectTree(Int_t run_number=0, Int_t seg_number=0 ){
     return; 
   }*/
   // Want to loop over the cycle numbers and do correction of a run using these slopes
-  // This entails collecting the cycnum based slope parameters and then applying them to any event that comes before/after that cycle number
-  //    Start with the first cycle number of the run and change to the following cycle number once the cycnumber in Japan file increases to the next in the vector of cycle numbers
+  // This entails collecting the cyclenum based slope parameters and then applying them to any event that comes before/after that cycle number
+  //    Start with the first cycle number of the run and change to the following cycle number once the cyclenumber in Japan file increases to the next in the vector of cycle numbers
   //    For now, if no available slopes just error out and leave, later try to get the one before and one after that cycle number and use the average (if available in slope root file)
 
 
@@ -72,7 +72,7 @@ void CorrectTree(Int_t run_number=0, Int_t seg_number=0 ){
     return;
   }
 
-  TFile* ditherOutput = TFile::Open(Form("./rootfiles/dit_slopes_slug%d.root",
+  TFile* ditherOutput = TFile::Open(Form("./rootfiles/dit_alldet_slopes_slug%d.root",
   					 slug_id));
   TTree *slope_tree = (TTree*)ditherOutput->Get("dit");
 
@@ -94,7 +94,7 @@ void CorrectTree(Int_t run_number=0, Int_t seg_number=0 ){
 
   //Build variable names
   //dit tree variable names go like "dv_iv", for example: "usr_4eX"
-  TString maindet_array[4]={"usl","usr","dsl","dsr","atl1","atl2","atr1","atr2"};
+  TString maindet_array[8]={"usl","usr","dsl","dsr","atl1","atl2","atr1","atr2"};
   TString bpm_array[6]={"4aX","4aY","4eX","4eY","11X12X","11X12X"};
   const Int_t ndet = sizeof(maindet_array)/sizeof(*maindet_array);
   const Int_t nmon= sizeof(bpm_array)/sizeof(*bpm_array);
@@ -110,7 +110,7 @@ void CorrectTree(Int_t run_number=0, Int_t seg_number=0 ){
   // slope unit: fraction / mm
   // ** which is  1e-3(ppm/um)
 
-  Int_t nCyc = slope_tree->Draw(">>elist1","cycnum>0");//,run_cut);
+  Int_t nCyc = slope_tree->Draw(">>elist1","cyclenum>0");//,run_cut);
   TEventList *elist = (TEventList*)gDirectory->Get("elist1");
   TString varname;
 
