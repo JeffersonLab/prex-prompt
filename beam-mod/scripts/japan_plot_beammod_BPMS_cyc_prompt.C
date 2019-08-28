@@ -56,6 +56,7 @@ int japan_plot_beammod_BPMS_cyc_prompt(int runNo=0) {
 
   const int n=cycles.size();//number of cycle
   Double_t supercyc[n];
+  Int_t Is_fill[n];
   for(int i=0;i<n;i++){
     supercyc[i]=cycles[i]; 
     cout<<"i="<<i<<"  "<<"supercyc="<<supercyc[i]<<endl;
@@ -148,19 +149,26 @@ int japan_plot_beammod_BPMS_cyc_prompt(int runNo=0) {
       } // end of coil loop
     } // end of Det loop
 
-  for(int ibpm=0;ibpm<nBPM;ibpm++)
-    for(int icoil=0;icoil<nCoil;icoil++)
+  for(int ibpm=0;ibpm<nBPM;ibpm++){
+    for(int icoil=0;icoil<nCoil;icoil++){
+       cout<<"cyc="<<supercyc[i]<<"coil="<<icoil<<"bpm="<<ibpm<<"sensi="<<sens[ibpm][icoil]<<"err="<<sens_err[ibpm][icoil]<<endl;
       if(sens_err[ibpm][icoil]==-1){
 	cout << "-- Incomplete dithering coil " << icoil 
 	     << " is found. No sensitivity output for this run "
 	     << endl;
-	return 1;
+	//return 1;
+        Is_fill[i]=0;
+      }else{
+       Is_fill[i]=1;
       }
-  
+     }
+    }
+  if(Is_fill[i]==1){
   for(int ibpm=0;ibpm<nBPM;ibpm++){
     outfile0<< setw(tab_width) << setiosflags(ios::left) << runNo<<setw(tab_width) << setiosflags(ios::left)<<supercyc[i]<<setw(tab_width) << setiosflags(ios::left) <<cutflag 
 	    << setw(tab_width) << setiosflags(ios::left) <<  bpm_array[ibpm];
     for(int icoil=0;icoil<nCoil;icoil++){
+      cout<<"cyc="<<supercyc[i]<<"coil="<<icoil<<"bpm="<<ibpm<<"sensi="<<sens[ibpm][icoil]<<endl;
       outfile0<< setw(tab_width) << setiosflags(ios::left) 
 	      << setprecision(5) << sens[ibpm][icoil]
 	      << setw(tab_width) << setiosflags(ios::left)
@@ -171,6 +179,7 @@ int japan_plot_beammod_BPMS_cyc_prompt(int runNo=0) {
     outfile0 << endl;
   } // end of detector loop
  } //end of cyc loop
+}
   return 0;
   
 }
