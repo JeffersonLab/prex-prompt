@@ -16,9 +16,21 @@ gedit instructions.txt&
 
 while IFS= read -r line; do
   run=$line;
-  gedit Quartz_sensitivity_run${run}.txt
-  gedit BPMs_sensitivity_run${run}.txt
-  gedit AT_sensitivity_run${run}.txt
+  if [ -f Quartz_sensitivity_run${run}.txt ]; then
+    gedit Quartz_sensitivity_run${run}.txt
+  else
+    echo "No Quartz sensitivity for run ${run}"
+  fi
+  if [ -f BPMs_sensitivity_run${run}.txt ]; then
+    gedit BPMs_sensitivity_run${run}.txt
+  else
+    echo "No BPMs sensitivity for run ${run}"
+  fi
+  if [ -f AT_sensitivity_run${run}.txt ]; then
+    gedit AT_sensitivity_run${run}.txt
+  else
+    echo "No AT sensitivity for run ${run}"
+  fi
 done < ~/PREX/prompt/collector/run_list/slug${1}.list
 echo -n "Done updating cycle flags? Enter any string when done: "
 read doneReading
@@ -36,9 +48,21 @@ if [ $sufficient = "n" ]; then
   cd ~/PREX/prompt/beam-mod/scripts/dit_11X12X_txt
   while IFS= read -r line; do
     run=$line;
-    gedit Quartz_sensitivity_run${run}.txt
-    gedit BPMs_sensitivity_run${run}.txt
-    gedit AT_sensitivity_run${run}.txt
+    if [ -f Quartz_sensitivity_run${run}.txt ]; then
+      gedit Quartz_sensitivity_run${run}.txt
+    else
+      echo "No Quartz sensitivity for run ${run}"
+    fi
+    if [ -f BPMs_sensitivity_run${run}.txt ]; then
+      gedit BPMs_sensitivity_run${run}.txt
+    else
+      echo "No BPMs sensitivity for run ${run}"
+    fi
+    if [ -f AT_sensitivity_run${run}.txt ]; then
+      gedit AT_sensitivity_run${run}.txt
+    else
+      echo "No AT sensitivity for run ${run}"
+    fi
   done < ~/PREX/prompt/collector/run_list/slug${1}.list
 
   cd ~/PREX/prompt/beam-mod/scripts
@@ -55,12 +79,12 @@ root -l -b -q 'sensitivity_plot_BPMs_uptodate.C('${1}')'
 evince plots/sensitivity_plots_slug${1}.pdf &
 echo "Done, copying new slope file to BMODextractor and making corrected tree"
 
-cp ~/PREX/prompt/beam-mod/rootfiles_alldet_pass2/dit_alldet_slopes_slug${68}.root ~/PREX/prompt/BMODextractor/
+cp ~/PREX/prompt/beam-mod/rootfiles_alldet_pass2/dit_alldet_slopes_slug${1}.root ~/PREX/prompt/BMODextractor/
 
 ~/PREX/prompt/beam-mod/correctTree_runlist.sh ~/PREX/prompt/collector/run_list/slug${1}.list
 
 while IFS= read -r line; do
     runnum=$line;
     timenow=$(date +"%Y-%m%d-%H%M");
-    ~/PREX/prompt/agg-scripts/aggregator_dithering.sh $runnum
+    ~/PREX/prompt/agg-scripts/aggregator_dithering.sh $runnum &
 done < ~/PREX/prompt/collector/run_list/slug${1}.list

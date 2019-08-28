@@ -107,7 +107,7 @@ cp -f plots/dithering/summary_minirun_slug_linear${slug}.txt ~/PREX/prompt/halla
 
 rm -f grand_slug_plot_list.txt
 for i in $(seq $startingpoint $slug); do echo $i>>grand_slug_plot_list.txt; done
-./slug_file_accumulate_list.sh grand_slug_plot_list.txt
+./dithering_slug_file_accumulate_list.sh grand_slug_plot_list.txt
 
 #make grand agg plots!
 root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering/grandRootfile/grand_'$startingpoint'-'${slug}'.root","~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug'$slug'/grand_'$startingpoint'-'$slug'")'

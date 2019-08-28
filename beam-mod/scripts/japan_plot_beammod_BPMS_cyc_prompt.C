@@ -115,7 +115,7 @@ int japan_plot_beammod_BPMS_cyc_prompt(int runNo=0) {
     for(int ibpm=0;ibpm<nBPM;ibpm++){
       bpmName= bpm_array[ibpm];
       for(int icoil=0;icoil<nCoil;icoil++){
-	int ndata = tree_R->Draw(Form("%lf*%s:(%s*%lf)",
+	int ndata = tree_R->Draw(Form("%lf*(%s):(%s*%lf)",
 				      factor,bpmName.Data(),wire[icoil].Data(),chtov),
 				 Form("(ErrorFlag&0x5b7e6bff)== 0 && bmod_ramp>0 && bmwobj==%d && abs(%s-%f)>20 && bmwcycnum==%f",
 				      icoil+1,wire[icoil].Data(),trim_base[icoil],supercyc[i]));
