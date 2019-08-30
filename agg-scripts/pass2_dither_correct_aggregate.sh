@@ -2,10 +2,10 @@
 mkdir ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${1}
 
 cd ~/PREX/prompt/beam-mod/scripts/
-./dit_runlist_alldet.sh ~/PREX/prompt/collector/run_list/slug${1}.list
-cd ~/PREX/prompt/beam-mod/rootfiles_alldet_pass1
-root -l -b -q 'dithering_plot_cyc.C('${1}')'
-evince plots/cyclenum_slug${1}.pdf &
+#./dit_runlist_alldet.sh ~/PREX/prompt/collector/run_list/slug${1}.list
+#cd ~/PREX/prompt/beam-mod/rootfiles_alldet_pass1
+#root -l -b -q 'dithering_plot_cyc.C('${1}')'
+#evince plots/cyclenum_slug${1}.pdf &
 
 #cat ~/PREX/prompt/collector/run_list/slug${1}.list
 #cd ~/PREX/prompt/beam-mod/scripts/dit_11X12X_txt

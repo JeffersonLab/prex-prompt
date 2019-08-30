@@ -97,6 +97,13 @@ cd /chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan
 #sleep 900
 ~/PREX/prompt/Aggregator/drawPostpan/dithering_accumulate_mini_aggFiles_list.sh slug$slug
 
+mkdir ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}
+
+cp ~/PREX/prompt/beam-mod/rootfiles_alldet_pass1/plots/cyclenum_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/cycle_slopes_pass1_slug${slug}.pdf
+cp ~/PREX/prompt/beam-mod/rootfiles_alldet_pass2/plots/cyclenum_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/cycle_slopes_pass2_slug${slug}.pdf
+#cp ~/PREX/prompt/beam-mod/scripts/dit_11X12X_txt/*sensitivity_slug${slug}.txt ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/
+cp ~/PREX/prompt/beam-mod/scripts/dit_11X12X_txt/plots/sensitivity_plots_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/
+
 #root -l -b -q copytree_auto.C'('$slug')'
 rm -f /chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering/grandRootfile_$slug/grand_aggregator.root
 export CAM_OUTPUTDIR=/chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering/grandRootfile_$slug/

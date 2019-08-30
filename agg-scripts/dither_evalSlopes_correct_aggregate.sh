@@ -1,8 +1,8 @@
 #!/bin/bash
 mkdir ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${1}
 
-cd ~/PREX/prompt/beam-mod/scripts/
-./dit_runlist_alldet.sh ~/PREX/prompt/collector/run_list/slug${1}.list
+#cd ~/PREX/prompt/beam-mod/scripts/
+#./dit_runlist_alldet.sh ~/PREX/prompt/collector/run_list/slug${1}.list
 cd ~/PREX/prompt/beam-mod/rootfiles_alldet_pass1
 root -l -b -q 'dithering_plot_cyc.C('${1}')'
 evince plots/cyclenum_slug${1}.pdf &
@@ -64,7 +64,6 @@ if [ $sufficient = "n" ]; then
       echo "No AT sensitivity for run ${run}"
     fi
   done < ~/PREX/prompt/collector/run_list/slug${1}.list
-
   echo -n "Was this sufficient to remove all outliers for this slug? y/n: "
   read sufficient
 
