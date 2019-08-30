@@ -267,7 +267,7 @@ void dithering_plot_cycles_pass2(int slugNo=0){
     lX[4]->DrawLatex(2702,80,"#splitline{run 4372-}{D-208Pb5-D}");
   }  
   //cus->SaveAs(Form("usl_cyclenum_slug%d_pass2.pdf",slugNo));
-  cus->SaveAs(Form("plots/cyclenum_slug%d_pass2.pdf[",slugNo));
+  cus->SaveAs(Form("plots/cyclenum_slug%d_pass2.pdf(",slugNo));
   TCanvas *cds = new TCanvas("cds","cds",1000,1000);
   cds->Divide(2,3);
   for(int i=0;i<5;i++){
@@ -347,7 +347,7 @@ void dithering_plot_cycles_pass2(int slugNo=0){
     lX[4]->DrawLatex(2702,80,"#splitline{run 4372-}{D-208Pb5-D}");
   }  
 
-  c3->SaveAs(Form("plots/cyclenum_slug%d_pass2.pdf]",slugNo));
+  c3->SaveAs(Form("plots/cyclenum_slug%d_pass2.pdf)",slugNo));
   /* TCanvas *c4 = new TCanvas("c4","c4",1000,1000);
      c4->Divide(2,3);
      for(int i=0;i<5;i++){
