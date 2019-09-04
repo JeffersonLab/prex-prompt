@@ -40,7 +40,7 @@
 
 #include "CheckNormalizedComboSAM.C"
 #include "CheckComboSAM.C"
-
+#include "CheckSuperCycle.C"
 #include "PlotErrorCounters.C"
 #include "Integrated.C"
 #include "PlotPairTree.C"
@@ -214,6 +214,8 @@ void PlotSummary(TString filename){
 
   // ===== Integrated Convergence 
   Integrated();
+  CheckSuperCycle();
+  
   //==== Injector BPMs Dx Dy Dr and Ellipticity ====
   // PlotInjBPMS();
   // PlotInjBPMSAq();
