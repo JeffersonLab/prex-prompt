@@ -7,7 +7,7 @@ shopt -s extglob
 rootfile_list=$(ls -1 ./japanOutput/prex$level\_pass1_$runnum.!(*jlab.org*).root);
 shopt -u extglob
 echo " -- summary.sh: checking PREX_PLOT_DIR=" $PREX_PLOT_DIR
-rsync_todo_list="./prompt-tmp/rsync_todo.list"
+rsync_todo_list="./rsync-scripts/rsync_todo.list"
 
 for rootfile  in $rootfile_list
 do
