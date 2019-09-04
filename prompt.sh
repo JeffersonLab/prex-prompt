@@ -6,6 +6,11 @@ then
     exit 1;
 fi
 
+MACHINE_NAME=${HOSTNAME%%.*}
+echo " -- prompt.sh: MACHINE_NAME=" $MACHINE_NAME
+export PREX_PLOT_DIR=$PWD/tmp_$MACHINE_NAME
+echo " -- prompt.sh: set PREX_PLOT_DIR=" $PREX_PLOT_DIR
+
 #  Remove the LRB output files if they exist
 shopt -s extglob
 # find split file

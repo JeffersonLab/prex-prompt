@@ -6,7 +6,7 @@ shopt -s extglob
 # find split file
 rootfile_list=$(ls -1 ./japanOutput/prex$level\_pass1_$runnum.!(*jlab.org*).root);
 shopt -u extglob
-
+echo " -- summary.sh: checking PREX_PLOT_DIR=" $PREX_PLOT_DIR
 rsync_todo_list="./prompt-tmp/rsync_todo.list"
 
 for rootfile  in $rootfile_list
@@ -20,19 +20,19 @@ do
 
     redfile='./results/prexPrompt_'${run_seg}'_regress_postpan.root';
     
-    if [ ! -d ./tmp/run$run_seg ]; then
-	mkdir ./tmp/run$run_seg;
+    if [ ! -d $PREX_PLOT_DIR/run$run_seg ]; then
+      mkdir $PREX_PLOT_DIR/run$run_seg;
     fi
-    
-    root -b -q -l './rootMacros/PlotSummary.C("'$rootfile'")';
-    root -b -q -l './postpan/rootmacros/PlotSummary_postpan.C("'$redfile'")';
+
+    root -b -q -l './rootMacros/PlotSummary.C("'$rootfile'","'$PREX_PLOT_DIR'")';
+    root -b -q -l './postpan/rootmacros/PlotSummary_postpan.C("'$redfile'","'$PREX_PLOT_DIR'")';
 
     if [ ! -d ./hallaweb_online/summary/run$run_seg ]; then
 	mkdir ./hallaweb_online/summary/run$run_seg;
     fi
-    
-    cp  ./tmp/run$run_seg/* \
-	./hallaweb_online/summary/run$run_seg/;
+
+    cp  $PREX_PLOT_DIR/run$run_seg/* \
+    	./hallaweb_online/summary/run$run_seg/;
 
     cp ./japanOutput/summary_*$runnum*.txt \
 	./SummaryText/
@@ -51,12 +51,12 @@ do
     
     bash 	./hallaweb_online/summary/sort.sh ;
 
-done
+    if [ -f $rsync_todo_list ]; then
+	echo $PREX_PLOT_DIR/run$run_seg >> $rsync_todo_list;
+    else 
+	echo $PREX_PLOT_DIR/run$run_seg > $rsync_todo_list;
+    fi
 
-if [ -f $rsync_todo_list ]; then
-    echo $run_num >> $rsync_todo_list;
-else 
-    echo $run_num > $rsync_todo_list;
-fi
+done
 
 
