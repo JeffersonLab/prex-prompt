@@ -33,16 +33,17 @@
 #include "CheckNormalizedComboSAM_postpan.C"
 #include "CheckRegNormATDetector_postpan.C"
 
-void PlotSummary_postpan(TString filename){
+void PlotSummary_postpan(TString filename,TString output_dir="./tmp"){
   results = TFile::Open(filename);
   Ssiz_t pfirst = filename.Last('_')-16;
   Ssiz_t plast = filename.Last('.')-17;
   Ssiz_t plength = plast-pfirst+1;
   run_seg = filename(pfirst,plength);
   run_seg = run_seg.ReplaceAll('.','_');
-  output_path = Form("./tmp/run%s/",run_seg.Data());
-
-  
+  if(output_dir=="")
+    output_dir="./tmp";
+  output_path = output_dir+Form("/run%s/",run_seg.Data());
+  cout << " -- output_path " << output_path << endl;
   // ===Check mulc_lrb before making plots
   // CheckComboSAM_postpan();
   // CheckBPM();
