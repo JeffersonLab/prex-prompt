@@ -33,14 +33,19 @@
 #include "CheckNormalizedComboSAM_postpan.C"
 #include "CheckRegNormATDetector_postpan.C"
 
-void PlotSummary_postpan(TString filename){
+void PlotSummary_postpan(TString filename, TString my_output = ""){
   results = TFile::Open(filename);
   Ssiz_t pfirst = filename.Last('_')-16;
   Ssiz_t plast = filename.Last('.')-17;
   Ssiz_t plength = plast-pfirst+1;
   run_seg = filename(pfirst,plength);
   run_seg = run_seg.ReplaceAll('.','_');
-  output_path = Form("./tmp/run%s/",run_seg.Data());
+  if(my_output == ""){
+    output_path = Form("./tmp/run%s/",run_seg.Data());
+  }else{
+    output_path = my_output;
+  }
+
 
   
   // ===Check mulc_lrb before making plots

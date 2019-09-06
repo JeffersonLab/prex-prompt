@@ -45,7 +45,7 @@
 #include "Integrated.C"
 #include "PlotPairTree.C"
 #include "CheckWireSum.C"
-void PlotSummary(TString filename){
+void PlotSummary(TString filename, TString my_output = ""){
 
   Bool_t isNormalized=kTRUE;
 
@@ -55,7 +55,11 @@ void PlotSummary(TString filename){
   Ssiz_t plength = plast-pfirst+1;
   run_seg = filename(pfirst,plength);
   run_seg = run_seg.ReplaceAll('.','_');
-  output_path = Form("./tmp/run%s/",run_seg.Data());
+  if(my_output == ""){
+    output_path = Form("./tmp/run%s/",run_seg.Data());
+  }else{
+    output_path = my_output;
+  }
 
   //  Make sure we have the trees before proceeding.
   TTree *evt_tree = (TTree*)gROOT->FindObject("evt");
