@@ -6,17 +6,6 @@ then
     exit 1;
 fi
 
-#shopt -s extglob
-## find split file
-#slopefile_list=$(ls -1 ./LRBoutput/blueR$runnum*slope.root);
-#shopt -u extglob
-
-#for slopefile in $slopefile_list
-#do
-#    echo "deleting "  $slopefile;
-#    rm -f $slopefile;
-#done
-
 minirun=0
 if [ $# -ge 2 ]
 then
@@ -41,4 +30,4 @@ echo "Doing events $startEvts to $endEvts"
 
 ./fast_summary.sh $runnum;
 
-evince FastPlots/run${runnum}_000/run${runnum}_000_all.pdf
+evince FastPlots/run${runnum}_000/run${runnum}_000_all.pdf &

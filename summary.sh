@@ -9,6 +9,8 @@ shopt -s extglob
 rootfile_list=$(ls -1 ${scriptDir}/japanOutput/prex$level\_pass1_$runnum.!(*jlab.org*).root);
 shopt -u extglob
 
+rsync_todo_list="./prompt-tmp/rsync_todo.list"
+
 for rootfile  in $rootfile_list
 do
     # strip out [run.seg]
@@ -78,6 +80,13 @@ do
     chmod -R 777 ${scriptDir}/hallaweb_online/summary/run$run_seg;    
     
     bash 	${scriptDir}/hallaweb_online/summary/sort_farm.sh ;
+
 done
+
+if [ -f $rsync_todo_list ]; then
+    echo $run_num >> $rsync_todo_list;
+else 
+    echo $run_num > $rsync_todo_list;
+fi
 
 

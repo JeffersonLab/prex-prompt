@@ -6,7 +6,8 @@ shopt -s extglob
 # find split file
 rootfile_list=$(ls -1 ./tmp/prex$level\_pass1_$runnum.!(*jlab.org*).root);
 shopt -u extglob
-rsync_todo_list="./tmp-test/rsync_todo.list"
+
+
 for rootfile  in $rootfile_list
 do
     # strip out [run.seg]

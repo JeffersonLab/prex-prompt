@@ -10,10 +10,13 @@ goods="True"
 if [ $# -eq 2 ] 
 then
     goods=$2
+    echo "Setting GoodRuns = $goods"
 fi
 
-if [ $# -ge 1 ]; then
+if [ $# -eq 1 ]; then
     # get charge for the given run range
+    python $script_dir/acc_charge.py --run=$1 
+elif [ $# -eq 2 ]; then
     python $script_dir/acc_charge.py --run=$1 --goodrun=$goods
 else
     # get charge for all production runs

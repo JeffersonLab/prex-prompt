@@ -3,6 +3,7 @@
 PLOT_FLAG=0
 
 echo "If you want to get plots then edit the script and set PLOT_FLAG=1, and use ROOT 5"
+echo ""
 
 script_dir=/adaqfs/home/apar/pvdb/prex/examples
 

@@ -53,7 +53,7 @@ void DitAlias(Int_t runnum, Int_t slope_runnum = -1){
   //Build variable names
   //  //dit tree variable names go like "dv_iv", for example: "usr_4eX"
   TString maindet_array[4]={"usl","usr","dsl","dsr"};
-  TString bpm_array[5]={"4aX","4aY","4eX","4eY","11X"};
+  TString bpm_array[5]={"4aX","4aY","4eX","4eY","12X"};
   Int_t ndet = sizeof(maindet_array)/sizeof(*maindet_array);
   Int_t nmon= sizeof(bpm_array)/sizeof(*bpm_array);
 

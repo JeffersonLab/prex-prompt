@@ -18,6 +18,10 @@ do
     rm -f $slopefile;
 done
 
+if[ ! -d ./tmp ]; then
+    mkdir ./tmp;
+fi
+
 #JAPAN First Pass
 timenow=$(date +"%Y-%m%d-%H%M");
 
@@ -27,7 +31,7 @@ timenow=$(date +"%Y-%m%d-%H%M");
     --QwLog.loglevel-file 2 \
     --QwLog.logfile ./LogFiles/QwLog_run$runnum\_prompt_pass1_$timenow.txt ;
 
-./tmp-test/auto_postpan.sh $runnum;
-./tmp-test/summary.sh $runnum;
+./prompt-tmp/auto_postpan.sh $runnum;
+./prompt-tmp/summary.sh $runnum;
 
 echo "Done with prompt for run $runnum";

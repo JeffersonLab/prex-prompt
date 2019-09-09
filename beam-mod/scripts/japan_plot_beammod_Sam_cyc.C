@@ -29,11 +29,11 @@ class TF1 *f1trap[42];
 int japan_plot_beammod_Sam_cyc(string inputfile_name){ 
   //gStyle->SetOptStat(0);
   gStyle->SetOptFit();
-int filenum=1;
- if (inputfile_name.find("_",0) != string::npos) {
-      filenum=atof(inputfile_name.substr(inputfile_name.find("_")+1,inputfile_name.find("_")).c_str());
-      cout << "run num " << filenum <<"  "<< "make sure this is run for the beam modulation" <<  endl;
- }else{
+  int filenum=1;
+  if (inputfile_name.find("_",0) != string::npos) {
+    filenum=atof(inputfile_name.substr(inputfile_name.find("_")+1,inputfile_name.find("_")).c_str());
+    cout << "run num " << filenum <<"  "<< "make sure this is run for the beam modulation" <<  endl;
+  }else{
     cout << "this file has no run number, please check the file name" << endl;
   }
   ostringstream sstr0,sstr1,sstr2,sstr3,sstr4,sstr5,sstr6,sstr7,sstr8,sstr9,sstr10,sstr11,sstr12,sstr13;
@@ -175,75 +175,75 @@ int filenum=1;
   TLeaf *l_bmwcycnum = tree_R->GetLeaf("bmwcycnum");
   int nonzero = tree_R->Draw("bmwcycnum","bmwcycnum>0","goff");
   vector<Double_t> cycles;
-   for(int i=0;i<nonzero;i++){
-              l_bmwcycnum->GetBranch()->GetEntry(elist->GetEntry(i));
-                            Double_t cyclenum = l_bmwcycnum->GetValue();
-                                  if(i==0){
-                                      cycles.push_back(cyclenum);
-                                            }    
-                                        else{
-                                            int sizeVec = cycles.size();
-                                              if(cyclenum != cycles[sizeVec-1]){
-                                                    cycles.push_back(cyclenum);
-                                                      }
-                                                    }    
-                                            }    
+  for(int i=0;i<nonzero;i++){
+    l_bmwcycnum->GetBranch()->GetEntry(elist->GetEntry(i));
+    Double_t cyclenum = l_bmwcycnum->GetValue();
+    if(i==0){
+      cycles.push_back(cyclenum);
+    }    
+    else{
+      int sizeVec = cycles.size();
+      if(cyclenum != cycles[sizeVec-1]){
+	cycles.push_back(cyclenum);
+      }
+    }    
+  }    
 
-                int n=cycles.size();
+  int n=cycles.size();
                   
-                  Double_t supercyc[n];
-                     for(int i=0;i<n;i++){
-                           supercyc[i]=cycles[i]; 
-                               cout<<"i="<<i<<"  "<<"supercyc="<<supercyc[i]<<endl;
-                                  }    
-                       Double_t supercycslope[n];
-                         Double_t supercyc_err[n];
-                           for(int i=0;i<n;i++ ){
-                                supercycslope[i]=/*filenum*100+*/supercyc[i];
-                                   supercyc_err[i]=0;
-                                      cout<<"supercycslope="<<supercycslope[i]<<endl;
-                                        }
+  Double_t supercyc[n];
+  for(int i=0;i<n;i++){
+    supercyc[i]=cycles[i]; 
+    cout<<"i="<<i<<"  "<<"supercyc="<<supercyc[i]<<endl;
+  }    
+  Double_t supercycslope[n];
+  Double_t supercyc_err[n];
+  for(int i=0;i<n;i++ ){
+    supercycslope[i]=/*filenum*100+*/supercyc[i];
+    supercyc_err[i]=0;
+    cout<<"supercycslope="<<supercycslope[i]<<endl;
+  }
 
 
-    Double_t trim_base[7] = {6831,6730,6967,6820,6690,6870,6830};
-      Double_t trim_obj[7] = {1,2,3,4,5,6,7};
+  Double_t trim_base[7] = {6831,6730,6967,6820,6690,6870,6830};
+  Double_t trim_obj[7] = {1,2,3,4,5,6,7};
 
-     const double trimmin=0.38;
-     const double trimmax=0.7;
-     const double bpmmax=3;
-     const double bpmmin=1;
-     const double chtov=7.62939453125000000e-05;
-     const double factor = 1000.0;
-     Double_t coil_slop[8][8];
-     Double_t coil_slop_err[8][8];
-     Double_t trim1_slop[8][n];
-     Double_t trim1_slop_err[8][n];
-     Double_t trim2_slop[8][n];
-     Double_t trim2_slop_err[8][n];
-    Double_t trim3_slop[8][n];
-     Double_t trim3_slop_err[8][n];
-     Double_t trim4_slop[8][n];
-     Double_t trim4_slop_err[8][n];
-     Double_t trim5_slop[8][n];
-     Double_t trim5_slop_err[8][n];
-     Double_t trim6_slop[8][n];
-     Double_t trim6_slop_err[8][n];
-    Double_t trim7_slop[8][n];
-     Double_t trim7_slop_err[8][n];
-     Double_t trim8_slop[8][n];
-     Double_t trim8_slop_err[8][n]; 
-   TGraphErrors *slopx[8];
-   TGraphErrors *slopy[8];
-   TGraphErrors *rslopx[8];
-   TGraphErrors *rslopy[8];
-   double meany_coil1[8];
-   double meany_coil2[8];
-   double meany_coil3[8];
-   double meany_coil4[8];
-   double meany_coil5[8];
-   double meany_coil6[8];
-   double meany_coil7[8];
-   double meany_coil8[8];
+  const double trimmin=0.38;
+  const double trimmax=0.7;
+  const double bpmmax=3;
+  const double bpmmin=1;
+  const double chtov=7.62939453125000000e-05;
+  const double factor = 1000.0;
+  Double_t coil_slop[8][8];
+  Double_t coil_slop_err[8][8];
+  Double_t trim1_slop[8][n];
+  Double_t trim1_slop_err[8][n];
+  Double_t trim2_slop[8][n];
+  Double_t trim2_slop_err[8][n];
+  Double_t trim3_slop[8][n];
+  Double_t trim3_slop_err[8][n];
+  Double_t trim4_slop[8][n];
+  Double_t trim4_slop_err[8][n];
+  Double_t trim5_slop[8][n];
+  Double_t trim5_slop_err[8][n];
+  Double_t trim6_slop[8][n];
+  Double_t trim6_slop_err[8][n];
+  Double_t trim7_slop[8][n];
+  Double_t trim7_slop_err[8][n];
+  Double_t trim8_slop[8][n];
+  Double_t trim8_slop_err[8][n]; 
+  TGraphErrors *slopx[8];
+  TGraphErrors *slopy[8];
+  TGraphErrors *rslopx[8];
+  TGraphErrors *rslopy[8];
+  double meany_coil1[8];
+  double meany_coil2[8];
+  double meany_coil3[8];
+  double meany_coil4[8];
+  double meany_coil5[8];
+  double meany_coil6[8];
+  double meany_coil7[8];
+  double meany_coil8[8];
   double meany_coil1_cyc[8][n];
   double meany_coil2_cyc[8][n];
   double meany_coil3_cyc[8][n];
@@ -346,9 +346,9 @@ int filenum=1;
   char name_test[50];
   for(int j=0;j<8;j++){
  
-   for(int i=0;i<8;i++){
-     sprintf(name_coil,"funcoil%d_sam%d",j,i);
-     funcoil[j][i]= new TF1(name_coil,"[0]+[1]*x",0,0.01);
+    for(int i=0;i<8;i++){
+      sprintf(name_coil,"funcoil%d_sam%d",j,i);
+      funcoil[j][i]= new TF1(name_coil,"[0]+[1]*x",0,0.01);
     }
     for(int i=0;i<n;i++){
       
@@ -453,7 +453,7 @@ int filenum=1;
     hist_4dd_coil[i]->GetYaxis()->SetTitleSize(0.05);
     meany_coil1[i]= hist_4dd_coil[i]->GetMean(2);
   }
- // super cycle analysis 
+  // super cycle analysis 
   for(int j=0;j<8;j++){
     for(int i=0;i<n;i++){
       tree_R->Draw(Form("(%s/bcm_an_ds):(bmod_trim3)>>hist_sam2_cyc%d%d",sam_wire[j].Data(),j,i),Form("bcm_an_ds3>5.32&& bcm_an_ds3<5.55 && bmwobj==3 && abs(bmod_trim3-%f)>20 && bmwcycnum==%f",trim_base[2],supercyc[i]));
@@ -504,7 +504,7 @@ int filenum=1;
     }
   }
 
-// Normalized sam
+  // Normalized sam
   for(int i=0;i<8;i++){
     tree_R->Draw(Form("(bmod_trim3*%lf):(%s/%lf)>>hist%d",chtov,sam_wire[i].Data(),meany_coil3[i],i),Form("bcm_an_ds3>5.32&& bcm_an_ds3<5.55 && bmwobj==3 && abs(bmod_trim3-%f)>20",trim_base[2]));
     hist[i] = (TH2F *)gDirectory->Get(Form("hist%d",i));
@@ -576,11 +576,11 @@ int filenum=1;
   TCanvas *ctest = new TCanvas("ctest","ctest",800,800);
   ctest->Divide(2,4);
   for(int i=0;i<8;i++){
-  ctest->cd(i+1);
-  hist[i]->Draw();
+    ctest->cd(i+1);
+    hist[i]->Draw();
   }
   // Difference sami-sami+4
-//coil1
+  //coil1
   meany_coil1[1]= hist_4dd_coil[1]->GetMean(2);
   meany_coil1[5]= hist_4dd_coil[5]->GetMean(2);
   int  num_trim1_26 = tree_R->Draw(Form("(bmod_trim1*%lf):(sam2/%lf-sam6/%lf)",chtov,meany_coil1[1],meany_coil1[5]),Form(" bcm_an_ds3>5.32&& bcm_an_ds3<5.55&& bmwobj==1 && abs(bmod_trim1-%f)>20",trim_base[0]));   
@@ -779,115 +779,115 @@ int filenum=1;
   
   char name_canvas[50];
   for(int i=0;i<8;i++){
-  sprintf(name_canvas,"c%d",i);
-  c[i]= new TCanvas(name_canvas,name_canvas,1000,1000);
-  c[i]->Divide(n,8);
+    sprintf(name_canvas,"c%d",i);
+    c[i]= new TCanvas(name_canvas,name_canvas,1000,1000);
+    c[i]->Divide(n,8);
   }
-   for(int i=0;i<n;i++){
+  for(int i=0;i<n;i++){
     for(int j=0;j<8;j++){
-    c[0]->cd(i*8+j+1);
-    trim1_slop[j][i]=0;
-    trim1_slop_err[j][i]=0;
-    gtrim1[j][i]->Draw("A p");
-    gtrim1[j][i]->Fit(funsloptrim1[j][i]);
-    gtrim1[j][i]->Fit(funsloptrim1[j][i]);
-    trim1_slop[j][i]=funsloptrim1[j][i]->GetParameter(1);
-    trim1_slop_err[j][i]=funsloptrim1[j][i]->GetParError(1);
+      c[0]->cd(i*8+j+1);
+      trim1_slop[j][i]=0;
+      trim1_slop_err[j][i]=0;
+      gtrim1[j][i]->Draw("A p");
+      gtrim1[j][i]->Fit(funsloptrim1[j][i]);
+      gtrim1[j][i]->Fit(funsloptrim1[j][i]);
+      trim1_slop[j][i]=funsloptrim1[j][i]->GetParameter(1);
+      trim1_slop_err[j][i]=funsloptrim1[j][i]->GetParError(1);
     }
     outfile0<<setw(20)<<setiosflags(ios::left)<<supercycslope[i]<<setw(20)<<setiosflags(ios::left)<<supercyc_err[i]
-    <<setw(20)<<setiosflags(ios::left)<<trim1_slop[0][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop_err[0][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop[1][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop_err[1][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop[2][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop_err[2][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop[3][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop_err[3][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop[4][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop_err[4][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop[5][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop_err[5][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop[6][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop_err[6][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop[7][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop_err[7][i]<<endl;
+	    <<setw(20)<<setiosflags(ios::left)<<trim1_slop[0][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop_err[0][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop[1][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop_err[1][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop[2][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop_err[2][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop[3][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop_err[3][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop[4][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop_err[4][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop[5][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop_err[5][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop[6][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop_err[6][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop[7][i]<<setw(20)<<setiosflags(ios::left)<<trim1_slop_err[7][i]<<endl;
   }
 
-   for(int i=0;i<n;i++){
+  for(int i=0;i<n;i++){
     for(int j=0;j<8;j++){
-    c[1]->cd(i*8+j+1);
-    trim2_slop[j][i]=0;
-    trim2_slop_err[j][i]=0;
-    gtrim2[j][i]->Draw("A p");
-   // gtrim2[j][i]->Fit(funtest[j][i]);
-   // funsloptrim2[j][i]->SetParameters(funtest[j][i]->GetParameter(0),funtest[j][i]->GetParameter(1));
-    gtrim2[j][i]->Fit(funsloptrim2[j][i]);
-    trim2_slop[j][i]=funsloptrim2[j][i]->GetParameter(1);
-    trim2_slop_err[j][i]=funsloptrim2[j][i]->GetParError(1);
+      c[1]->cd(i*8+j+1);
+      trim2_slop[j][i]=0;
+      trim2_slop_err[j][i]=0;
+      gtrim2[j][i]->Draw("A p");
+      // gtrim2[j][i]->Fit(funtest[j][i]);
+      // funsloptrim2[j][i]->SetParameters(funtest[j][i]->GetParameter(0),funtest[j][i]->GetParameter(1));
+      gtrim2[j][i]->Fit(funsloptrim2[j][i]);
+      trim2_slop[j][i]=funsloptrim2[j][i]->GetParameter(1);
+      trim2_slop_err[j][i]=funsloptrim2[j][i]->GetParError(1);
     }
     outfile1<<setw(20)<<setiosflags(ios::left)<<supercycslope[i]<<setw(20)<<setiosflags(ios::left)<<supercyc_err[i]
-    <<setw(20)<<setiosflags(ios::left)<<trim2_slop[0][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop_err[0][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop[1][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop_err[1][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop[2][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop_err[2][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop[3][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop_err[3][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop[4][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop_err[4][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop[5][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop_err[5][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop[6][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop_err[6][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop[7][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop_err[7][i]<<endl;
+	    <<setw(20)<<setiosflags(ios::left)<<trim2_slop[0][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop_err[0][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop[1][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop_err[1][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop[2][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop_err[2][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop[3][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop_err[3][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop[4][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop_err[4][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop[5][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop_err[5][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop[6][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop_err[6][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop[7][i]<<setw(20)<<setiosflags(ios::left)<<trim2_slop_err[7][i]<<endl;
   }
 
-   for(int i=0;i<n;i++){
+  for(int i=0;i<n;i++){
     for(int j=0;j<8;j++){
-    c[2]->cd(i*8+j+1);
-    trim3_slop[j][i]=0;
-    trim3_slop_err[j][i]=0;
-    gtrim3[j][i]->Draw("A p");
-    gtrim3[j][i]->Fit(funsloptrim3[j][i]);
-    gtrim3[j][i]->Fit(funsloptrim3[j][i]);
-    trim3_slop[j][i]=funsloptrim3[j][i]->GetParameter(1);
-    trim3_slop_err[j][i]=funsloptrim3[j][i]->GetParError(1);
+      c[2]->cd(i*8+j+1);
+      trim3_slop[j][i]=0;
+      trim3_slop_err[j][i]=0;
+      gtrim3[j][i]->Draw("A p");
+      gtrim3[j][i]->Fit(funsloptrim3[j][i]);
+      gtrim3[j][i]->Fit(funsloptrim3[j][i]);
+      trim3_slop[j][i]=funsloptrim3[j][i]->GetParameter(1);
+      trim3_slop_err[j][i]=funsloptrim3[j][i]->GetParError(1);
     }
     outfile2<<setw(20)<<setiosflags(ios::left)<<supercycslope[i]<<setw(20)<<setiosflags(ios::left)<<supercyc_err[i]
-    <<setw(20)<<setiosflags(ios::left)<<trim3_slop[0][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop_err[0][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop[1][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop_err[1][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop[2][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop_err[2][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop[3][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop_err[3][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop[4][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop_err[4][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop[5][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop_err[5][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop[6][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop_err[6][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop[7][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop_err[7][i]<<endl;
+	    <<setw(20)<<setiosflags(ios::left)<<trim3_slop[0][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop_err[0][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop[1][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop_err[1][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop[2][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop_err[2][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop[3][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop_err[3][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop[4][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop_err[4][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop[5][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop_err[5][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop[6][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop_err[6][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop[7][i]<<setw(20)<<setiosflags(ios::left)<<trim3_slop_err[7][i]<<endl;
   }
 
-   for(int i=0;i<n;i++){
+  for(int i=0;i<n;i++){
     for(int j=0;j<8;j++){
-    c[3]->cd(i*8+j+1);
-    trim4_slop[j][i]=0;
-    trim4_slop_err[j][i]=0;
-    gtrim4[j][i]->Draw("A p");
-    gtrim4[j][i]->Fit(funsloptrim4[j][i]);
-    gtrim4[j][i]->Fit(funsloptrim4[j][i]);
-    trim4_slop[j][i]=funsloptrim4[j][i]->GetParameter(1);
-    trim4_slop_err[j][i]=funsloptrim4[j][i]->GetParError(1);
+      c[3]->cd(i*8+j+1);
+      trim4_slop[j][i]=0;
+      trim4_slop_err[j][i]=0;
+      gtrim4[j][i]->Draw("A p");
+      gtrim4[j][i]->Fit(funsloptrim4[j][i]);
+      gtrim4[j][i]->Fit(funsloptrim4[j][i]);
+      trim4_slop[j][i]=funsloptrim4[j][i]->GetParameter(1);
+      trim4_slop_err[j][i]=funsloptrim4[j][i]->GetParError(1);
     }
     outfile3<<setw(20)<<setiosflags(ios::left)<<supercycslope[i]<<setw(20)<<setiosflags(ios::left)<<supercyc_err[i]
-    <<setw(20)<<setiosflags(ios::left)<<trim4_slop[0][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop_err[0][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop[1][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop_err[1][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop[2][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop_err[2][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop[3][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop_err[3][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop[4][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop_err[4][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop[5][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop_err[5][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop[6][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop_err[6][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop[7][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop_err[7][i]<<endl;
+	    <<setw(20)<<setiosflags(ios::left)<<trim4_slop[0][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop_err[0][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop[1][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop_err[1][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop[2][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop_err[2][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop[3][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop_err[3][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop[4][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop_err[4][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop[5][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop_err[5][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop[6][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop_err[6][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop[7][i]<<setw(20)<<setiosflags(ios::left)<<trim4_slop_err[7][i]<<endl;
   }
 
 
-   for(int i=0;i<n;i++){
+  for(int i=0;i<n;i++){
     for(int j=0;j<8;j++){
-    c[4]->cd(i*8+j+1);
-    trim5_slop[j][i]=0;
-    trim5_slop_err[j][i]=0;
-    gtrim5[j][i]->Draw("A p");
-    gtrim5[j][i]->Fit(funsloptrim5[j][i]);
-    gtrim5[j][i]->Fit(funsloptrim5[j][i]);
-    trim5_slop[j][i]=funsloptrim5[j][i]->GetParameter(1);
-    trim5_slop_err[j][i]=funsloptrim5[j][i]->GetParError(1);
+      c[4]->cd(i*8+j+1);
+      trim5_slop[j][i]=0;
+      trim5_slop_err[j][i]=0;
+      gtrim5[j][i]->Draw("A p");
+      gtrim5[j][i]->Fit(funsloptrim5[j][i]);
+      gtrim5[j][i]->Fit(funsloptrim5[j][i]);
+      trim5_slop[j][i]=funsloptrim5[j][i]->GetParameter(1);
+      trim5_slop_err[j][i]=funsloptrim5[j][i]->GetParError(1);
     }
     outfile4<<setw(20)<<setiosflags(ios::left)<<supercycslope[i]<<setw(20)<<setiosflags(ios::left)<<supercyc_err[i]
-    <<setw(20)<<setiosflags(ios::left)<<trim5_slop[0][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop_err[0][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop[1][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop_err[1][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop[2][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop_err[2][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop[3][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop_err[3][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop[4][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop_err[4][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop[5][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop_err[5][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop[6][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop_err[6][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop[7][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop_err[7][i]<<endl;
+	    <<setw(20)<<setiosflags(ios::left)<<trim5_slop[0][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop_err[0][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop[1][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop_err[1][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop[2][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop_err[2][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop[3][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop_err[3][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop[4][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop_err[4][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop[5][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop_err[5][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop[6][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop_err[6][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop[7][i]<<setw(20)<<setiosflags(ios::left)<<trim5_slop_err[7][i]<<endl;
   }
 
 
-   for(int i=0;i<n;i++){
+  for(int i=0;i<n;i++){
     for(int j=0;j<8;j++){
-    c[5]->cd(i*8+j+1);
-    trim6_slop[j][i]=0;
-    trim6_slop_err[j][i]=0;
-    gtrim6[j][i]->Draw("A p");
-    gtrim6[j][i]->Fit(funsloptrim6[j][i]);
-    gtrim6[j][i]->Fit(funsloptrim6[j][i]);
-    trim6_slop[j][i]=funsloptrim6[j][i]->GetParameter(1);
-    trim6_slop_err[j][i]=funsloptrim6[j][i]->GetParError(1);
+      c[5]->cd(i*8+j+1);
+      trim6_slop[j][i]=0;
+      trim6_slop_err[j][i]=0;
+      gtrim6[j][i]->Draw("A p");
+      gtrim6[j][i]->Fit(funsloptrim6[j][i]);
+      gtrim6[j][i]->Fit(funsloptrim6[j][i]);
+      trim6_slop[j][i]=funsloptrim6[j][i]->GetParameter(1);
+      trim6_slop_err[j][i]=funsloptrim6[j][i]->GetParError(1);
     }
     outfile5<<setw(20)<<setiosflags(ios::left)<<supercycslope[i]<<setw(20)<<setiosflags(ios::left)<<supercyc_err[i]
-    <<setw(20)<<setiosflags(ios::left)<<trim6_slop[0][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop_err[0][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop[1][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop_err[1][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop[2][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop_err[2][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop[3][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop_err[3][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop[4][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop_err[4][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop[5][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop_err[5][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop[6][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop_err[6][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop[7][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop_err[7][i]<<endl;
+	    <<setw(20)<<setiosflags(ios::left)<<trim6_slop[0][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop_err[0][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop[1][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop_err[1][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop[2][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop_err[2][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop[3][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop_err[3][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop[4][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop_err[4][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop[5][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop_err[5][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop[6][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop_err[6][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop[7][i]<<setw(20)<<setiosflags(ios::left)<<trim6_slop_err[7][i]<<endl;
   }
-   for(int i=0;i<n;i++){
+  for(int i=0;i<n;i++){
     for(int j=0;j<8;j++){
-    c[6]->cd(i*8+j+1);
-    trim7_slop[j][i]=0;
-    trim7_slop_err[j][i]=0;
-    gtrim7[j][i]->Draw("A p");
-    gtrim7[j][i]->Fit(funsloptrim7[j][i]);
-    gtrim7[j][i]->Fit(funsloptrim7[j][i]);
-    trim7_slop[j][i]=funsloptrim7[j][i]->GetParameter(1);
-    trim7_slop_err[j][i]=funsloptrim7[j][i]->GetParError(1);
+      c[6]->cd(i*8+j+1);
+      trim7_slop[j][i]=0;
+      trim7_slop_err[j][i]=0;
+      gtrim7[j][i]->Draw("A p");
+      gtrim7[j][i]->Fit(funsloptrim7[j][i]);
+      gtrim7[j][i]->Fit(funsloptrim7[j][i]);
+      trim7_slop[j][i]=funsloptrim7[j][i]->GetParameter(1);
+      trim7_slop_err[j][i]=funsloptrim7[j][i]->GetParError(1);
     }
     outfile6<<setw(20)<<setiosflags(ios::left)<<supercycslope[i]<<setw(20)<<setiosflags(ios::left)<<supercyc_err[i]
-    <<setw(20)<<setiosflags(ios::left)<<trim7_slop[0][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop_err[0][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop[1][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop_err[1][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop[2][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop_err[2][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop[3][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop_err[3][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop[4][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop_err[4][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop[5][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop_err[5][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop[6][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop_err[6][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop[7][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop_err[7][i]<<endl;
+	    <<setw(20)<<setiosflags(ios::left)<<trim7_slop[0][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop_err[0][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop[1][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop_err[1][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop[2][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop_err[2][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop[3][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop_err[3][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop[4][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop_err[4][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop[5][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop_err[5][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop[6][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop_err[6][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop[7][i]<<setw(20)<<setiosflags(ios::left)<<trim7_slop_err[7][i]<<endl;
   }
 
 
@@ -942,42 +942,42 @@ int filenum=1;
   } 
   
   char name_trim1_sam[50];
- char name_trim2_sam[50];
- char name_trim3_sam[50];
- char name_trim4_sam[50];
- char name_trim5_sam[50];
- char name_trim6_sam[50];
- char name_trim7_sam[50];
- char name_trim8_sam[50];
+  char name_trim2_sam[50];
+  char name_trim3_sam[50];
+  char name_trim4_sam[50];
+  char name_trim5_sam[50];
+  char name_trim6_sam[50];
+  char name_trim7_sam[50];
+  char name_trim8_sam[50];
   
 
-for(int j=0;j<8;j++){
-      sprintf(name_trim1_sam,"cantrim1_sam%d",j+1);
-      sprintf(name_trim2_sam,"cantrim2_sam%d",j+1);
-      sprintf(name_trim3_sam,"cantrim3_sam%d",j+1);
-      sprintf(name_trim4_sam,"cantrim4_sam%d",j+1);
-      sprintf(name_trim5_sam,"cantrim5_sam%d",j+1);
-      sprintf(name_trim6_sam,"cantrim6_sam%d",j+1);
-      sprintf(name_trim7_sam,"cantrim7_sam%d",j+1);
-      sprintf(name_trim8_sam,"cantrim8_sam%d",j+1);
- trim7_sam[j] =  new TCanvas(name_trim7_sam,name_trim7_sam,1000,1000);
- trim7_sam[j]->Divide(2,4);
-for(int i=0;i<n;i++){
- trim7_sam[j]->cd(i+1);
- gtrim1[j][i]->SetTitle(Form("cycle==%f",supercyc[i]));
- gtrim1[j][i]->GetXaxis()->SetTitle("coil 1");
- gtrim1[j][i]->GetYaxis()->SetTitle(Form("sam%d",j+1));
- gtrim1[j][i]->Draw("A p*");
- //gtrim2[j][i]->Fit(funsloptrim2[j][i]);
- //gtrim2[j][i]->Fit(funsloptrim2[j][i]);
- //gtrim2[j][i]->Fit(funsloptrim7[j][i]);
-}
-}
-trim7_sam[0]->Print("trim1.pdf[","pdf");
-trim7_sam[0]->Print("trim1.pdf","pdf");
-for(int j=1;j<8;j++){
-trim7_sam[j]->Print("trim1.pdf","pdf");
-}
-trim7_sam[0]->Print("trim1.pdf]","pdf");
+  for(int j=0;j<8;j++){
+    sprintf(name_trim1_sam,"cantrim1_sam%d",j+1);
+    sprintf(name_trim2_sam,"cantrim2_sam%d",j+1);
+    sprintf(name_trim3_sam,"cantrim3_sam%d",j+1);
+    sprintf(name_trim4_sam,"cantrim4_sam%d",j+1);
+    sprintf(name_trim5_sam,"cantrim5_sam%d",j+1);
+    sprintf(name_trim6_sam,"cantrim6_sam%d",j+1);
+    sprintf(name_trim7_sam,"cantrim7_sam%d",j+1);
+    sprintf(name_trim8_sam,"cantrim8_sam%d",j+1);
+    trim7_sam[j] =  new TCanvas(name_trim7_sam,name_trim7_sam,1000,1000);
+    trim7_sam[j]->Divide(2,4);
+    for(int i=0;i<n;i++){
+      trim7_sam[j]->cd(i+1);
+      gtrim1[j][i]->SetTitle(Form("cycle==%f",supercyc[i]));
+      gtrim1[j][i]->GetXaxis()->SetTitle("coil 1");
+      gtrim1[j][i]->GetYaxis()->SetTitle(Form("sam%d",j+1));
+      gtrim1[j][i]->Draw("A p*");
+      //gtrim2[j][i]->Fit(funsloptrim2[j][i]);
+      //gtrim2[j][i]->Fit(funsloptrim2[j][i]);
+      //gtrim2[j][i]->Fit(funsloptrim7[j][i]);
+    }
+  }
+  trim7_sam[0]->Print("trim1.pdf[","pdf");
+  trim7_sam[0]->Print("trim1.pdf","pdf");
+  for(int j=1;j<8;j++){
+    trim7_sam[j]->Print("trim1.pdf","pdf");
+  }
+  trim7_sam[0]->Print("trim1.pdf]","pdf");
 
 }  

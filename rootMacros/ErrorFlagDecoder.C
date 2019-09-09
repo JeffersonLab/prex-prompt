@@ -27,7 +27,8 @@ Bool_t ErrorFlagDecoder(){
   static const UInt_t kBModFFBErrorFlag = 0x1000; // in Decimal 4096 (2^12) to identify the FFB OFF periods for Energy modulation
   static const UInt_t kBModErrorFlag = 0x8000; // in Decimal 32768 (2^15) to identify the single event cut is failed for a BMod channel
   static const UInt_t kErrorFlag_Helicity = 0x20000;  // Any type of helicity decoding problem
-  static const UInt_t kErrorFlag_BurpCut =   0x800000;// in Decimal 2^23 to identify a burp cut failure
+  //static const UInt_t kErrorFlag_BurpCut =   0x800000;// in Decimal 2^23 to identify a burp cut failure -- FIXME before run 4380 was 800000
+  static const UInt_t kErrorFlag_BurpCut =   0x20000000;// in Decimal 2^29 to identify a burp cut failure
   static const UInt_t kBeamStabilityError= 0x10000000;//in Decimal 2^28(268435456) to identify the a stability cut
   static const UInt_t kBeamTripError     =  0x8000000;// in Decimal 2^27(134217728) to identify the an event within a beam trip range set by ring parameters
   static const UInt_t kStabilityCut      =  0x1000000;// in Decimal 2^24 (16777216) to i

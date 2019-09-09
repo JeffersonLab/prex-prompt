@@ -351,7 +351,7 @@ void invertMatrix_maindet(int runNo=0){
   Double_t slope[4][5];
   Int_t run_number = runNo;
   Int_t slug_number = QuerySlugNumber(run_number);
-  TString output_path = "~/PREX/prompt/beam-mod/rootfiles/";
+  TString output_path = "~/PREX/prompt/beam-mod/rootfiles_run/";
   TString slopeFilename = Form("dit_slopes_slug%d.root",slug_number);
   
   TFile* ditfile = TFile::Open(output_path+slopeFilename,"UPDATE");

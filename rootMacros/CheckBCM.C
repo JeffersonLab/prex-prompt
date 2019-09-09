@@ -68,7 +68,8 @@ void CheckBCM(){
     hAq->SetTitle(Form("asym_%s;ppm",device_name));
     pad_buff->Update();
     TPaveStats *st = (TPaveStats*)hAq->FindObject("stats");
-    st->SetOptStat(111110);
+    if(st!=NULL)
+      st->SetOptStat(111110);
 
     if(hAq!=0){
       mul_tree->Draw(Form("asym_%s/ppm",device_name),
