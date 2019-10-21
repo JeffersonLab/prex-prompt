@@ -65,7 +65,7 @@ void fastPlotSummary(TString filename){
 
   //===== BPM Plots =======
   CheckBPM();
-  gsystem->Exec(Form("convert $(ls -rt %s*bpm*.png ) %srun%s_summary_bpm.pdf",
+  gSystem->Exec(Form("convert $(ls -rt %s*bpm*.png ) %srun%s_summary_bpm.pdf",
   		     output_path.Data(),
 		     output_path.Data(),
   		     run_seg.Data()));
@@ -76,6 +76,12 @@ void fastPlotSummary(TString filename){
     CheckNormalizedDetector();
   else
     CheckDetector();
+  gSystem->Exec(Form("convert $(ls -rt %s*maindet*.png %s*pairTree*[ud]s[lr]*.png)  %srun%s_summary_main_detector.pdf",
+  		     output_path.Data(),
+  		     output_path.Data(),
+		     output_path.Data(),
+  		     run_seg.Data()));
+
   gSystem->Exec(Form("rm %s*maindet*.png %s*[ud]s[lr]*.png",
 		     output_path.Data(),
 		     output_path.Data()));
