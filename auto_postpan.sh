@@ -44,12 +44,12 @@ do
     #	-c ./postpan/conf/combo_reg.conf ;
     # From run 3583- use the 3583-.conf file, manually runranged
 
-    # if [ ! -d ./hallaweb_online/summary/run$run_seg ]; then
-    # 	mkdir ./hallaweb_online/summary/run$run_seg;
+    # if [ ! -d ./hallaweb_online/summary_respin/run$run_seg ]; then
+    # 	mkdir ./hallaweb_online/summary_respin/run$run_seg;
     # fi
 
     # cp  ./results/prexPrompt_$run_seg\_postpan_summary.txt \
-    # 	./hallaweb_online/summary/run$run_seg/;
+    # 	./hallaweb_online/summary_respin/run$run_seg/;
 
 done
 

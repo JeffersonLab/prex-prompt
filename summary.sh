@@ -54,12 +54,12 @@ do
     pdfunite $(ls -rt ${scriptDir}/tmp/run$run_seg/*_summary_*.pdf) \
      	${scriptDir}/tmp/run$run_seg/run${run_seg}_all.pdf
 
-    if [ ! -d ${scriptDir}/hallaweb_online/summary/run$run_seg ]; then
-	mkdir ${scriptDir}/hallaweb_online/summary/run$run_seg;
+    if [ ! -d ${scriptDir}/hallaweb_online/summary_respin/run$run_seg ]; then
+	mkdir ${scriptDir}/hallaweb_online/summary_respin/run$run_seg;
     fi
     
     mv  ./tmp/run$run_seg/* \
-	${scriptDir}/hallaweb_online/summary/run$run_seg/;
+	${scriptDir}/hallaweb_online/summary_respin/run$run_seg/;
     rm  -rf ./tmp/run$run_seg;
 
     # copying prompt summary
@@ -70,16 +70,16 @@ do
 	${scriptDir}/SummaryText/summary_$level_$run_seg.txt \
 
     cp  ${scriptDir}/SummaryText/summary_$level_$run_seg.txt \
-	${scriptDir}/hallaweb_online/summary/run$run_seg/ ;
+	${scriptDir}/hallaweb_online/summary_respin/run$run_seg/ ;
     # copying postpan summary
     cp  ${scriptDir}/results/prexPrompt_$run_seg\_postpan_summary.txt \
-    	${scriptDir}/hallaweb_online/summary/run$run_seg/;
+    	${scriptDir}/hallaweb_online/summary_respin/run$run_seg/;
 
     #Change user group and permission
-    chgrp -R a-parity ${scriptDir}/hallaweb_online/summary/run$run_seg;
-    chmod -R 777 ${scriptDir}/hallaweb_online/summary/run$run_seg;    
+    chgrp -R a-parity ${scriptDir}/hallaweb_online/summary_respin/run$run_seg;
+    chmod -R 777 ${scriptDir}/hallaweb_online/summary_respin/run$run_seg;    
     
-    bash 	${scriptDir}/hallaweb_online/summary/sort_farm.sh ;
+    bash 	${scriptDir}/hallaweb_online/summary_respin/sort_farm.sh ;
 
 done
 
