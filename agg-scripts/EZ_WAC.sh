@@ -81,9 +81,9 @@ then
     wien=2
 fi
 
-if [ ! -d /adaqfs/home/apar/PREX/prompt/hallaweb_online/slug/slug_list/slug$slug ]
+if [ ! -d /u/group/halla/www/hallaweb/html/parity/prex/onlinePlots/slug/slug_list/slug$slug ]
 then
-    mkdir /adaqfs/home/apar/PREX/prompt/hallaweb_online/slug/slug_list/slug$slug
+    mkdir /u/group/halla/www/hallaweb/html/parity/prex/onlinePlots/slug/slug_list/slug$slug
 fi
 
 #copy current slug list to online plots

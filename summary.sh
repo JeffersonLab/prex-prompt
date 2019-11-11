@@ -1,7 +1,6 @@
 #!/bin/sh
 scriptDir=`pwd`
 cd $WORK_DIR
-
 runnum=$1
 level="Prompt"
 shopt -s extglob
@@ -27,29 +26,35 @@ do
       mkdir $PREX_PLOT_DIR/run$run_seg;
     fi
 
-    root -b -q -l './rootMacros/PlotSummary.C("'$rootfile'","'$PREX_PLOT_DIR'")';
-    root -b -q -l './postpan/rootmacros/PlotSummary_postpan.C("'$redfile'","'$PREX_PLOT_DIR'")';
+    #root -b -q -l './rootMacros/PlotSummary.C("'$rootfile'","'$PREX_PLOT_DIR'")';
+    #root -b -q -l './postpan/rootmacros/PlotSummary_postpan.C("'$redfile'","'$PREX_PLOT_DIR'")';
 
-    root -b -q -l "${scriptDir}/rootMacros/PlotSummary.C(\"${rootfile}\",\"${my_output_path}\")";
-    root -b -q -l "${scriptDir}/postpan/rootmacros/PlotSummary_postpan.C(\"${redfile}\",\"${my_output_path}\")";
+    #root -b -q -l "${scriptDir}/rootMacros/PlotSummary.C(\"${rootfile}\",\"${my_output_path}\")";
+    #root -b -q -l "${scriptDir}/postpan/rootmacros/PlotSummary_postpan.C(\"${redfile}\",\"${my_output_path}\")";
+
+    root -b -q -l "${scriptDir}/rootMacros/PlotSummary.C(\"${rootfile}\",\"$PREX_PLOT_DIR/run$run_seg/\")";
+    root -b -q -l "${scriptDir}/postpan/rootmacros/PlotSummary_postpan.C(\"${redfile}\",\"$PREX_PLOT_DIR/run$run_seg/\")";
 
     echo "****  CHECKING THE DIRECTORY STUCTURE"
     pwd
-    echo "ls -lrtd `pwd`/tmp/run$run_seg"
-    ls -lrtd `pwd`/tmp/run$run_seg
-    echo "ls -lrt `pwd`/tmp/run$run_seg"
-    ls -lrt `pwd`/tmp/run$run_seg
+    echo "ls -lrtd $PREX_PLOT_DIR/run$run_seg"
+    ls -lrtd $PREX_PLOT_DIR/run$run_seg
+    echo "ls -lrt $PREX_PLOT_DIR/run$run_seg"
+    ls -lrt $PREX_PLOT_DIR/run$run_seg
     echo "****  DONE CHECKING THE DIRECTORY STUCTURE"
 
-    pdfunite $(ls -rt ${scriptDir}/tmp/run$run_seg/*_summary_*.pdf) \
-     	${scriptDir}/tmp/run$run_seg/run${run_seg}_all.pdf
+    #pdfunite $(ls -rt ${scriptDir}/tmp/run$run_seg/*_summary_*.pdf) \
+    # 	${scriptDir}/tmp/run$run_seg/run${run_seg}_all.pdf
+
+    pdfunite $(ls -rt $PREX_PLOT_DIR/run$run_seg/*_summary_*.pdf) \
+     	$PREX_PLOT_DIR/run$run_seg/run${run_seg}_all.pdf
 
     if [ ! -d ${scriptDir}/hallaweb_online/summary_respin/run$run_seg ]; then
 	mkdir ${scriptDir}/hallaweb_online/summary_respin/run$run_seg;
     fi
 
     cp  $PREX_PLOT_DIR/run$run_seg/* \
-    	./hallaweb_online/summary/run$run_seg/;
+    	./hallaweb_online/summary_respin/run$run_seg/;
 
     cp ./japanOutput/summary_*$runnum*.txt \
 	./SummaryText/

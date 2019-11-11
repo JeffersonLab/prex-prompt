@@ -3,7 +3,7 @@
 level="Prompt"
 
 japan_work1="/chafs2/work1/apar/japanOutput/";
-prompt_dir="/adaqfs/home/apar/PREX/prompt";
+prompt_dir="/u/group/halla/parity/software/japan_offline/prompt/prex-prompt_merge/prex-prompt";
 todo_list=""$prompt_dir"/prompt-tmp/rsync_todo.list";
 
 if [ -f $todo_list ]; then 

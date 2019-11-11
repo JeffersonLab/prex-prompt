@@ -13,7 +13,7 @@
 #include<TRandom.h>
 void dithering_sensitivity_plot(int slugNo=0){ 
   char inputfile[300];
-  sprintf(inputfile,"/adaqfs/home/apar/PREX/prompt/beam-mod/scripts/dit_11X12X_txt/BPMs_sensitivity_slug%d.txt",slugNo);
+  sprintf(inputfile,"/u/group/halla/parity/software/japan_offline/prompt/prex-prompt_merge/prex-prompt/beam-mod/scripts/dit_11X12X_txt/BPMs_sensitivity_slug%d.txt",slugNo);
   ifstream infile(inputfile);
 
   const int n=1000;

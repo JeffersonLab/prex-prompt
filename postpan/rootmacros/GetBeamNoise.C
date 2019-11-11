@@ -1,6 +1,6 @@
 void GetBeamNoise(Int_t run_num,TString suffix){
 
-  TString output_filename = Form("./summary/run%d/run%d_postpan_summary.txt",run_num,run_num);
+  TString output_filename = Form("./summary_respin/run%d/run%d_postpan_summary.txt",run_num,run_num);
   FILE *summary_txt = fopen(output_filename.Data(), "w");
 
   TFile* rootfile = TFile::Open(Form("./japanOutput/prexRespin2_%d_regress_%s.root",run_num,suffix.Data() ));

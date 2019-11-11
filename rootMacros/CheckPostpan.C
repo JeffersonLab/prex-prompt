@@ -15,7 +15,7 @@ void CheckPostpan(Int_t run_num, TString suffix){
   file_name = Form("%s_%d_regress_%s.root",
 		   prefix.Data(),run_number,suffix.Data());
   TFile* rootfile = TFile::Open(path+file_name);
-  output_path = Form("./summary/run%d/",run_number);
+  output_path = Form("./summary_respin/run%d/",run_number);
   TString pdf_filename;
 
   gStyle->SetOptFit(1);
