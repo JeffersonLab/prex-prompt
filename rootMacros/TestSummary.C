@@ -24,11 +24,8 @@
 
 #include "CheckDetector.C"
 #include "CheckNormalizedDetector.C"
-#include "CheckDetectorCorrelation.C"
 
-#include "CheckAT.C"
-#include "CheckNormalizedAT.C"
-#include "CheckATCorrelation.C"
+#include "CheckDetectorCorrelation.C"
 
 #include "CheckRegNormDetector.C"
 #include "CheckRegressedDetector.C"
@@ -40,13 +37,12 @@
 
 #include "CheckNormalizedComboSAM.C"
 #include "CheckComboSAM.C"
-#include "CheckSuperCycle.C"
+
 #include "PlotErrorCounters.C"
 #include "Integrated.C"
 #include "PlotPairTree.C"
 #include "CheckWireSum.C"
-
-void PlotSummary(TString filename,TString output_dir="./tmp"){
+void TestSummary(TString filename){
 
   Bool_t isNormalized=kTRUE;
 
@@ -56,11 +52,8 @@ void PlotSummary(TString filename,TString output_dir="./tmp"){
   Ssiz_t plength = plast-pfirst+1;
   run_seg = filename(pfirst,plength);
   run_seg = run_seg.ReplaceAll('.','_');
+  output_path = Form("./SummaryPlots/run%s/",run_seg.Data());
 
-  if(output_dir=="")
-    output_dir="./tmp/";
-  output_path = output_dir + Form("/run%s/",run_seg.Data());
-  cout << " -- output_path " << output_path << endl;
   //  Make sure we have the trees before proceeding.
   TTree *evt_tree = (TTree*)gROOT->FindObject("evt");
   if (evt_tree==NULL){
@@ -83,22 +76,22 @@ void PlotSummary(TString filename,TString output_dir="./tmp"){
   }
 
   //===== Error Counter from Evt Tree =====   
+  // PlotErrorCounters();
 
-  if (evt_tree->GetEntries("ErrorFlag==0")==0){
-    std::cout << "WARNING:  The event tree has no good events in file "
-	      << filename << "!" << std::endl;
-    // Make plots from BCM without ErrorFlag cuts
-    PlotErrorCounters();
-    CheckBCM();
-    gSystem->Exec(Form("convert $(ls -rt %s*bcm*.png) %srun%s_summary_bcm.pdf",
-		       output_path.Data(),
-		       output_path.Data(),
-		       run_seg.Data()));
+  // if (evt_tree->GetEntries("ErrorFlag==0")==0){
+  //   std::cout << "WARNING:  The event tree has no good events in file "
+  // 	      << filename << "!" << std::endl;
+  //   // Make plots from BCM without ErrorFlag cuts
+  //   CheckBCM();
+  //   gSystem->Exec(Form("convert $(ls -rt %s*bcm*.png) %srun%s_summary_bcm.pdf",
+  // 		       output_path.Data(),
+  // 		       output_path.Data(),
+  // 		       run_seg.Data()));
 
-    gSystem->Exec(Form("rm %s*bcm*.png",output_path.Data()));
+  //   gSystem->Exec(Form("rm %s*bcm*.png",output_path.Data()));
 
-    return;
-  }
+  //   return;
+  // }
   if (mul_tree->GetEntries("ErrorFlag==0")==0){
     std::cout << "WARNING:  The multiplet tree has no good events in file "
 	      << filename << "!" << std::endl;
@@ -156,21 +149,7 @@ void PlotSummary(TString filename,TString output_dir="./tmp"){
   gSystem->Exec(Form("rm %s*maindet*.png %s*[ud]s[lr]*.png",
 		     output_path.Data(),
 		     output_path.Data()));
-
-   //===== AT Detector Plots =======
-  if(isNormalized)
-    CheckNormalizedAT();		
-  else
-    CheckAT();
-  CheckATCorrelation();
-
-  gSystem->Exec(Form("convert $(ls -rt %s*at*.png)  %srun%s_summary_at_detector.pdf",
-  		     output_path.Data(),
-		     output_path.Data(),
-  		     run_seg.Data()));
-
-  gSystem->Exec(Form("rm %s*at*.png",
-		     output_path.Data()));
+  
 
   //===== SAM Plots =======
   if(isNormalized)
@@ -218,23 +197,21 @@ void PlotSummary(TString filename,TString output_dir="./tmp"){
 
   // ===== Integrated Convergence 
   Integrated();
-  CheckSuperCycle();
-  
   //==== Injector BPMs Dx Dy Dr and Ellipticity ====
-  // PlotInjBPMS();
-  // PlotInjBPMSAq();
-  // PlotInjBPMSDr();
-  // PlotInjBPMSAelli();
-  // TString pdf_filename = Form("run%s_injector_BPM.pdf",run_seg.Data());
-  // gSystem->Exec(Form("convert $(ls -rt %srun%s*injector_BPM*.png) %s%s",
-  // 		     output_path.Data(),
-  // 		     run_seg.Data(),
-  // 		     output_path.Data(),
-  // 		     pdf_filename.Data()));
+  PlotInjBPMS();
+  PlotInjBPMSAq();
+  PlotInjBPMSDr();
+  PlotInjBPMSAelli();
+  TString pdf_filename = Form("run%s_injector_BPM.pdf",run_seg.Data());
+  gSystem->Exec(Form("convert $(ls -rt %srun%s*injector_BPM*.png) %s%s",
+		     output_path.Data(),
+		     run_seg.Data(),
+		     output_path.Data(),
+		     pdf_filename.Data()));
 
-  // gSystem->Exec(Form("rm %srun%s*injector_BPM*.png",
-  // 		     output_path.Data(),
-  // 		     run_seg.Data())); 
+  gSystem->Exec(Form("rm %srun%s*injector_BPM*.png",
+		     output_path.Data(),
+		     run_seg.Data())); 
 
   // gSystem->Exec(Form("pdfunite $(ls -rt %s/*_summary_*.pdf) %s/run%s_all.pdf",
   // 		     output_path.Data(),

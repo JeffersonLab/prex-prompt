@@ -6,10 +6,10 @@
 # 2: A single number 0, 1, or 2 for the spectrometers enabled. This is usually 0. 0 for both, 1 for right only, 2 for left only.
 
 slugfile=$1
-hrs=$2
+#hrs=$2
 startingpoint=60 #Default start on 60, most recent Wien
-if [ "$#" -eq 3 ]; then
-  startingpoint=$3
+if [ "$#" -eq 2 ]; then
+  startingpoint=$2
 fi
 
 source ~/PREX/setup_japan.sh
@@ -36,16 +36,24 @@ do
 done < "$input"
 
 slug1=`rcnd $firstrun slug`
+arm1=`rcnd $firstrun arm_flag`
 ihwp1=`rcnd $firstrun ihwp`
 wien1=`rcnd $firstrun flip_state`
 
 slug2=`rcnd $lastrun slug`
+arm2=`rcnd $lastrun arm_flag`
 ihwp2=`rcnd $lastrun ihwp`
 wien2=`rcnd $lastrun flip_state`
 
 if [ $slug1 != $slug2 ]
 then
   echo "First and last run's slugs don't equal!"
+  exit
+fi
+
+if [[ (($arm1 -ne 0) && ($arm2 -ne 0)) && ($arm1 -ne $arm2) ]]
+then
+  echo "First and last run's good HRS don't equal!"
   exit
 fi
 
@@ -62,6 +70,7 @@ then
 fi
 
 slug=$slug1
+hrs=$arm2
 ihwpstring=$ihwp1
 wienstring=$wien1
 
@@ -97,6 +106,13 @@ cd /chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan
 #sleep 900
 ~/PREX/prompt/Aggregator/drawPostpan/dithering_accumulate_mini_aggFiles_list.sh slug$slug
 
+mkdir ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}
+
+cp ~/PREX/prompt/beam-mod/rootfiles_alldet_pass1/plots/cyclenum_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/cycle_slopes_pass1_slug${slug}.pdf
+cp ~/PREX/prompt/beam-mod/rootfiles_alldet_pass2/plots/cyclenum_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/cycle_slopes_pass2_slug${slug}.pdf
+#cp ~/PREX/prompt/beam-mod/scripts/dit_11X12X_txt/*sensitivity_slug${slug}.txt ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/
+cp ~/PREX/prompt/beam-mod/scripts/dit_11X12X_txt/plots/sensitivity_plots_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/
+
 #root -l -b -q copytree_auto.C'('$slug')'
 rm -f /chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering/grandRootfile_$slug/grand_aggregator.root
 export CAM_OUTPUTDIR=/chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering/grandRootfile_$slug/
@@ -107,7 +123,7 @@ cp -f plots/dithering/summary_minirun_slug_linear${slug}.txt ~/PREX/prompt/halla
 
 rm -f grand_slug_plot_list.txt
 for i in $(seq $startingpoint $slug); do echo $i>>grand_slug_plot_list.txt; done
-./slug_file_accumulate_list.sh grand_slug_plot_list.txt
+./dithering_slug_file_accumulate_list.sh grand_slug_plot_list.txt
 
 #make grand agg plots!
 root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering/grandRootfile/grand_'$startingpoint'-'${slug}'.root","~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug'$slug'/grand_'$startingpoint'-'$slug'")'

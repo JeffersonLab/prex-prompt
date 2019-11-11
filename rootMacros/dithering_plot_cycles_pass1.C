@@ -245,7 +245,7 @@ void dithering_plot_cycles_pass1(int slugNo=0){
     gPad->SetGridy(1);
   }  
   //cus->SaveAs(Form("usl_cyclenum_slug%d_pass1.pdf",slugNo));
-  cus->SaveAs(Form("plots/cyclenum_slug%d_pass1.pdf[",slugNo));
+  cus->SaveAs(Form("plots/cyclenum_slug%d_pass1.pdf(",slugNo));
   TCanvas *cds = new TCanvas("cds","cds",1000,1000);
   cds->Divide(2,3);
   for(int i=0;i<5;i++){
@@ -353,7 +353,7 @@ void dithering_plot_cycles_pass1(int slugNo=0){
   }  
 
   //  c7->SaveAs(Form("ddds_cyclenum_slug%d_pass1.pdf",slugNo));
-  c7->SaveAs(Form("plots/cyclenum_slug%d_pass1.pdf]",slugNo));
+  c7->SaveAs(Form("plots/cyclenum_slug%d_pass1.pdf)",slugNo));
   // gSystem->Exec("pdfunite *cyclenum_slug17.pdf all_cyclenum_slug.pdf");
   // gSystem->Exec("rm -rf *cyclenum_slug17.pdf");
 }

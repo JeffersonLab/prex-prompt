@@ -673,7 +673,7 @@ void dithering_sensitivity_plot(int slugNo=0){
     xmeanLine[i]->Draw("same");
     gPad->SetGridy(1);
   }
-  c41->SaveAs(Form("plots/sensitivity_plots_slug%d.pdf[",slugNo));
+  c41->SaveAs(Form("plots/sensitivity_plots_slug%d.pdf(",slugNo));
 
   TCanvas *c42 = new TCanvas("c42","c42",1000,1000);
   c42->Divide(2,3);
@@ -1076,7 +1076,7 @@ void dithering_sensitivity_plot(int slugNo=0){
   gPad->SetGrid(1); // both axes get a grid, don't forget the gPad->Modified() (see below)
   gPad->SetGridx(1);
 
-  c43->SaveAs(Form("plots/sensitivity_plots_slug%d.pdf]",slugNo));
+  c43->SaveAs(Form("plots/sensitivity_plots_slug%d.pdf)",slugNo));
 
 }
 

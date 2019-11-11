@@ -8,8 +8,8 @@ shopt -s extglob
 # find split file
 rootfile_list=$(ls -1 ${scriptDir}/japanOutput/prex$level\_pass1_$runnum.!(*jlab.org*).root);
 shopt -u extglob
-
-rsync_todo_list="./prompt-tmp/rsync_todo.list"
+echo " -- summary.sh: checking PREX_PLOT_DIR=" $PREX_PLOT_DIR
+rsync_todo_list="./rsync-scripts/rsync_todo.list"
 
 for rootfile  in $rootfile_list
 do
@@ -21,24 +21,14 @@ do
     run_num=${run_dot_seg%.*}
     run_seg=${run_dot_seg/./_}
 
-    redfile="${scriptDir}/results/prexPrompt_${run_seg}_regress_postpan.root";
-
-    echo "****  Setting up directories"
-    pwd
-    ls -lrt
-
-    if [ ! -d `pwd`/tmp/run$run_seg ]; then
-	mkdir -p `pwd`/tmp/run$run_seg;
+    redfile='./results/prexPrompt_'${run_seg}'_regress_postpan.root';
+    
+    if [ ! -d $PREX_PLOT_DIR/run$run_seg ]; then
+      mkdir $PREX_PLOT_DIR/run$run_seg;
     fi
-    chmod 777 `pwd`/tmp/run$run_seg;
-    echo "Plots should be going to `pwd`/tmp/run$run_seg"
-    echo    ls -lrt
-    ls -lrt
-    echo    ls -lrt `pwd`/tmp
-    ls -lrt `pwd`/tmp
-    my_output_path=`pwd`/tmp/run$run_seg/
 
-    echo "****  Done setting up directories"
+    root -b -q -l './rootMacros/PlotSummary.C("'$rootfile'","'$PREX_PLOT_DIR'")';
+    root -b -q -l './postpan/rootmacros/PlotSummary_postpan.C("'$redfile'","'$PREX_PLOT_DIR'")';
 
     root -b -q -l "${scriptDir}/rootMacros/PlotSummary.C(\"${rootfile}\",\"${my_output_path}\")";
     root -b -q -l "${scriptDir}/postpan/rootmacros/PlotSummary_postpan.C(\"${redfile}\",\"${my_output_path}\")";
@@ -57,10 +47,12 @@ do
     if [ ! -d ${scriptDir}/hallaweb_online/summary_respin/run$run_seg ]; then
 	mkdir ${scriptDir}/hallaweb_online/summary_respin/run$run_seg;
     fi
-    
-    mv  ./tmp/run$run_seg/* \
-	${scriptDir}/hallaweb_online/summary_respin/run$run_seg/;
-    rm  -rf ./tmp/run$run_seg;
+
+    cp  $PREX_PLOT_DIR/run$run_seg/* \
+    	./hallaweb_online/summary/run$run_seg/;
+
+    cp ./japanOutput/summary_*$runnum*.txt \
+	./SummaryText/
 
     # copying prompt summary
     cp ${scriptDir}/japanOutput/summary_*$runnum*.txt \
@@ -81,12 +73,12 @@ do
     
     bash 	${scriptDir}/hallaweb_online/summary_respin/sort_farm.sh ;
 
-done
+    if [ -f $rsync_todo_list ]; then
+	echo $PREX_PLOT_DIR/run$run_seg >> $rsync_todo_list;
+    else 
+	echo $PREX_PLOT_DIR/run$run_seg > $rsync_todo_list;
+    fi
 
-if [ -f $rsync_todo_list ]; then
-    echo $run_num >> $rsync_todo_list;
-else 
-    echo $run_num > $rsync_todo_list;
-fi
+done
 
 

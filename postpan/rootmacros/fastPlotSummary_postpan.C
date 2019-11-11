@@ -31,25 +31,16 @@
 #include "RegressionSummary.C"
 #include "PlotPairTree.C"
 #include "CheckNormalizedComboSAM_postpan.C"
-#include "CheckRegNormATDetector_postpan.C"
 
-void PlotSummary_postpan(TString filename,TString output_dir="./tmp"){
+void fastPlotSummary_postpan(TString filename){
   results = TFile::Open(filename);
   Ssiz_t pfirst = filename.Last('_')-16;
   Ssiz_t plast = filename.Last('.')-17;
   Ssiz_t plength = plast-pfirst+1;
   run_seg = filename(pfirst,plength);
   run_seg = run_seg.ReplaceAll('.','_');
+  output_path = Form("./FastPlots/run%s/",run_seg.Data());
 
-  if(output_dir=="")
-    output_dir="./tmp";
-  output_path = output_dir+Form("/run%s/",run_seg.Data());
-  cout << " -- output_path " << output_path << endl;
-  // ===Check mulc_lrb before making plots
-  // CheckComboSAM_postpan();
-  // CheckBPM();
-  // CheckRegNormDetector_postpan();
-  //  PlotPairTree(CheckRegression_postpan);
   TTree *red_tree = (TTree*)gROOT->FindObject("reg");
   if (red_tree==NULL){
     std::cout << "WARNING:  The ReD tree was not found for file "
@@ -63,10 +54,7 @@ void PlotSummary_postpan(TString filename,TString output_dir="./tmp"){
   }
   else{
     CheckRegression_postpan();
-    CheckNormalizedComboSAM_postpan(); 
-    CheckRegNormATDetector_postpan();
     CheckRegNormDetector_postpan();
   }
-  //CheckRegressedDetector_postpan();
 }
 

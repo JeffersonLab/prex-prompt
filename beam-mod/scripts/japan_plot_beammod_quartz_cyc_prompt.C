@@ -56,6 +56,7 @@ int japan_plot_beammod_quartz_cyc_prompt(int runNo=0) {
 
   const int n=cycles.size();//number of cycle
   Double_t supercyc[n];
+  Int_t Is_fill[n];
   for(int i=0;i<n;i++){
     supercyc[i]=cycles[i]; 
     cout<<"i="<<i<<"  "<<"supercyc="<<supercyc[i]<<endl;
@@ -68,7 +69,7 @@ int japan_plot_beammod_quartz_cyc_prompt(int runNo=0) {
     cout<<"supercycslope="<<supercycslope[i]<<endl;
   }
   Double_t trim_base[7] = {833,782,845,827,822,844,832};
-  //Double_t trim_base[7] = {1683,1582,1708,1670,1662,1709,1686};
+ // Double_t trim_base[7] = {1683,1582,1708,1670,1662,1709,1686};
   const double trimmin=0.38;
   const double trimmax=0.7;
   const double bpmmax=3;
@@ -116,7 +117,7 @@ int japan_plot_beammod_quartz_cyc_prompt(int runNo=0) {
       for(int icoil=0;icoil<nCoil;icoil++){
 	int ndata = tree_R->Draw(Form("%s:(%s*%lf)",
 				      detname.Data(),wire[icoil].Data(),chtov),
-				 Form("(ErrorFlag&0x5b7e6bff)== 0 && bmod_ramp>0 && bmwobj==%d && abs(%s-%f)>20 && bmwcycnum==%f",
+				 Form("bcm_dg_ds>60 && bmod_ramp>0 && bmwobj==%d && abs(%s-%f)>20 && bmwcycnum==%f",
 				      icoil+1,wire[icoil].Data(),trim_base[icoil],supercyc[i]));
 	if(ndata<50){
 	  // cout << "-- CycleNumber: " << supercyc[i] <<  endl;
@@ -134,7 +135,7 @@ int japan_plot_beammod_quartz_cyc_prompt(int runNo=0) {
 	ndata = tree_R->Draw(Form("(%lf/%lf)*%s:(%s*%lf)",
 				  factor,this_mean, detname.Data(),
 				  wire[icoil].Data(),chtov),
-			     Form("(ErrorFlag&0x5b7e6bff)== 0 && bmod_ramp>0 && bmwobj==%d && abs(%s-%f)>20 && bmwcycnum==%f",
+			     Form("bcm_dg_ds>60 && bmod_ramp>0 && bmwobj==%d && abs(%s-%f)>20 && bmwcycnum==%f",
 				  icoil+1,wire[icoil].Data(),trim_base[icoil],supercyc[i]));
 
 	double this_slope,this_error;
@@ -168,11 +169,18 @@ int japan_plot_beammod_quartz_cyc_prompt(int runNo=0) {
     for(int icoil=0;icoil<nCoil;icoil++)
       if(sens_err[idet][icoil]==-1){
 	cout << "-- Incomplete dithering coil " << icoil 
-	     << " is found. No sensitivity output for this run "
+	     << " is found. No sensitivity output for this cycle "
 	     << endl;
-	return 1;
+//	return 1;
       }
 
+   if(sens_err[0][0]==-1 || sens_err[0][1]==-1|| sens_err[0][2]==-1 || sens_err[0][3]==-1 || sens_err[0][4]==-1 || sens_err[0][5]==-1 || sens_err[0][6]==-1 || sens_err[1][0]==-1 || sens_err[1][1]==-1|| sens_err[1][2]==-1 || sens_err[1][3]==-1 || sens_err[1][4]==-1 || sens_err[1][5]==-1 || sens_err[1][6]==-1 || sens_err[2][0]==-1 || sens_err[2][1]==-1|| sens_err[2][2]==-1 || sens_err[2][3]==-1 || sens_err[2][4]==-1 || sens_err[2][5]==-1 || sens_err[2][6]==-1 || sens_err[3][0]==-1 || sens_err[3][1]==-1|| sens_err[3][2]==-1 || sens_err[3][3]==-1 || sens_err[3][4]==-1 || sens_err[3][5]==-1 || sens_err[3][6]==-1 ){
+     Is_fill[i]=0;
+   }else{
+    Is_fill[i]=1;
+   }
+
+  if(Is_fill[i]==1){
   for(int idet=0;idet<nDet;idet++){
     outfile0<< setw(tab_width) << setiosflags(ios::left) << runNo<<setw(tab_width) << setiosflags(ios::left)<<supercyc[i]<<setw(tab_width) << setiosflags(ios::left) <<cutflag // Now , just one o   
      << setw(tab_width) << setiosflags(ios::left) <<  det_array[idet];
@@ -187,6 +195,7 @@ int japan_plot_beammod_quartz_cyc_prompt(int runNo=0) {
     outfile0 << endl;
   } // end of detector loop
  }//end of cyc
+}
   return 0;
 }
   

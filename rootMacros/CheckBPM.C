@@ -33,8 +33,11 @@ void CheckBPM(){
   mul_tree->SetAlias("Aq","asym_bcm_an_ds");
   mul_tree->Draw("Aq/ppm",mul_cut);
   TH1D* h1d_buff = (TH1D*)pad_buff->FindObject("htemp");
-  Double_t Aq_mean = h1d_buff->GetMean();
-  Double_t Aq_rms = h1d_buff->GetRMS();
+  Double_t Aq_mean,Aq_rms;
+  if(h1d_buff!=NULL){
+    Aq_mean = h1d_buff->GetMean();
+    Aq_rms = h1d_buff->GetRMS();
+  }
   TString suffix[2]={"X","Y"};
   
   for(int ibpm=0;ibpm<nbpm;ibpm++){
@@ -73,13 +76,15 @@ void CheckBPM(){
 			  device_name),
 		     "ErrorFlag==0","COL");
       TH2F* h2d_buff = (TH2F*)pad_buff->FindObject("htemp");
-      h2d_buff->Draw("candlex3");
+      if(h2d_buff!=NULL)
+	h2d_buff->Draw("candlex3");
 
       pad_buff=cbpm->cd(4*ix+4);
       mul_tree->Draw(Form("diff_%s/um",device_name),
 		     "ErrorFlag==0");
       h_buff = (TH1D*)pad_buff->FindObject("htemp");
-      h_buff->SetName(device_name);
+      if(h_buff!=NULL)
+	h_buff->SetName(device_name);
 
       mul_tree->Draw(Form("diff_%s/um",device_name),
 		     Form("ErrorFlag==0 && diff_%s.Device_Error_Code!=0",
@@ -123,21 +128,21 @@ void CheckBPM(){
 		   mul_cut,"prof");
     
     h2d_buff = (TH2D*)pad_buff->FindObject("htemp");
+    if(h2d_buff!=NULL){
+      h2d_buff->Fit("pol1","QR","",
+		    Aq_mean-2*Aq_rms,
+		    Aq_mean+2*Aq_rms);
 
-    h2d_buff->Fit("pol1","QR","",
-		Aq_mean-2*Aq_rms,
-		Aq_mean+2*Aq_rms);
-
-    pad_buff->Update();
-    TPaveStats* st = (TPaveStats*)h2d_buff->FindObject("stats");
-    st->SetOptFit(1);
-    st->SetOptStat(0);
-    st->SetTextSize(0.03);
-    st->SetX1NDC(0.1);
-    st->SetX2NDC(0.5);
-    st->SetY1NDC(0.9);
-    st->SetY2NDC(0.7);
-    
+      pad_buff->Update();
+      TPaveStats* st = (TPaveStats*)h2d_buff->FindObject("stats");
+      st->SetOptFit(1);
+      st->SetOptStat(0);
+      st->SetTextSize(0.03);
+      st->SetX1NDC(0.1);
+      st->SetX2NDC(0.5);
+      st->SetY1NDC(0.9);
+      st->SetY2NDC(0.7);
+    }
     cwiresum->cd(5);
     evt_tree->Draw(Form("%sXP.hw_sum_raw/%sXP.num_samples*76.29e-6:Entry$",
 			vBPM[ibpm],vBPM[ibpm]),
