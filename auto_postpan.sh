@@ -10,7 +10,7 @@ fi
 level="Prompt"
 shopt -s extglob
 # find split file
-rootfile_list=$(ls -1 ./japanOutput/prex$level\_pass1_$runnum.!(*jlab.org*).root);
+rootfile_list=$(ls -1 ./japanOutput/prex$level\_pass1_$runnum.!(*farm*).root);
 shopt -u extglob
 
 for rootfile  in $rootfile_list
@@ -20,22 +20,21 @@ do
     run_num=${run_dot_seg%.*}
     run_seg=${run_dot_seg/./_}
 
-    postpanConf="combo_reg.conf"
+    echo $(($run_num))
+    echo $run_num
+
+    postpanConf="std_reg.conf"
     if [ $(($run_num)) -ge 3390 ]
     then
-      postpanConf="combo_reg.3390-3582.conf"
-    fi
-    if [ $(($run_num)) -ge 3583 ]
-    then
-      postpanConf="combo_reg.3583-3802.conf"
+      postpanConf="std_reg.3390-3802.conf"
     fi
     if [ $(($run_num)) -ge 3803 ]
     then
-      postpanConf="combo_reg.3803-4294.conf"
+      postpanConf="std_reg.3803-4294.conf"
     fi
     if [ $(($run_num)) -ge 4295 ]
     then
-      postpanConf="combo_reg.4295-.conf"
+      postpanConf="std_reg.4295-.conf"
     fi
 
     ./postpan/redana \
