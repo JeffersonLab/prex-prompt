@@ -1,14 +1,13 @@
 #!/bin/sh
-scriptDir=`pwd`
-cd $WORK_DIR
+#scriptDir=`pwd`
 runnum=$1
 level="Prompt"
 shopt -s extglob
 # find split file
-rootfile_list=$(ls -1 ${scriptDir}/japanOutput/prex$level\_pass1_$runnum.!(*jlab.org*).root);
+rootfile_list=$(ls -1 $PROMPT_DIR/japanOutput/prex$level\_pass1_$runnum.!(*jlab.org*).root);
 shopt -u extglob
 echo " -- summary.sh: checking PREX_PLOT_DIR=" $PREX_PLOT_DIR
-rsync_todo_list="./rsync-scripts/rsync_todo.list"
+rsync_todo_list="$PROMPT_DIR/rsync-scripts/rsync_todo.list"
 
 for rootfile  in $rootfile_list
 do
@@ -20,20 +19,14 @@ do
     run_num=${run_dot_seg%.*}
     run_seg=${run_dot_seg/./_}
 
-    redfile='./results/prexPrompt_'${run_seg}'_regress_postpan.root';
+    redfile="$PROMPT_DIR/results/prexPrompt_${run_seg}_regress_postpan.root";
     
     if [ ! -d $PREX_PLOT_DIR/run$run_seg ]; then
       mkdir $PREX_PLOT_DIR/run$run_seg;
     fi
 
-    #root -b -q -l './rootMacros/PlotSummary.C("'$rootfile'","'$PREX_PLOT_DIR'")';
-    #root -b -q -l './postpan/rootmacros/PlotSummary_postpan.C("'$redfile'","'$PREX_PLOT_DIR'")';
-
-    #root -b -q -l "${scriptDir}/rootMacros/PlotSummary.C(\"${rootfile}\",\"${my_output_path}\")";
-    #root -b -q -l "${scriptDir}/postpan/rootmacros/PlotSummary_postpan.C(\"${redfile}\",\"${my_output_path}\")";
-
-    root -b -q -l "${scriptDir}/rootMacros/PlotSummary.C(\"${rootfile}\",\"$PREX_PLOT_DIR/run$run_seg/\")";
-    root -b -q -l "${scriptDir}/postpan/rootmacros/PlotSummary_postpan.C(\"${redfile}\",\"$PREX_PLOT_DIR/run$run_seg/\")";
+    root -b -q -l "$PROMPT_DIR/rootMacros/PlotSummary.C(\"${rootfile}\",\"$PREX_PLOT_DIR\")";
+    root -b -q -l "$PROMPT_DIR/postpan/rootmacros/PlotSummary_postpan.C(\"${redfile}\",\"$PREX_PLOT_DIR\")";
 
     echo "****  CHECKING THE DIRECTORY STUCTURE"
     pwd
@@ -43,40 +36,37 @@ do
     ls -lrt $PREX_PLOT_DIR/run$run_seg
     echo "****  DONE CHECKING THE DIRECTORY STUCTURE"
 
-    #pdfunite $(ls -rt ${scriptDir}/tmp/run$run_seg/*_summary_*.pdf) \
-    # 	${scriptDir}/tmp/run$run_seg/run${run_seg}_all.pdf
-
     pdfunite $(ls -rt $PREX_PLOT_DIR/run$run_seg/*_summary_*.pdf) \
      	$PREX_PLOT_DIR/run$run_seg/run${run_seg}_all.pdf
 
-    if [ ! -d ${scriptDir}/hallaweb_online/summary_respin/run$run_seg ]; then
-	mkdir ${scriptDir}/hallaweb_online/summary_respin/run$run_seg;
+    if [ ! -d $PROMPT_DIR/hallaweb_online/summary_respin/run$run_seg ]; then
+	mkdir $PROMPT_DIR/hallaweb_online/summary_respin/run$run_seg;
     fi
 
     cp  $PREX_PLOT_DIR/run$run_seg/* \
-    	./hallaweb_online/summary_respin/run$run_seg/;
+    	$PROMPT_DIR/hallaweb_online/summary_respin/run$run_seg/;
 
-    cp ./japanOutput/summary_*$runnum*.txt \
-	./SummaryText/
+    cp $PROMPT_DIR/japanOutput/summary_*$runnum*.txt \
+	$PROMPT_DIR/SummaryText/
 
     # copying prompt summary
-    cp ${scriptDir}/japanOutput/summary_*$runnum*.txt \
-	${scriptDir}/SummaryText/
+    cp $PROMPT_DIR/japanOutput/summary_*$runnum*.txt \
+	$PROMPT_DIR/SummaryText/
 
-    mv  ${scriptDir}/SummaryText/summary_$run_num.txt \
-	${scriptDir}/SummaryText/summary_$level_$run_seg.txt \
+    mv  $PROMPT_DIR/SummaryText/summary_$run_num.txt \
+	$PROMPT_DIR/SummaryText/summary_$level_$run_seg.txt \
 
-    cp  ${scriptDir}/SummaryText/summary_$level_$run_seg.txt \
-	${scriptDir}/hallaweb_online/summary_respin/run$run_seg/ ;
+    cp  $PROMPT_DIR/SummaryText/summary_$level_$run_seg.txt \
+	$PROMPT_DIR/hallaweb_online/summary_respin/run$run_seg/ ;
     # copying postpan summary
-    cp  ${scriptDir}/results/prexPrompt_$run_seg\_postpan_summary.txt \
-    	${scriptDir}/hallaweb_online/summary_respin/run$run_seg/;
+    cp  $PROMPT_DIR/results/prexPrompt_$run_seg\_postpan_summary.txt \
+    	$PROMPT_DIR/hallaweb_online/summary_respin/run$run_seg/;
 
     #Change user group and permission
-    chgrp -R a-parity ${scriptDir}/hallaweb_online/summary_respin/run$run_seg;
-    chmod -R 777 ${scriptDir}/hallaweb_online/summary_respin/run$run_seg;    
+    chgrp -R a-parity $PROMPT_DIR/hallaweb_online/summary_respin/run$run_seg;
+    chmod -R 777 $PROMPT_DIR/hallaweb_online/summary_respin/run$run_seg;    
     
-    bash 	${scriptDir}/hallaweb_online/summary_respin/sort_farm.sh ;
+    bash 	$PROMPT_DIR/hallaweb_online/summary_respin/sort_farm.sh ;
 
     if [ -f $rsync_todo_list ]; then
 	echo $PREX_PLOT_DIR/run$run_seg >> $rsync_todo_list;

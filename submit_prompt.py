@@ -6,7 +6,7 @@ def main():
     
     _email="rradloff@jlab.org"
     _mssdir="/mss/halla/parity/raw"
-    _source="/u/group/halla/parity/software/japan_offline/prompt/prex-prompt"
+    _source="/u/group/halla/parity/software/japan_offline/prompt/prex-prompt_merge/prex-prompt"
     _directory="/lustre/expphy/cache/halla/parity/raw"
     _rootout="/lustre/expphy/volatile/halla/parity/japanOutput"
     _nrStart=3900
@@ -53,18 +53,20 @@ def createXMLfile(mssdir,source,rootout,nStart,nStop,email,workflowID):
         f.write("    <Command><![CDATA[\n")
         f.write("    echo \"Setting the current directory to QW_DATA.\"\n")
         f.write("    setenv QW_DATA `pwd`\n")
-        f.write("    echo \"QW_DATA = $QW_DATA\"\n\n")
+        f.write("    setenv PREX_PLOT_DIR `pwd`/tmp \n")
         f.write("    cd "+source+"\n")
         f.write("    echo \"Switching to the prompt directory.\"\n")
         f.write("    setenv QW_PRMINPUT "+source+"/Parity/prminput\n")
         f.write("    setenv QW_ROOTFILES "+rootout+"\n")
+#        f.write("    cd $QW_DATA\n")
 #        f.write("    alias convert "+source+"/convert\n")
         f.write("    echo \"Set up these environment variables:\"\n")
         f.write("    echo \"QW_DATA = $QW_DATA\"\n")
         f.write("    echo \"QW_PRMINPUT = $QW_PRMINPUT\"\n")
         f.write("    echo \"QW_ROOTFILES = $QW_ROOTFILES\"\n")
+        f.write("    echo \"PREX_PLOT_DIR = $PREX_PLOT_DIR\"\n")
 #        f.write("    echo \"alias convert "+source+"/convert\"\n\n")
-        f.write("    prompt.sh "+str(nr)+"\n")
+        f.write("    "+source+"/prompt.sh "+str(nr)+"\n")
         f.write("    ]]></Command>\n")
         f.write("    <Stdout dest=\""+source+"/LogFiles/ifarmlog"+"_%04d"%(nr)+".out\"/>\n")
         f.write("    <Stderr dest=\""+source+"/LogFiles/ifarmlog"+"_%04d"%(nr)+".err\"/>\n")
