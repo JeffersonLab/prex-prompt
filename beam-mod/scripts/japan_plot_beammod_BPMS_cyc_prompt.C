@@ -30,8 +30,13 @@ int japan_plot_beammod_BPMS_cyc_prompt(int runNo=0) {
   sprintf(infile,"$QW_ROOTFILES/prexPrompt_pass1_%d.000.root",runNo);
   TFile *file1= TFile::Open(infile);
   if(file1==NULL){
-    cout << infile << "doesn't exist!!!" << endl;
-    return 1;
+    cout << infile << "doesn't exist!!! Trying quick prompt" << endl;
+    sprintf(infile,"$QW_ROOTFILES/quick_%d.000.root",runNo);
+    file1=TFile::Open(infile);
+    if(file1==NULL){
+      cout << infile << "doesn't exist!!!" << endl;
+      return 1;
+    }
   }
   TTree *tree_R = (TTree*) file1->Get("evt");
   tree_R->Draw(">>elist","bmwcycnum>0","entrylist");  //picks out unique cycle numbers
@@ -118,7 +123,7 @@ int japan_plot_beammod_BPMS_cyc_prompt(int runNo=0) {
       for(int icoil=0;icoil<nCoil;icoil++){
 	int ndata = tree_R->Draw(Form("%lf*(%s):(%s*%lf)",
 				      factor,bpmName.Data(),wire[icoil].Data(),chtov),
-				 Form("bcm_dg_ds>60 && bmod_ramp>0 && bmwobj==%d && abs(%s-%f)>20 && bmwcycnum==%f",
+				 Form("(ErrorFlag & 0xbb020bff)==0 && bmod_ramp>0 && bmwobj==%d && abs(%s-%f)>20 && bmwcycnum==%f",
 				      icoil+1,wire[icoil].Data(),trim_base[icoil],supercyc[i]));
 	if(ndata<50){
 	  // cout << "-- CycleNumber: " << supercyc[i] <<  endl;
