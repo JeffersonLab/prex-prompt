@@ -1,6 +1,9 @@
 #! /bin/sh
 runnum=$1;
 
+echo -e "\n\n\n\n\n    Starting overload_postpan.sh\n\n\n\n\n";
+>&2 echo -e "\n\n\n\n\n    Starting overload_postpan.sh\n\n\n\n\n";
+
 if [ -z "$runnum" ] 
 then
     echo "Run Number is empty";
@@ -43,11 +46,10 @@ do
     	-f $rootfile \
     	-c ./postpan/conf/$overloadConf ; 
 
-    # if[ $(($run_num)) -ge 3390 ] then
-    # 	./postpan/redana \
-    # 	    -f $rootfile \
-    # 	    -c ./postpan/conf/$comboBPMConf;
-    # fi
-
+    if[ $(($run_num)) -ge 3390 ] then
+    	./postpan/redana \
+    	    -f $rootfile \
+    	    -c ./postpan/conf/$comboBPMConf;
+    fi
 done
 

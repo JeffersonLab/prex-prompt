@@ -91,20 +91,20 @@ void CheckRegNormATDetector_postpan(){
 		 "prof");
   gPad->Update();
   hfit = (TH2D*)gDirectory->FindObject("hcoratlr1");
-  TPaveStats *psus = (TPaveStats*)hfit->FindObject("stats");
-  if(psus!=NULL){
-    psus->SetOptFit(1);
-    psus->SetOptStat(0);
-    psus->SetX1NDC(0.0);
-    psus->SetY1NDC(0.95);
-    psus->SetX2NDC(0.35);
-    psus->SetY2NDC(0.7);
-  }
-  if(hfit!=NULL){
+  if (hfit!=NULL) {
+    TPaveStats *psus = (TPaveStats*)hfit->FindObject("stats");
+    if(psus!=NULL){
+      psus->SetOptFit(1);
+      psus->SetOptStat(0);
+      psus->SetX1NDC(0.0);
+      psus->SetY1NDC(0.95);
+      psus->SetX2NDC(0.35);
+      psus->SetY2NDC(0.7);
+    }
     low = hfit->GetMean()-2*(hfit->GetRMS());
     up = hfit->GetMean()+2*(hfit->GetRMS());
     hfit->Fit("pol1","QR","",low,up);
-  } 
+  }
   TVirtualPad *pad_buff;
   pad_buff = c1->cd(5);
   reg_tree->Draw("(reg_asym_atl1/ppm-reg_asym_atr1/ppm)/2","ok_cut");
@@ -147,16 +147,16 @@ void CheckRegNormATDetector_postpan(){
 		 "prof");
   gPad->Update();
   h_buff = (TH2D*)gDirectory->FindObject("hcorat2lr");
-  TPaveStats *psds = (TPaveStats*)h_buff->FindObject("stats");
-  if(psds!=NULL){
-    psds->SetOptFit(1);
-    psds->SetOptStat(0);
-    psds->SetX1NDC(0.0);
-    psds->SetY1NDC(0.95);
-    psds->SetX2NDC(0.35);
-    psds->SetY2NDC(0.7);
-  }
   if(h_buff!=NULL){
+    TPaveStats *psds = (TPaveStats*)h_buff->FindObject("stats");
+    if(psds!=NULL){
+      psds->SetOptFit(1);
+      psds->SetOptStat(0);
+      psds->SetX1NDC(0.0);
+      psds->SetY1NDC(0.95);
+      psds->SetX2NDC(0.35);
+      psds->SetY2NDC(0.7);
+    }
     low = h_buff->GetMean()-2*h_buff->GetRMS();
     up = h_buff->GetMean()+2*h_buff->GetRMS();
     h_buff->Fit("pol1","QR","",low,up);

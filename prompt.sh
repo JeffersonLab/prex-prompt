@@ -1,5 +1,9 @@
 #! /bin/sh
 runnum=$1;
+
+echo -e "\n\n\n\n\n    Starting prompt.sh\n\n\n\n\n";
+>&2 echo -e "\n\n\n\n\n    Starting prompt.sh\n\n\n\n\n";
+
 if [ -z "$runnum" ]
 then
     echo "Run Number is empty";

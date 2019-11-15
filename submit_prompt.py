@@ -1,5 +1,6 @@
 #!/apps/python/PRO/bin/python
 from subprocess import call
+import subprocess
 import sys,os,time
 
 def main():
@@ -37,19 +38,20 @@ def createXMLfile(mssdir,source,rootout,nStart,nStop,email,workflowID):
     f.write("<Request>\n")
     f.write("  <Email email=\""+email+"\" request=\"false\" job=\"true\"/>\n")
     f.write("  <Project name=\"prex\"/>\n")
-    f.write("  <Track name=\"debug\"/>\n")
-#    f.write("  <Track name=\"simulation\"/>\n")
-#    f.write("  <Command><![CDATA[\n")
-#    f.write("    "+source+"/prompt/prex-prompt/qwparity\n")
-#    f.write("  ]]></Command>\n")
+#    f.write("  <Track name=\"debug\"/>\n")
+    f.write("  <Track name=\"production\"/>\n")
     f.write("  <Name name=\""+workflowID+"\"/>\n")
     f.write("  <OS name=\"centos7\"/>\n")
     f.write("  <Memory space=\"2000\" unit=\"MB\"/>\n")
 
-    for nr in range(nStart,nStop): # repeat for nr jobs
+    for nr in range(nStart,nStop+1): # repeat for nr jobs
         f.write("  <Job>\n")
-        datName="mss:"+mssdir+"/"+"parity_ALL"+"_%04d"%(nr)+".dat.0"
-        f.write("    <Input src=\""+datName+"\" dest=\"parity_ALL"+"_%04d"%(nr)+".dat.0\"/>\n")
+        cmd = "ls /mss/halla/parity/raw/parity_ALL_"+str(nr)+".dat.* | sort -t'.' -n -k3 | tail -n 1 | awk -F. '{print $3}'"
+        ps = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+        output = ps.communicate()[0]
+        for partfile in range(0,int(output)+1):
+            datName="mss:"+mssdir+"/"+"parity_ALL"+"_%04d"%(nr)+".dat."+str(partfile)
+            f.write("    <Input src=\""+datName+"\" dest=\"parity_ALL"+"_%04d"%(nr)+".dat."+str(partfile)+"\"/>\n")
         f.write("    <Command><![CDATA[\n")
         f.write("    echo \"Setting the current directory to QW_DATA.\"\n")
         f.write("    setenv QW_DATA `pwd`\n")
@@ -58,14 +60,11 @@ def createXMLfile(mssdir,source,rootout,nStart,nStop,email,workflowID):
         f.write("    echo \"Switching to the prompt directory.\"\n")
         f.write("    setenv QW_PRMINPUT "+source+"/Parity/prminput\n")
         f.write("    setenv QW_ROOTFILES "+rootout+"\n")
-#        f.write("    cd $QW_DATA\n")
-#        f.write("    alias convert "+source+"/convert\n")
         f.write("    echo \"Set up these environment variables:\"\n")
         f.write("    echo \"QW_DATA = $QW_DATA\"\n")
         f.write("    echo \"QW_PRMINPUT = $QW_PRMINPUT\"\n")
         f.write("    echo \"QW_ROOTFILES = $QW_ROOTFILES\"\n")
         f.write("    echo \"PREX_PLOT_DIR = $PREX_PLOT_DIR\"\n")
-#        f.write("    echo \"alias convert "+source+"/convert\"\n\n")
         f.write("    "+source+"/prompt.sh "+str(nr)+"\n")
         f.write("    ]]></Command>\n")
         f.write("    <Stdout dest=\""+source+"/LogFiles/ifarmlog"+"_%04d"%(nr)+".out\"/>\n")

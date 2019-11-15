@@ -1,6 +1,9 @@
 #! /bin/sh
 runnum=$1;
 
+echo -e "\n\n\n\n\n    Starting auto_postpan.sh\n\n\n\n\n";
+>&2 echo -e "\n\n\n\n\n    Starting auto_postpan.sh\n\n\n\n\n";
+
 if [ -z "$runnum" ] 
 then
     echo "Run Number is empty";
@@ -32,7 +35,7 @@ do
     then
       postpanConf="std_reg.3803-4294.conf"
     fi
-    if [ $(($run_num)) -ge 4295 ]
+    if [ $(($run_num)) -ge 4305 ]
     then
       postpanConf="std_reg.4295-.conf"
     fi

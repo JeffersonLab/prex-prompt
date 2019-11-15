@@ -1,6 +1,9 @@
 #!/bin/sh
-#scriptDir=`pwd`
 runnum=$1
+
+echo -e "\n\n\n\n\n    Starting summary.sh\n\n\n\n\n";
+>&2 echo -e "\n\n\n\n\n    Starting summary.sh\n\n\n\n\n";
+
 level="Prompt"
 shopt -s extglob
 # find split file
@@ -64,7 +67,7 @@ do
 
     #Change user group and permission
     chgrp -R a-parity $PROMPT_DIR/hallaweb_online/summary_respin/run$run_seg;
-    chmod -R 777 $PROMPT_DIR/hallaweb_online/summary_respin/run$run_seg;    
+    chmod -R 775 $PROMPT_DIR/hallaweb_online/summary_respin/run$run_seg;    
     
     bash 	$PROMPT_DIR/hallaweb_online/summary_respin/sort_farm.sh ;
 
