@@ -46,7 +46,8 @@ do
     	-f $rootfile \
     	-c ./postpan/conf/$overloadConf ; 
 
-    if[ $(($run_num)) -ge 3390 ] then
+    if [ $(($run_num)) -ge 3390 ]
+    then
     	./postpan/redana \
     	    -f $rootfile \
     	    -c ./postpan/conf/$comboBPMConf;
