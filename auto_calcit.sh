@@ -24,6 +24,10 @@ do
     run_seg=${run_dot_seg/./_}
 
     sensConf="sens.conf"
+    if [ $(($run_num)) -ge 3130 ]
+    then
+      sensConf="sens.3130-.conf"
+    fi
     if [ $(($run_num)) -ge 3390 ]
     then
       sensConf="sens.3390-.conf"

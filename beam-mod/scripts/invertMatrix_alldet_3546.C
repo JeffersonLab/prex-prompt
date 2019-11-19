@@ -17,13 +17,13 @@ using namespace std;
 void invertMatrix_alldet_3546(int runNo=0){
   Int_t msize=5;
   char inputfile1[300];
-  sprintf(inputfile1,"./dit_11X12X_txt/BPMs_sensitivity_run%d.txt",runNo);
+  sprintf(inputfile1,"/lustre/expphy/volatile/halla/parity/ditherOutput/rootfiles_alldet_pass1/dit_11X12X_txt/BPMs_sensitivity_run%d.txt",runNo);
 
   char inputfile2[300];
-  sprintf(inputfile2,"./dit_11X12X_txt/Quartz_sensitivity_run%d.txt",runNo);
+  sprintf(inputfile2,"/lustre/expphy/volatile/halla/parity/ditherOutput/rootfiles_alldet_pass1/dit_11X12X_txt/Quartz_sensitivity_run%d.txt",runNo);
 
   char inputfile3[300];
-  sprintf(inputfile3,"./dit_11X12X_txt/AT_sensitivity_run%d.txt",runNo);
+  sprintf(inputfile3,"/lustre/expphy/volatile/halla/parity/ditherOutput/rootfiles_alldet_pass1/dit_11X12X_txt/AT_sensitivity_run%d.txt",runNo);
 
   ifstream infile2(inputfile3);	 
   ifstream infile(inputfile1);	 
@@ -46,10 +46,6 @@ void invertMatrix_alldet_3546(int runNo=0){
   std::cout << "of the off-diagonal elements of Inv(A) * A              " <<std::endl;
   std::cout << "--------------------------------------------------------" <<std::endl;
 
-  ostringstream sstr0;
-  sstr0<<"./dit_txt/maindet_dithering_slope_run"<<runNo<<".txt";
-  ofstream outfile0(sstr0.str().c_str());
-  sstr0.str("");
   vector<Double_t> cycles;
   const int n=30;
   const int m=24;
@@ -1264,7 +1260,7 @@ void invertMatrix_alldet_3546(int runNo=0){
   Double_t slope[8][5];
   Int_t run_number = runNo;
   Int_t slug_number = QuerySlugNumber(run_number);
-  TString output_path = "../rootfiles_alldet_pass1/";
+  TString output_path = "/lustre/expphy/volatile/halla/parity/ditherOutput/rootfiles_alldet_pass1/";
   TString slopeFilename = Form("dit_alldet_slopes_slug%d.root",slug_number);
   
   TFile* ditfile = TFile::Open(output_path+slopeFilename,"UPDATE");

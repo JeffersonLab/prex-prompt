@@ -10,29 +10,41 @@ def main():
     _source="/u/group/halla/parity/software/japan_offline/prompt/prex-prompt_merge/prex-prompt"
     _directory="/lustre/expphy/cache/halla/parity/raw"
     _rootout="/lustre/expphy/volatile/halla/parity/japanOutput"
-    _nrStart=3900
-    _nrStop=3905
+    _nrStart=1
+    _nrStop=9999
     submit=1
     useSWIF=1 #0: uses jsub 1: uses SWIF+jsub
-    
-    _workflowID="Prompt_"+str(_nrStart)+"_"+str(_nrStop)
 
-    createXMLfile(_mssdir,_source,_rootout,_nrStart,_nrStop,_email,_workflowID)
+    firstrun=9999
+    lastrun=0
+    _runlist=[]
+    runfile=open(_source+"/prex-runlist/good_list/test.list","r")
+    for line in runfile:
+        _runlist.append(int(line))
+        if (firstrun >= int(line) and _nrStart <= int(line)):
+            firstrun=int(line)
+        if (lastrun <= int(line) and _nrStop >= int(line)):
+            lastrun=int(line)
+    runfile.close()
+    
+    _workflowID="Prompt_"+str(firstrun)+"_"+str(lastrun)
+
+    createXMLfile(_mssdir,_source,_rootout,_nrStart,_nrStop,_email,_workflowID,_runlist)
 
     if submit==1:
         if useSWIF==1:
-            print "Submitting japan prompt analysis for runs "+str(_nrStart)+" to "+str(_nrStop)+" using designated SWIF workflow "+str(_workflowID)
+            print "Submitting japan prompt analysis for runs "+str(firstrun)+" to "+str(lastrun)+" using designated SWIF workflow "+str(_workflowID)
             call(["swif","add-jsub","-workflow",str(_workflowID),"-create","-script",_rootout+"/"+_workflowID+".xml"])
         elif useSWIF==0:
-            print "submitting position sampled with id between ",_nrStart,_nrStop
+            print "submitting position sampled with id between ",firstrun,lastrun
             call(["jsub","-xml",_directory+"/"+_workflowID+".xml"])
     else:
-        print "NOT submitting position sampled with id between ",_nrStart,_nrStop
+        print "NOT submitting position sampled with id between ",firstrun,lastrun
         
     print "I am all done"
 
 
-def createXMLfile(mssdir,source,rootout,nStart,nStop,email,workflowID):
+def createXMLfile(mssdir,source,rootout,nStart,nStop,email,workflowID,runlist):
 
     f=open(rootout+"/"+workflowID+".xml","w")
     f.write("<Request>\n")
@@ -44,7 +56,10 @@ def createXMLfile(mssdir,source,rootout,nStart,nStop,email,workflowID):
     f.write("  <OS name=\"centos7\"/>\n")
     f.write("  <Memory space=\"2000\" unit=\"MB\"/>\n")
 
-    for nr in range(nStart,nStop+1): # repeat for nr jobs
+    #for nr in range(nStart,nStop+1): # repeat for nr jobs
+    for nr in runlist:
+        if (nr < nStart or nr > nStop):
+            continue
         f.write("  <Job>\n")
         cmd = "ls /mss/halla/parity/raw/parity_ALL_"+str(nr)+".dat.* | sort -t'.' -n -k3 | tail -n 1 | awk -F. '{print $3}'"
         ps = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)

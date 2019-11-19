@@ -27,7 +27,7 @@ using namespace std;
 int japan_plot_beammod_at_cyc(int runNo=0) { 
   gStyle->SetOptStat(0); 
   char infile[300];
-  sprintf(infile,"$QW_ROOTFILES/prexPrompt_pass1_%d.000.root",runNo);
+  sprintf(infile,"/lustre/expphy/volatile/halla/parity/japanOutput/prexPrompt_pass1_%d.000.root",runNo);
   TFile *file1=TFile::Open(infile);
   if(file1==NULL){
     cout << infile << "doesn't exist!!!" << endl;
@@ -88,7 +88,7 @@ int japan_plot_beammod_at_cyc(int runNo=0) {
   double xbincon=0.0;
   int coilnum=0;
     ostringstream sstr0;
-  sstr0<<"./dit_11X12X_txt/AT_sensitivity_run"<<runNo<<".txt";
+  sstr0<<"/lustre/expphy/volatile/halla/parity/ditherOutput/dit_11X12X_txt/AT_sensitivity_run"<<runNo<<".txt";
   ofstream outfile0(sstr0.str().c_str());
   sstr0.str("");
 
@@ -118,7 +118,7 @@ int japan_plot_beammod_at_cyc(int runNo=0) {
 				      detname.Data(),wire[icoil].Data(),chtov),
 				  //Form("(ErrorFlag & 0x7bfe6fff)==0 && bmod_ramp>0 && bmwobj==%d && abs(%s-%f)>20 && bmwcycnum==%f",
 				  //   icoil+1,wire[icoil].Data(),trim_base[icoil],supercyc[i]));
-				 Form("bcm_dg_ds>60 && bmod_ramp>0 && bmwobj==%d && abs(%s-%f)>20 && bmwcycnum==%f",
+				 Form("(ErrorFlag & 0xda7e6bff)==0 && bmod_ramp>0 && bmwobj==%d && abs(%s-%f)>20 && bmwcycnum==%f",
 				       icoil+1,wire[icoil].Data(),trim_base[icoil],supercyc[i]));
     
       if(ndata<50){
@@ -137,7 +137,7 @@ int japan_plot_beammod_at_cyc(int runNo=0) {
 	ndata = tree_R->Draw(Form("(%lf/%lf)*%s:(%s*%lf)",
 				  factor,this_mean, detname.Data(),
 				  wire[icoil].Data(),chtov),
-			     Form("bcm_dg_ds>60 && bmod_ramp>0 && bmwobj==%d && abs(%s-%f)>20 && bmwcycnum==%f",
+			     Form("(ErrorFlag & 0xda7e6bff)==0 && bmod_ramp>0 && bmwobj==%d && abs(%s-%f)>20 && bmwcycnum==%f",
 				  icoil+1,wire[icoil].Data(),trim_base[icoil],supercyc[i]));
 
 	double this_slope,this_error;
