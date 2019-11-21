@@ -11,9 +11,10 @@
 #include <sstream>
 #include <iostream>
 #include<TRandom.h>
-void dithering_sensitivity_plot(int slugNo=0){ 
+void dithering_sensitivity_plot(int slugNo=0){
+  tString promptdir = gSystem->Getenv("$PROMPT_DIR");
   char inputfile[300];
-  sprintf(inputfile,"/u/group/halla/parity/software/japan_offline/prompt/prex-prompt_merge/prex-prompt/beam-mod/scripts/dit_11X12X_txt/BPMs_sensitivity_slug%d.txt",slugNo);
+  sprintf(inputfile,"%s/beam-mod/scripts/dit_11X12X_txt/BPMs_sensitivity_slug%d.txt",promptdir,slugNo);
   ifstream infile(inputfile);
 
   const int n=1000;

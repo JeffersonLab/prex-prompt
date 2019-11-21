@@ -148,7 +148,9 @@ void CheckBPM(){
 			vBPM[ibpm],vBPM[ibpm]),
 		   "","l");
     g_buff = (TGraph*)gPad->FindObject("Graph");
-    g_buff->SetName("GraphAll");
+    if(g_buff!=0){
+      g_buff->SetName("GraphAll");
+    }
     evt_tree->Draw(Form("%sXP.hw_sum_raw/%sXP.num_samples*76.29e-6:Entry$",
 			vBPM[ibpm],vBPM[ibpm]),
 		   "ErrorFlag!=0","* same");
@@ -163,7 +165,9 @@ void CheckBPM(){
 			vBPM[ibpm],vBPM[ibpm]),
 		   "","l");
     g_buff = (TGraph*)gPad->FindObject("Graph");
-    g_buff->SetName("GraphAll");
+    if(g_buff!=0){
+      g_buff->SetName("GraphAll");
+    }
     evt_tree->Draw(Form("%sXM.hw_sum_raw/%sXM.num_samples*76.29e-6:Entry$",
 			vBPM[ibpm],vBPM[ibpm]),
 		   "ErrorFlag!=0","* same");
@@ -178,7 +182,9 @@ void CheckBPM(){
 			vBPM[ibpm],vBPM[ibpm]),
 		   "","l");
     g_buff = (TGraph*)gPad->FindObject("Graph");
-    g_buff->SetName("GraphAll");
+    if(g_buff!=0){
+      g_buff->SetName("GraphAll");
+    }
     evt_tree->Draw(Form("%sYP.hw_sum_raw/%sYP.num_samples*76.29e-6:Entry$",
 			vBPM[ibpm],vBPM[ibpm]),
 		   "ErrorFlag!=0","* same");
@@ -193,7 +199,9 @@ void CheckBPM(){
 			vBPM[ibpm],vBPM[ibpm]),
 		   "","l");
     g_buff = (TGraph*)gPad->FindObject("Graph");
-    g_buff->SetName("GraphAll");
+    if(g_buff!=0){
+      g_buff->SetName("GraphAll");
+    }
     evt_tree->Draw(Form("%sYM.hw_sum_raw/%sYM.num_samples*76.29e-6:Entry$",
 			vBPM[ibpm],vBPM[ibpm]),
 		   "ErrorFlag!=0","* same");

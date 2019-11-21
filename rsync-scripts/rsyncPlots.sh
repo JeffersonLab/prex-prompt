@@ -2,12 +2,11 @@
 
 level="Prompt"
 
-plot_work1="/chafs2/work1/apar/SummaryPlots/";
-prompt_dir="/adaqfs/home/apar/PREX/prompt/";
-todo_list=$prompt_dir/rsync-scripts/rsync_todo.list;
+todo_list=$PROMPT_DIR/rsync-scripts/rsync_todo.list;
+plot_work1=$PROMPT_DIR/SummaryPlots/;
 
 if [ -f $todo_list ]; then 
-    working_list=$prompt_dir/rsync-scripts/rsync_working.list;
+    working_list=$PROMPT_DIR/rsync-scripts/rsync_working.list;
     mv $todo_list $working_list; 
     while IFS= read -r line; do
 	folder=$line;

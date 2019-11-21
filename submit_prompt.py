@@ -7,7 +7,7 @@ def main():
     
     _email="rradloff@jlab.org"
     _mssdir="/mss/halla/parity/raw"
-    _source="/u/group/halla/parity/software/japan_offline/prompt/prex-prompt_merge/prex-prompt"
+    _source="/u/group/halla/parity/software/japan_offline/prompt/prex-prompt"
     _directory="/lustre/expphy/cache/halla/parity/raw"
     _rootout="/lustre/expphy/volatile/halla/parity/japanOutput"
     _nrStart=1
@@ -18,6 +18,7 @@ def main():
     firstrun=9999
     lastrun=0
     _runlist=[]
+#    runfile=open(_source+"/deletemesoon.list","r")
     runfile=open(_source+"/prex-runlist/good_list/test.list","r")
     for line in runfile:
         _runlist.append(int(line))
@@ -51,7 +52,7 @@ def createXMLfile(mssdir,source,rootout,nStart,nStop,email,workflowID,runlist):
     f.write("  <Email email=\""+email+"\" request=\"false\" job=\"true\"/>\n")
     f.write("  <Project name=\"prex\"/>\n")
 #    f.write("  <Track name=\"debug\"/>\n")
-    f.write("  <Track name=\"production\"/>\n")
+    f.write("  <Track name=\"one_pass\"/>\n")
     f.write("  <Name name=\""+workflowID+"\"/>\n")
     f.write("  <OS name=\"centos7\"/>\n")
     f.write("  <Memory space=\"2000\" unit=\"MB\"/>\n")
