@@ -42,9 +42,14 @@ void CheckBPM(){
   
   for(int ibpm=0;ibpm<nbpm;ibpm++){
     ///////____BPM  X and Y ( Event and Multiplet Tree)____ ///////
+    TBranch *test_branch = evt_tree->GetBranch(TString(vBPM[ibpm])+"X");
+    if(test_branch==NULL){
+      cerr<< "-- Warning: " << vBPM[ibpm] << " is not found in this run. " << endl;
+      continue;
+    }
+
     for(int ix=0;ix<2;ix++){
       const char* device_name = (TString(vBPM[ibpm])+suffix[ix]).Data();
-    
       cbpm->cd(4*ix+1);
       evt_tree->Draw(Form("%s/mm:Entry$",device_name),"ErrorFlag==0","");
     

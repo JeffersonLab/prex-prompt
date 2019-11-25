@@ -39,8 +39,8 @@ do
     ls -lrt $PREX_PLOT_DIR/run$run_seg
     echo "****  DONE CHECKING THE DIRECTORY STUCTURE"
 
-    pdfunite $(ls -rt $PREX_PLOT_DIR/run$run_seg/*_summary_*.pdf) \
-     	$PREX_PLOT_DIR/run$run_seg/run${run_seg}_all.pdf
+    #pdfunite $(ls -rt $PREX_PLOT_DIR/run$run_seg/*_summary_*.pdf) \
+    # 	$PREX_PLOT_DIR/run$run_seg/run${run_seg}_all.pdf
 
     if [ ! -d $PROMPT_DIR/hallaweb_online/summary_respin/run$run_seg ]; then
 	mkdir $PROMPT_DIR/hallaweb_online/summary_respin/run$run_seg;

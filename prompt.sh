@@ -56,14 +56,15 @@ $PROMPT_DIR/qwparity -r $runnum -c prex_prompt.conf \
 $PROMPT_DIR/auto_postpan.sh $runnum;
 $PROMPT_DIR/overload_postpan.sh $runnum;
 $PROMPT_DIR/auto_calcit.sh $runnum;
+$PROMPT_DIR/auto_beammod.sh $runnum;
 
 # Make Summary Plots/Text and sync to HallA onlineWeb
 # now make plots from pass1 and postpan output
 $PROMPT_DIR/summary.sh $runnum;
 
 # Do aggregation after the second pass of japan is done. Assume all slug aggregation is done by the WAC
-#Aggregator pass 0
-# timenow=$(date +"%Y-%m%d-%H%M");
-# ($PROMPT_DIR/aggregator.sh $runnum > /dev/tty ) >& $PROMPT_DIR/LogFiles/Camguin_run$runnum\_$timenow.txt
+# Aggregator pass 0
+timenow=$(date +"%Y-%m%d-%H%M");
+($PROMPT_DIR/aggregator.sh $runnum > /dev/tty ) >& $PROMPT_DIR/LogFiles/Camguin_run$runnum\_$timenow.txt
 
 echo "Done with prompt for run $runnum";

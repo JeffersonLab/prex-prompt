@@ -89,6 +89,7 @@ int japan_plot_beammod_BPMS_cyc_prompt(int runNo=0) {
 
   ostringstream sstr0;
   sstr0<<"/lustre/expphy/volatile/halla/parity/ditherOutput/dit_11X12X_txt/BPMs_sensitivity_run"<<runNo<<".txt";
+  cout << "-- writing output to: " << sstr0.str().c_str() << endl;
   ofstream outfile0(sstr0.str().c_str());
   sstr0.str("");
 

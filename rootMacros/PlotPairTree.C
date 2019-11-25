@@ -5,10 +5,17 @@ void PlotPairTree(TString device_name);
 
 void PlotPairTree( vector< const char*> device_array){
   TCanvas *c1 = new TCanvas("c1","c1",2400,600);
-  
+  TTree *pr_tree = (TTree*)gROOT->FindObject("pr");  
   Int_t ndevice = device_array.size();
   for(int idev=0;idev<ndevice;idev++){
     TString device1 = device_array[idev];
+    TBranch* test_ptr = pr_tree->GetBranch("yield_"+device1);
+    if(test_ptr==NULL){
+      cerr<< " -- Warning: "
+	  << device1 
+	  << " is not found in pair tree."<< endl;
+      continue;
+    }
     PlotPairTree(device1);
     plot_title = Form("run%s_pairTree_%s.png",
 		      run_seg.Data(),

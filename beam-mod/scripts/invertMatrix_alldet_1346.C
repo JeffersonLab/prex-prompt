@@ -1379,11 +1379,12 @@ void invertMatrix_alldet_1346(int runNo=0){
   dit_tree->Fill();
   }
  }
-if(dit_tree->GetEntries()==1)
-    dit_tree->Write();
-  else
-    dit_tree->Write(0,TObject::kOverwrite);
-  
+  if(dit_tree!=NULL){
+    if(dit_tree->GetEntries()==1)
+      dit_tree->Write();
+    else
+      dit_tree->Write(0,TObject::kOverwrite);
+  }
   ditfile->Close();
  
 }

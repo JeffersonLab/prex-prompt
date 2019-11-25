@@ -56,7 +56,8 @@ void PlotSummary(TString filename,TString output_dir="./tmp"){
   Ssiz_t plength = plast-pfirst+1;
   run_seg = filename(pfirst,plength);
   run_seg = run_seg.ReplaceAll('.','_');
-
+  run_number = run_seg.Atoi();
+  
   if(output_dir=="")
     output_dir="./tmp/";
   output_path = output_dir + Form("/run%s/",run_seg.Data());
@@ -158,19 +159,21 @@ void PlotSummary(TString filename,TString output_dir="./tmp"){
 		     output_path.Data()));
 
    //===== AT Detector Plots =======
-  if(isNormalized)
-    CheckNormalizedAT();		
-  else
-    CheckAT();
-  CheckATCorrelation();
+  if(run_number>=3803){
+    if(isNormalized)
+      CheckNormalizedAT();		
+    else
+      CheckAT();
+    CheckATCorrelation();
 
-  gSystem->Exec(Form("convert $(ls -rt %s*at*.png)  %srun%s_summary_at_detector.pdf",
-  		     output_path.Data(),
-		     output_path.Data(),
-  		     run_seg.Data()));
+    gSystem->Exec(Form("convert $(ls -rt %s*at*.png)  %srun%s_summary_at_detector.pdf",
+		       output_path.Data(),
+		       output_path.Data(),
+		       run_seg.Data()));
 
-  gSystem->Exec(Form("rm %s*at*.png",
-		     output_path.Data()));
+    gSystem->Exec(Form("rm %s*at*.png",
+		       output_path.Data()));
+  }
 
   //===== SAM Plots =======
   if(isNormalized)

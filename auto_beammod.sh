@@ -12,32 +12,38 @@ then
     exit 1;
 fi    
 
+if [[ -z "${PROMPT_DIR}" ]]; then
+    echo "PROMPT_DIR is not defined and redirected to ./ "
+    PROMPT_DIR=".";
+fi
 
 if  [ $(($run_num)) -ge  3130 ] && [ $(($run_num)) -le  3403 ]
 then
-    root -b -q '$PROMPT_DIR/beam-mod/scripts/japan_plot_beammod_BPMS_cyc_12X.C('$run_num')';
+    root -b -q $PROMPT_DIR'/beam-mod/scripts/japan_plot_beammod_BPMS_cyc_12X.C('$run_num')';
 fi
 if  [ $(($run_num)) -ge  3404 ] && [ $(($run_num)) -le  4980 ]
 then
-    root -b -q '$PROMPT_DIR/beam-mod/scripts/japan_plot_beammod_BPMS_cyc_prompt.C('$run_num')';
+    root -b -q $PROMPT_DIR'/beam-mod/scripts/japan_plot_beammod_BPMS_cyc_prompt.C('$run_num')';
 fi
 
-root -b -q '$PROMPT_DIR/beam-mod/scripts/japan_plot_beammod_quartz_cyc_prompt.C('$run_num')';
+root -b -q $PROMPT_DIR'/beam-mod/scripts/japan_plot_beammod_quartz_cyc_prompt.C('$run_num')';
 
 if  [ $(($run_num)) -ge  3803 ]
 then
-    root -b -q '$PROMPT_DIR/beam-mod/scripts/japan_plot_beammod_at_cyc_prompt.C('$run_num')';
+    root -b -q $PROMPT_DIR'/beam-mod/scripts/japan_plot_beammod_at_cyc_prompt.C('$run_num')';
 fi
 
 if  [ $(($run_num)) -ge  3130 ] && [ $(($run_num)) -le  3403 ]
 then
-    root -b -q '$PROMPT_DIR/beam-mod/scripts/invertMatrix_alldet.C('$run_num')';
+    root -b -q $PROMPT_DIR'/beam-mod/scripts/invertMatrix_alldet.C('$run_num')';
 fi
 if  [ $(($run_num)) -ge  3404 ] && [ $(($run_num)) -le  4734 ]
 then
-    root -b -q '$PROMPT_DIR/beam-mod/scripts/invertMatrix_alldet_1346.C('$run_num')';
+    root -b -q $PROMPT_DIR'/beam-mod/scripts/invertMatrix_alldet_1346.C('$run_num')';
 fi
 if  [ $(($run_num)) -ge  4735 ] && [ $(($run_num)) -le  4980 ]
 then
-    root -b -q '$PROMPT_DIR/beam-mod/scripts/invertMatrix_alldet_3546.C('$run_num')';
+    root -b -q $PROMPT_DIR'/beam-mod/scripts/invertMatrix_alldet_3546.C('$run_num')';
 fi
+
+# chmod -R 775 $PROMPT_DIR'/ditherOutput/'; # Needs a better way to manage permission

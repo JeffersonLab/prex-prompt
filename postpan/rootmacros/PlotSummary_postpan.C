@@ -39,6 +39,7 @@ void PlotSummary_postpan(TString filename,TString output_dir="./tmp"){
   Ssiz_t plast = filename.Last('.')-17;
   Ssiz_t plength = plast-pfirst+1;
   run_seg = filename(pfirst,plength);
+  run_number = run_seg.Atoi();
   run_seg = run_seg.ReplaceAll('.','_');
 
   if(output_dir=="")
@@ -64,7 +65,8 @@ void PlotSummary_postpan(TString filename,TString output_dir="./tmp"){
   else{
     CheckRegression_postpan();
     CheckNormalizedComboSAM_postpan(); 
-    CheckRegNormATDetector_postpan();
+    if(run_number>=3803)
+      CheckRegNormATDetector_postpan();
     CheckRegNormDetector_postpan();
   }
   //CheckRegressedDetector_postpan();

@@ -17,13 +17,13 @@ using namespace std;
 void invertMatrix_alldet_3546(int runNo=0){
   Int_t msize=5;
   char inputfile1[300];
-  sprintf(inputfile1,"/lustre/expphy/volatile/halla/parity/ditherOutput/rootfiles_alldet_pass1/dit_11X12X_txt/BPMs_sensitivity_run%d.txt",runNo);
+  sprintf(inputfile1,"/lustre/expphy/volatile/halla/parity/ditherOutput/dit_11X12X_txt/BPMs_sensitivity_run%d.txt",runNo);
 
   char inputfile2[300];
-  sprintf(inputfile2,"/lustre/expphy/volatile/halla/parity/ditherOutput/rootfiles_alldet_pass1/dit_11X12X_txt/Quartz_sensitivity_run%d.txt",runNo);
+  sprintf(inputfile2,"/lustre/expphy/volatile/halla/parity/ditherOutput/dit_11X12X_txt/Quartz_sensitivity_run%d.txt",runNo);
 
   char inputfile3[300];
-  sprintf(inputfile3,"/lustre/expphy/volatile/halla/parity/ditherOutput/rootfiles_alldet_pass1/dit_11X12X_txt/AT_sensitivity_run%d.txt",runNo);
+  sprintf(inputfile3,"/lustre/expphy/volatile/halla/parity/ditherOutput/dit_11X12X_txt/AT_sensitivity_run%d.txt",runNo);
 
   ifstream infile2(inputfile3);	 
   ifstream infile(inputfile1);	 
@@ -1379,11 +1379,12 @@ void invertMatrix_alldet_3546(int runNo=0){
   dit_tree->Fill();
   }
  }
-if(dit_tree->GetEntries()==1)
-    dit_tree->Write();
-  else
-    dit_tree->Write(0,TObject::kOverwrite);
-  
+  if(dit_tree!=NULL){
+    if(dit_tree->GetEntries()==1)
+      dit_tree->Write();
+    else
+      dit_tree->Write(0,TObject::kOverwrite);
+  }
   ditfile->Close();
  
 }

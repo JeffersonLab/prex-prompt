@@ -20,7 +20,13 @@ void CheckWireSum(){
   c1->Divide(3,1);
   for(int ibpm=0;ibpm<nBPM;ibpm++){
     TString device_name = injBPMs[ibpm];
-    
+    TBranch* test_ptr = mul_tree->GetBranch(device_name);
+    if(test_ptr==NULL){
+      cerr<< " -- Warning: "
+	  << device_name
+	  << " is not found in mul tree."<< endl;
+      continue;
+    }
     c1->cd(1);
     mul_tree->Draw(device_name+"/ppm","ErrorFlag==0");
     c1->cd(2);

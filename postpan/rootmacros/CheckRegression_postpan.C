@@ -28,13 +28,17 @@ void CheckRegression_postpan(){
   vector<TString> IVlist = *(vector<TString>*)results->Get("IVNames"); // Getting IV list from postpan output
 
   vector<vector<TString> > vDV_plot ={vSAMU,
-				      vSAMV,vAT,
+				      vSAMV,
 				      vMain};
-  Int_t nplots = vDV_plot.size();
 
   vector<TString> vtag_dv ={"asym_sam2468",
-			    "asym_sam1357","asym_at",
+			    "asym_sam1357",
 			    "asym_maindet"};
+  if(run_number>=3803){
+    vDV_plot.push_back(vAT);
+    vtag_dv.push_back("asym_at");
+  }
+  Int_t nplots = vDV_plot.size();
   TString blueRCut = "ok_cut";
   TCanvas* c_this = new TCanvas("","",2400,2400);
   for(int iplot=0;iplot<nplots;iplot++){
@@ -95,10 +99,12 @@ void CheckRegression_postpan(){
 		     output_path.Data(),
 		     run_seg.Data()));
 
-  gSystem->Exec(Form("convert $(ls -rt %s/*regression*_at_*postpan.png) %s/run%s_summary_regression_at.pdf",
-         output_path.Data(),
-         output_path.Data(),
-         run_seg.Data()));
+  if(run_number>=3803){
+    gSystem->Exec(Form("convert $(ls -rt %s/*regression*_at_*postpan.png) %s/run%s_summary_regression_at.pdf",
+		       output_path.Data(),
+		       output_path.Data(),
+		       run_seg.Data()));
+  }
 
   gSystem->Exec(Form("convert $(ls -rt %s/*regression*maindet*_postpan.png) %s/run%s_summary_regression_maindet.pdf",
 		     output_path.Data(),
