@@ -35,7 +35,7 @@ do
     then
       postpanConf="std_reg.3803-4294.conf"
     fi
-    if [ $(($run_num)) -ge 4305 ]
+    if [ $(($run_num)) -ge 4295 ]
     then
       postpanConf="std_reg.4295-.conf"
     fi
