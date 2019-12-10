@@ -33,6 +33,7 @@ timenow=$(date +"%Y-%m%d-%H%M");
 
 # Postpan regression to the first pass results
 ./auto_postpan.sh $runnum;
+./auto_calcit.sh $runnum;
 
 # Make Summary Plots/Text and sync to HallA onlineWeb
 # now make plots from pass1 and postpan output
