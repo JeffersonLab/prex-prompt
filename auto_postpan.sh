@@ -41,7 +41,10 @@ do
     then
       postpanConf="combo_reg.4305-.conf"
     fi
-
+    if [ $(($run_num)) -ge 5376 ]
+    then
+      postpanConf="burst.conf"
+    fi
     ./postpan/redana \
     	-f $rootfile \
     	-c ./postpan/conf/$postpanConf ; 
