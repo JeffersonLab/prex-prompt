@@ -46,6 +46,9 @@ do
     cp  ./results/prexPrompt_$run_seg\_postpan_summary.txt \
     	./hallaweb_online/summary/run$run_seg/;
 
+    cp ./lagrange/dit-coeffs/prexPrompt_ditcoeffs_$run_num.txt \
+    	./hallaweb_online/summary/run$run_seg/;
+
     chgrp -R a-parity ./hallaweb_online/summary/run$run_seg;
     chmod -R 755 ./hallaweb_online/summary/run$run_seg;    
     
