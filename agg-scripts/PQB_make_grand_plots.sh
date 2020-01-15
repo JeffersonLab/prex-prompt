@@ -7,7 +7,9 @@
 
 slugfile=$1
 #hrs=$2
-startingpoint=100
+#startingpoint=4 #Default start on 60, most recent Wien
+#startingpoint=60 #Default start on 60, most recent Wien
+startingpoint=100 #Default start on 60, most recent Wien
 if [ "$#" -eq 2 ]; then
   startingpoint=$2
 fi
@@ -48,25 +50,25 @@ wien2=`rcnd $lastrun flip_state`
 if [ $slug1 != $slug2 ]
 then
   echo "First and last run's slugs don't equal!"
-  exit
+  #exit
 fi
 
 if [[ (($arm1 -ne 0) && ($arm2 -ne 0)) && ($arm1 -ne $arm2) ]]
 then
   echo "First and last run's good HRS don't equal!"
-  exit
+  #exit
 fi
 
 if [ $ihwp1 != $ihwp2 ]
 then
   echo "First and last run's ihwp don't equal!"
-  exit
+  #exit
 fi
 
 if [ $wien1 != $wien2 ]
 then
   echo "First and last run's wien don't equal!"
-  exit
+  #exit
 fi
 
 slug=$slug1
@@ -94,9 +96,9 @@ then
     wien=2
 fi
 
-if [ ! -d /chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile_$slug ]
+if [ ! -d /chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile_$slug ]
 then
-    mkdir /chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile_$slug
+    mkdir /chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile_$slug
 fi
 
 #make aggregator plots!
@@ -104,24 +106,28 @@ cd /chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan
 
 #~/PREX/prompt/agg-scripts/agg_prompt_list.sh ~/PREX/prompt/agg-scripts/run_list/slug${slug}.list
 #sleep 900
-~/PREX/prompt/Aggregator/drawPostpan/accumulate_mini_aggFiles_list.sh slug$slug
+~/PREX/prompt/Aggregator/drawPostpan/PQB_accumulate_mini_aggFiles_list.sh slug$slug
 
-mkdir ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}
-cp $1 ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}/
+mkdir ~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug${slug}
+
+cp ~/PREX/prompt/beam-mod/rootfiles_alldet_pass1/plots/cyclenum_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug${slug}/cycle_slopes_pass1_slug${slug}.pdf
+cp ~/PREX/prompt/beam-mod/rootfiles_alldet_pass2/plots/cyclenum_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug${slug}/cycle_slopes_pass2_slug${slug}.pdf
+#cp ~/PREX/prompt/beam-mod/scripts/dit_11X12X_txt/*sensitivity_slug${slug}.txt ~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug${slug}/
+cp ~/PREX/prompt/beam-mod/scripts/dit_11X12X_txt/plots/sensitivity_plots_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug${slug}/
 
 #root -l -b -q copytree_auto.C'('$slug')'
-rm -f /chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile_$slug/grand_aggregator.root
-export CAM_OUTPUTDIR=/chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile_$slug/
-root -l -b -q plotAgg.C'("aggRootfiles/slugRootfiles/minirun_slug","plots/summary_minirun_slug", '$slug', '$ihwp', '$wien', '$hrs')'
-cp -f plots/summary_minirun_slug${slug}.txt ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}/
-cp -f plots/summary_minirun_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}/
-cp -f plots/summary_minirun_slug_linear${slug}.txt ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}/
+rm -f /chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile_$slug/grand_aggregator.root
+export CAM_OUTPUTDIR=/chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile_$slug/
+root -l -b -q plotAgg.C'("aggRootfiles/slugRootfiles/PQB/minirun_slug","plots/PQB/summary_minirun_slug", '$slug', '$ihwp', '$wien', '$hrs')'
+cp -f plots/PQB/summary_minirun_slug${slug}.txt ~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug${slug}/
+cp -f plots/PQB/summary_minirun_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug${slug}/
+cp -f plots/PQB/summary_minirun_slug_linear${slug}.txt ~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug${slug}/
 
 rm -f grand_slug_plot_list.txt
 for i in $(seq $startingpoint $slug); do echo $i>>grand_slug_plot_list.txt; done
-./slug_file_accumulate_list.sh grand_slug_plot_list.txt
+./PQB_slug_file_accumulate_list.sh grand_slug_plot_list.txt
 
 #make grand agg plots!
-root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile/grand_'$startingpoint'-'${slug}'.root","~/PREX/prompt/hallaweb_online/slug/slug_list/slug'$slug'/grand_'$startingpoint'-'$slug'")'
+root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile/grand_'$startingpoint'-'${slug}'.root","~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug'$slug'/grand_'$startingpoint'-'$slug'")'
 
 cd $forgetmenot

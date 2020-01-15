@@ -17,6 +17,7 @@ do
     run_dot_seg=${trim#*pass1_}
     run_num=${run_dot_seg%.*}
     run_seg=${run_dot_seg/./_}
+    # seg_seg=${run_dot_seg#*_}
 
     redfile='./results/prexPrompt_'${run_seg}'_regress_postpan.root';
     
@@ -26,9 +27,10 @@ do
 
     root -b -q -l './rootMacros/PlotSummary.C("'$rootfile'","'$PREX_PLOT_DIR'")';
     root -b -q -l './postpan/rootmacros/PlotSummary_postpan.C("'$redfile'","'$PREX_PLOT_DIR'")';
+    ~/PREX/prompt/dither_summary.sh $runnum
 
     if [ ! -d ./hallaweb_online/summary/run$run_seg ]; then
-	mkdir ./hallaweb_online/summary/run$run_seg;
+	    mkdir ./hallaweb_online/summary/run$run_seg;
     fi
 
     cp  $PREX_PLOT_DIR/run$run_seg/* \
@@ -46,20 +48,24 @@ do
     cp  ./results/prexPrompt_$run_seg\_postpan_summary.txt \
     	./hallaweb_online/summary/run$run_seg/;
 
-    cp ./lagrange/dit-coeffs/prexPrompt_ditcoeffs_$run_num.txt \
+    cp ./lagrange/dit-coeffs/prexPrompt_ditcoeffs_$run_num\_summary.txt \
     	./hallaweb_online/summary/run$run_seg/;
+
+    cp /chafs2/work1/apar/DitherResponse/run${runnum}_cyc*.pdf  \
+      ./hallaweb_online/summary/run$run_seg/;
 
     chgrp -R a-parity ./hallaweb_online/summary/run$run_seg;
     chmod -R 755 ./hallaweb_online/summary/run$run_seg;    
     
     bash 	./hallaweb_online/summary/sort.sh ;
 
+    python /adaqfs/home/apar/pvdb/prex/scripts/update_avg_current.py $run_num
+    ./publish_charge.sh
+
     if [ -f $rsync_todo_list ]; then
-	echo $PREX_PLOT_DIR/run$run_seg >> $rsync_todo_list;
+	    echo $PREX_PLOT_DIR/run$run_seg >> $rsync_todo_list;
     else 
-	echo $PREX_PLOT_DIR/run$run_seg > $rsync_todo_list;
+      echo $PREX_PLOT_DIR/run$run_seg > $rsync_todo_list;
     fi
 
 done
-
-

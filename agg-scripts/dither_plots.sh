@@ -1,0 +1,142 @@
+#!/bin/bash
+mkdir ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${1}
+
+cd ~/PREX/prompt/beam-mod/scripts/
+#./dit_runlist_alldet.sh ~/PREX/prompt/collector/run_list/slug${1}.list
+cd ~/PREX/prompt/beam-mod/rootfiles_alldet_pass1
+root -l -b -q 'dithering_plot_cyc.C('${1}')'
+#evince plots/cyclenum_slug${1}.pdf &
+
+cd ~/PREX/prompt/beam-mod/rootfiles_alldet_pass2
+root -l -b -q 'dithering_plot_cyc.C('${1}')'
+evince plots/cyclenum_slug${1}.pdf &
+
+
+cd ~/PREX/prompt/agg-scripts/
+slugfile=run_list/slug${1}.list
+#hrs=$2
+startingpoint=100 #Default start on 101, most recent Wien
+if [ "$#" -eq 2 ]; then
+  startingpoint=$2
+fi
+
+source ~/PREX/setup_japan.sh
+
+forgetmenot=`pwd`
+
+firstrun=999999
+lastrun=0
+
+input="$slugfile"
+while IFS= read -r line
+do
+  if [ $(echo "$line < $firstrun" | bc) -eq 1  ]
+    then
+        firstrun=$line
+        #echo "firstrun $line"
+    fi
+    
+    if [ $(echo "$line > $lastrun" | bc) -eq 1  ]
+    then
+        lastrun=$line
+        #echo "lastrun $line"
+    fi
+done < "$input"
+
+slug1=`rcnd $firstrun slug`
+arm1=`rcnd $firstrun arm_flag`
+ihwp1=`rcnd $firstrun ihwp`
+wien1=`rcnd $firstrun flip_state`
+
+slug2=`rcnd $lastrun slug`
+arm2=`rcnd $lastrun arm_flag`
+ihwp2=`rcnd $lastrun ihwp`
+wien2=`rcnd $lastrun flip_state`
+
+if [ $slug1 != $slug2 ]
+then
+  echo "First and last run's slugs don't equal!"
+  exit
+fi
+
+if [[ (($arm1 -ne 0) && ($arm2 -ne 0)) && ($arm1 -ne $arm2) ]]
+then
+  echo "First and last run's good HRS don't equal!"
+  exit
+fi
+
+if [ $ihwp1 != $ihwp2 ]
+then
+  echo "First and last run's ihwp don't equal!"
+  exit
+fi
+
+if [ $wien1 != $wien2 ]
+then
+  echo "First and last run's wien don't equal!"
+  wien2 = $wien1
+#  exit
+fi
+
+slug=$slug1
+hrs=$arm2
+ihwpstring=$ihwp1
+wienstring=$wien1
+
+if [ $ihwpstring == "IN" ]
+then
+    ihwp=1
+fi
+
+if [ $ihwpstring == "OUT" ]
+then
+    ihwp=2
+fi
+
+wienstring="FLIP-RIGHT"
+
+if [ $wienstring == "FLIP-RIGHT" ]
+then
+    wien=1
+fi
+
+if [ $wienstring == "FLIP-LEFT" ]
+then
+    wien=2
+fi
+
+if [ ! -d /chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering/grandRootfile_$slug ]
+then
+    mkdir /chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering/grandRootfile_$slug
+fi
+
+#make aggregator plots!
+cd /chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan
+
+#~/PREX/prompt/agg-scripts/agg_prompt_list.sh ~/PREX/prompt/agg-scripts/run_list/slug${slug}.list
+#sleep 900
+~/PREX/prompt/Aggregator/drawPostpan/dithering_accumulate_mini_aggFiles_list.sh slug$slug
+
+mkdir ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}
+
+cp ~/PREX/prompt/beam-mod/rootfiles_alldet_pass1/plots/cyclenum_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/cycle_slopes_pass1_slug${slug}.pdf
+cp ~/PREX/prompt/beam-mod/rootfiles_alldet_pass2/plots/cyclenum_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/cycle_slopes_pass2_slug${slug}.pdf
+#cp ~/PREX/prompt/beam-mod/scripts/dit_11X12X_txt/*sensitivity_slug${slug}.txt ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/
+cp ~/PREX/prompt/beam-mod/scripts/dit_11X12X_txt/plots/sensitivity_plots_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/
+
+#root -l -b -q copytree_auto.C'('$slug')'
+rm -f /chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering/grandRootfile_$slug/grand_aggregator.root
+export CAM_OUTPUTDIR=/chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering/grandRootfile_$slug/
+root -l -b -q plotAgg.C'("aggRootfiles/slugRootfiles/dithering/minirun_slug","plots/dithering/summary_minirun_slug", '$slug', '$ihwp', '$wien', '$hrs')'
+cp -f plots/dithering/summary_minirun_slug${slug}.txt ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/
+cp -f plots/dithering/summary_minirun_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/
+cp -f plots/dithering/summary_minirun_slug_linear${slug}.txt ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/
+
+rm -f grand_slug_plot_list.txt
+for i in $(seq $startingpoint $slug); do echo $i>>grand_slug_plot_list.txt; done
+./dithering_slug_file_accumulate_list.sh grand_slug_plot_list.txt
+
+#make grand agg plots!
+root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering/grandRootfile/grand_'$startingpoint'-'${slug}'.root","~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug'$slug'/grand_'$startingpoint'-'$slug'")'
+
+cd $forgetmenot
