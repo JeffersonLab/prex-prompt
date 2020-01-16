@@ -25,6 +25,8 @@ do
       mkdir $PREX_PLOT_DIR/run$run_seg;
     fi
 
+    # Uncomment Err.C if you want the ErrorCounter macro - It's slow and not often looked at normally
+    #root -b -q -l './rootMacros/Err.C("'$rootfile'","'$PREX_PLOT_DIR'")';
     root -b -q -l './rootMacros/PlotSummary.C("'$rootfile'","'$PREX_PLOT_DIR'")';
     root -b -q -l './postpan/rootmacros/PlotSummary_postpan.C("'$redfile'","'$PREX_PLOT_DIR'")';
     ~/PREX/prompt/dither_summary.sh $runnum
@@ -51,7 +53,13 @@ do
     cp ./lagrange/dit-coeffs/prexPrompt_ditcoeffs_$run_num\_summary.txt \
     	./hallaweb_online/summary/run$run_seg/;
 
-    cp /chafs2/work1/apar/DitherResponse/run${runnum}_cyc*.pdf  \
+    # For early run-range CREX coils 13746 are chosen - this may get runranged later
+    cp /chafs2/work1/apar/japan-bmodAna/rootScripts/BeamMod/slopes/*13746*${runnum}*.pdf \
+      ./hallaweb_online/summary/run$run_seg/;
+    cp /chafs2/work1/apar/japan-bmodAna/rootScripts/BeamMod/slopes/*13746*${runnum}*.txt \
+      ./hallaweb_online/summary/run$run_seg/;
+
+    cp /chafs2/work1/apar/DitherResponse/*${runnum}_cyc*.pdf  \
       ./hallaweb_online/summary/run$run_seg/;
 
     chgrp -R a-parity ./hallaweb_online/summary/run$run_seg;

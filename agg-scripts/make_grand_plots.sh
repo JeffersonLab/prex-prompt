@@ -94,6 +94,14 @@ then
     wien=2
 fi
 
+cd ~/PREX/prompt/
+./get_charge.sh 5408-${lastrun} 0
+#convert charge_mon.pdf -trim +repage charge_mon.png
+/bin/cp --force charge_mon.png hallaweb_online/slug/slug_list/slug${slug}/charge_mon.pdf
+./get_charge.sh ${firstrun}-${lastrun} 0
+#convert charge_mon.pdf -trim +repage charge_mon.png
+/bin/cp --force charge_mon.png hallaweb_online/slug/slug_list/slug${slug}/charge_mon_slug${slug}.pdf
+
 if [ ! -d /chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile_$slug ]
 then
     mkdir /chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile_$slug
@@ -107,7 +115,7 @@ cd /chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan
 ~/PREX/prompt/Aggregator/drawPostpan/accumulate_mini_aggFiles_list.sh slug$slug
 
 mkdir ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}
-cp $1 ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}/
+cp --force $1 ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}/
 
 #root -l -b -q copytree_auto.C'('$slug')'
 rm -f /chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile_$slug/grand_aggregator.root
@@ -117,11 +125,16 @@ cp -f plots/summary_minirun_slug${slug}.txt ~/PREX/prompt/hallaweb_online/slug/s
 cp -f plots/summary_minirun_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}/
 cp -f plots/summary_minirun_slug_linear${slug}.txt ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}/
 
+# Do the blessed dithering alpha/delta plots for the slug
+~/PREX/prompt/agg-scripts/dither_slug_plots.sh ${slug}
+
 rm -f grand_slug_plot_list.txt
 for i in $(seq $startingpoint $slug); do echo $i>>grand_slug_plot_list.txt; done
 ./slug_file_accumulate_list.sh grand_slug_plot_list.txt
 
 #make grand agg plots!
 root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile/grand_'$startingpoint'-'${slug}'.root","~/PREX/prompt/hallaweb_online/slug/slug_list/slug'$slug'/grand_'$startingpoint'-'$slug'")'
+
+cp --force ${CAM_OUTPUTDIR}/grand_aggregator.root ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}/
 
 cd $forgetmenot
