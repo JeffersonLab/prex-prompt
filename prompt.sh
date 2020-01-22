@@ -27,7 +27,16 @@ done
 timenow=$(date +"%Y-%m%d-%H%M");
 
 ./qwparity -r $runnum -c prex_prompt.conf \
+    --rootfile-stem prexPrompt_pass0_ \
+    --add-config 0.5pass.conf \
+    --QwLog.loglevel-file 2 \
+    --QwLog.logfile ./LogFiles/QwLog_run$runnum\_prompt_pass0_$timenow.txt ;
+
+mv --force max_burst_index.${runnum}.conf Parity/prminput/
+
+./qwparity -r $runnum -c prex_prompt.conf \
     --rootfile-stem prexPrompt_pass1_ \
+    --add-config 2pass.conf \
     --QwLog.loglevel-file 2 \
     --QwLog.logfile ./LogFiles/QwLog_run$runnum\_prompt_pass1_$timenow.txt ;
 
@@ -41,6 +50,7 @@ timenow=$(date +"%Y-%m%d-%H%M");
 
 ./qwparity -r $runnum -c prex_prompt.conf \
     --rootfile-stem prexPrompt_pass2_ \
+    --add-config 2pass.conf \
     --QwLog.loglevel-file 2 \
     --QwLog.logfile ./LogFiles/QwLog_run$runnum\_prompt_pass2_$timenow.txt ;
 # FIXME INSERT JAPAN SUMMARY HERE - replace postpan evntually

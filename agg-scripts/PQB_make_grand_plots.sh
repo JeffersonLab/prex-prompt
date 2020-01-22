@@ -96,6 +96,8 @@ then
     wien=2
 fi
 
+mkdir ~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug${slug}
+cp --force $1 ~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug${slug}/
 if [ ! -d /chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile_$slug ]
 then
     mkdir /chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile_$slug
@@ -108,12 +110,7 @@ cd /chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan
 #sleep 900
 ~/PREX/prompt/Aggregator/drawPostpan/PQB_accumulate_mini_aggFiles_list.sh slug$slug
 
-mkdir ~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug${slug}
 
-cp ~/PREX/prompt/beam-mod/rootfiles_alldet_pass1/plots/cyclenum_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug${slug}/cycle_slopes_pass1_slug${slug}.pdf
-cp ~/PREX/prompt/beam-mod/rootfiles_alldet_pass2/plots/cyclenum_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug${slug}/cycle_slopes_pass2_slug${slug}.pdf
-#cp ~/PREX/prompt/beam-mod/scripts/dit_11X12X_txt/*sensitivity_slug${slug}.txt ~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug${slug}/
-cp ~/PREX/prompt/beam-mod/scripts/dit_11X12X_txt/plots/sensitivity_plots_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug${slug}/
 
 #root -l -b -q copytree_auto.C'('$slug')'
 rm -f /chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile_$slug/grand_aggregator.root
@@ -129,5 +126,7 @@ for i in $(seq $startingpoint $slug); do echo $i>>grand_slug_plot_list.txt; done
 
 #make grand agg plots!
 root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile/grand_'$startingpoint'-'${slug}'.root","~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug'$slug'/grand_'$startingpoint'-'$slug'")'
+
+cp --force ${CAM_OUTPUTDIR}/grand_aggregator.root ~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug${slug}/
 
 cd $forgetmenot
