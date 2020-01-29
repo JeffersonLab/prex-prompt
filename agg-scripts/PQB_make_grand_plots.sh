@@ -121,7 +121,17 @@ cp -f plots/PQB/summary_minirun_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/PQ
 cp -f plots/PQB/summary_minirun_slug_linear${slug}.txt ~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug${slug}/
 
 rm -f grand_slug_plot_list.txt
-for i in $(seq $startingpoint $slug); do echo $i>>grand_slug_plot_list.txt; done
+# ignore 105
+if [[ $slug < 105 ]] 
+then
+  for i in $(seq $startingpoint $slug); do echo $i>>grand_slug_plot_list.txt; done
+else
+  for i in $(seq $startingpoint 104); do echo $i>>grand_slug_plot_list.txt; done
+fi
+if [[ $slug > 105 ]]
+then
+  for i in $(seq 106 $slug); do echo $i>>grand_slug_plot_list.txt; done
+fi
 ./PQB_slug_file_accumulate_list.sh grand_slug_plot_list.txt
 
 #make grand agg plots!

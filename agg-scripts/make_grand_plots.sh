@@ -130,11 +130,22 @@ cp -f plots/summary_minirun_slug_linear${slug}.txt ~/PREX/prompt/hallaweb_online
 ~/PREX/prompt/agg-scripts/dither_slug_plots.sh ${slug}
 
 rm -f grand_slug_plot_list.txt
-for i in $(seq $startingpoint $slug); do echo $i>>grand_slug_plot_list.txt; done
+# ignore 105
+if [[ $slug < 105 ]]
+then
+  for i in $(seq $startingpoint $slug); do echo $i>>grand_slug_plot_list.txt; done
+else
+  for i in $(seq $startingpoint 104); do echo $i>>grand_slug_plot_list.txt; done
+fi
+if [[ $slug > 105 ]]
+then
+  for i in $(seq 106 $slug); do echo $i>>grand_slug_plot_list.txt; done
+fi
 ./slug_file_accumulate_list.sh grand_slug_plot_list.txt
 
 #make grand agg plots!
-root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile/grand_'$startingpoint'-'${slug}'.root","~/PREX/prompt/hallaweb_online/slug/slug_list/slug'$slug'/grand_'$startingpoint'-'$slug'")'
+root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile/grand_'$startingpoint'-'${slug}'.root","~/PREX/prompt/hallaweb_online/slug/slug_list/slug'$slug'/grand_'$startingpoint'-'$slug'",0)'
+root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile/grand_'$startingpoint'-'${slug}'.root","~/PREX/prompt/hallaweb_online/slug/slug_list/slug'$slug'/grand_signed_'$startingpoint'-'$slug'",1)'
 
 cp --force ${CAM_OUTPUTDIR}/grand_aggregator.root ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}/
 
