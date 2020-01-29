@@ -21,6 +21,7 @@ void CheckBCM(){
   TH2D *h2d_buff;
   TVirtualPad* pad_buff;
   TGraph* g_buff;
+  TGraph* g_buff2;
   for(int ibcm=0;ibcm<nbcm;ibcm++){
     const char* device_name = vBCM[ibcm];
     pad_buff = c1->cd(1);
@@ -35,7 +36,7 @@ void CheckBCM(){
       // g_buff->SetMarkerStyle(20);
     }
     //===================================================
-
+    
     pad_buff=c1->cd(2);
     evt_tree->Draw(Form("%s",device_name),"ErrorFlag==0","");
     h_buff=(TH1D*)pad_buff->FindObject("htemp");
@@ -58,6 +59,7 @@ void CheckBCM(){
     TH2F* h2d_buff = (TH2F*)pad_buff->FindObject("htemp");
     if (h2d_buff!=NULL)
       h2d_buff->Draw("candlex3");
+
 
     //===================================================
 
