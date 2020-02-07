@@ -1,4 +1,5 @@
 #!/bin/bash
+cd charge_plots
 
 source /apps/root/5.34.36/setroot_CUE.bash
 PLOT_FLAG=1
@@ -15,9 +16,11 @@ script_dir=/adaqfs/home/apar/pvdb/prex/examples
 if [ $# -ge 1 ]; then
     # get charge for the given run range
     python $script_dir/acc_charge.py --run=$1
+    python $script_dir/acc_charge_time.py --run=$1
 else
     # get charge for all production runs
     python $script_dir/acc_charge.py
+    python $script_dir/acc_charge_time.py
 fi
 
 # Other examples
@@ -29,8 +32,12 @@ fi
 # python $script_dir/acc_charge.py --list list.txt --goodrun=True
 
     root -b -q ${script_dir}/DrawChargeMon.C
+    root -b -q ${script_dir}/DrawChargeMon_time.C
+    root -b -q ${script_dir}/DrawChargeMon_TGraph.C
+    root -b -q ${script_dir}/DrawChargeMon_projected.C
 if [ $PLOT_FLAG -eq 1 ]; then
     evince charge_mon.pdf&
+    evince charge_mon_time.pdf&
 fi
 
 rm -f out.txt
