@@ -28,6 +28,8 @@ void CheckBPM(){
   TH2D *h2d_buff;
   TVirtualPad* pad_buff;
   TGraph* g_buff;
+  TGraph* g_buff2;
+  TGraph* g_buff3;
   
   pad_buff=cwiresum->cd(1);  
   mul_tree->SetAlias("Aq","asym_bcm_an_ds");
@@ -60,18 +62,31 @@ void CheckBPM(){
 	h_buff->SetLineColor(kRed);
 */
       pad_buff=cbpm->cd(5*ix+2);
-      h2d_buff = (TH2D*)pad_buff->FindObject("htemp");
+      //g_buff2 = (TGraph*)pad_buff->FindObject("htemp");
       evt_tree->Draw(Form("%s/mm:Entry$",device_name),
-		     "ErrorFlag==0 && bcm_an_us>5");
-      h2d_buff = (TH2D*)pad_buff->FindObject("htemp");
-      if(h2d_buff!=NULL)
-        h2d_buff->SetName(device_name);
+		     "(ErrorFlag&0xff)==0 && bcm_an_us>5","l");
+      g_buff2 = (TGraph*)pad_buff->FindObject("Graph");
+      if(g_buff2!=NULL)
+        g_buff2->SetName(device_name);
 
-      evt_tree->Draw(Form("%s/um:Entry$",device_name),
-		     Form("bcm_an_us>5"),"* same");
-      h2d_buff = (TH2D*)pad_buff->FindObject("htemp");
-      if(h2d_buff!=0)
-        h2d_buff->SetLineColor(kRed);
+      evt_tree->Draw(Form("%s/mm:Entry$",device_name),"(ErrorFlag&0xffffff00)!=0&&bcm_an_us>5","* same");
+      g_buff2 = (TGraph*)pad_buff->FindObject("Graph");
+      if(g_buff2!=0){
+        g_buff2->SetMarkerColor(kRed);
+        g_buff2->SetMarkerSize(0.5);
+      }
+      /*evt_tree->Draw(Form("%s/mm:Entry$>>g3",device_name),"(ErrorFlag&0x80000000)!=0&&bcm_an_us>5","* same");
+      g_buff3 = (TGraph*)pad_buff->FindObject("g3");
+      //g_buff3 = (TGraph*)gROOT->FindObject("g3");
+      //
+      */
+      evt_tree->Draw(Form("%s/mm:Entry$",device_name),"(ErrorFlag&0x80000000)!=0&&bcm_an_us>5","* same");
+      //g_buff3 = (TGraph*)pad_buff->FindObject("Graph");
+      //g_buff3 = (TGraph*)gROOT->FindObject("Graph");
+      //if(g_buff3!=0){
+      //  g_buff3->SetMarkerColor(kYellow);
+      //  g_buff3->SetMarkerSize(0.3);
+      //}
 
       pad_buff=cbpm->cd(5*ix+3);
       mul_tree->Draw(Form("diff_%s/um:pattern_number",device_name),"ErrorFlag==0");
