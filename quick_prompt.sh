@@ -9,7 +9,6 @@ fi
 minirun=0
 if [ $# -ge 2 ]
 then
-  echo "Doing minirun $2 (starts at minirun 0, and has 9000 good multiplets per minirun, assume here we are doing 2x as large event ranges, 100000 events long, to compensate for potential beam trips)"
   minirun=$2
 fi
 startEvts=$((100000*${minirun}))
@@ -22,12 +21,10 @@ fi
 
 echo "Doing events $startEvts to $endEvts"
 
-./qwparity -r $runnum -c prex.conf \
+./qwparity -r $runnum -c prex_prompt.conf \
     --rootfile-stem quick_ \
     -e $startEvts:$endEvts;
 
 ./fast_postpan.sh $runnum;
 
 ./fast_summary.sh $runnum;
-
-evince FastPlots/run${runnum}_000/run${runnum}_000_all.pdf &
