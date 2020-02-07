@@ -100,10 +100,12 @@ cp --force $1 ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}/
 cd ~/PREX/prompt/
 ./get_charge.sh 5408-${lastrun} 0
 #convert charge_mon.pdf -trim +repage charge_mon.png
-/bin/cp --force charge_mon.pdf hallaweb_online/slug/slug_list/slug${slug}/charge_mon.pdf
+/bin/cp --force charge_plots/charge_mon.pdf hallaweb_online/slug/slug_list/slug${slug}/charge_mon.pdf
+/bin/cp --force charge_plots/charge_mon.pdf hallaweb_online/charge/slugs/charge_mon_integrated_slug${slug}.pdf
 ./get_charge.sh ${firstrun}-${lastrun} 0
 #convert charge_mon.pdf -trim +repage charge_mon.png
-/bin/cp --force charge_mon.pdf hallaweb_online/slug/slug_list/slug${slug}/charge_mon_slug${slug}.pdf
+/bin/cp --force charge_plots/charge_mon.pdf hallaweb_online/slug/slug_list/slug${slug}/charge_mon_slug${slug}.pdf
+/bin/cp --force charge_plots/charge_mon.pdf hallaweb_online/charge/slugs/charge_mon_slug${slug}.pdf
 
 if [ ! -d /chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile_$slug ]
 then
@@ -139,14 +141,19 @@ else
 fi
 if [[ $slug > 105 ]]
 then
-  for i in $(seq 106 $slug); do echo $i>>grand_slug_plot_list.txt; done
+  if [[ $startingpoint > 105 ]]
+  then
+    for i in $(seq $startingpoint $slug); do echo $i>>grand_slug_plot_list.txt; done
+  else
+    for i in $(seq 106 $slug); do echo $i>>grand_slug_plot_list.txt; done
+  fi
 fi
-./slug_file_accumulate_list.sh grand_slug_plot_list.txt
 
 #make grand agg plots!
+./slug_file_accumulate_list.sh grand_slug_plot_list.txt
 root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile/grand_'$startingpoint'-'${slug}'.root","~/PREX/prompt/hallaweb_online/slug/slug_list/slug'$slug'/grand_'$startingpoint'-'$slug'",0)'
-root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile/grand_'$startingpoint'-'${slug}'.root","~/PREX/prompt/hallaweb_online/slug/slug_list/slug'$slug'/grand_signed_'$startingpoint'-'$slug'",1)'
-
 cp --force ${CAM_OUTPUTDIR}/grand_aggregator.root ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}/
+./slug_file_accumulate_list.sh grand_slug_plot_list.txt
+root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile/grand_'$startingpoint'-'${slug}'.root","~/PREX/prompt/hallaweb_online/slug/slug_list/slug'$slug'/grand_signed_'$startingpoint'-'$slug'",1)'
 
 cd $forgetmenot

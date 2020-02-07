@@ -50,25 +50,25 @@ wien2=`rcnd $lastrun flip_state`
 if [ $slug1 != $slug2 ]
 then
   echo "First and last run's slugs don't equal!"
-  #exit
+  exit
 fi
 
 if [[ (($arm1 -ne 0) && ($arm2 -ne 0)) && ($arm1 -ne $arm2) ]]
 then
   echo "First and last run's good HRS don't equal!"
-  #exit
+  exit
 fi
 
 if [ $ihwp1 != $ihwp2 ]
 then
   echo "First and last run's ihwp don't equal!"
-  #exit
+  exit
 fi
 
 if [ $wien1 != $wien2 ]
 then
   echo "First and last run's wien don't equal!"
-  #exit
+  exit
 fi
 
 slug=$slug1
@@ -135,7 +135,8 @@ fi
 ./PQB_slug_file_accumulate_list.sh grand_slug_plot_list.txt
 
 #make grand agg plots!
-root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile/grand_'$startingpoint'-'${slug}'.root","~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug'$slug'/grand_'$startingpoint'-'$slug'")'
+root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile/grand_'$startingpoint'-'${slug}'.root","~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug'$slug'/grand_'$startingpoint'-'$slug'",0)'
+root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile/grand_'$startingpoint'-'${slug}'.root","~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug'$slug'/grand_signed_'$startingpoint'-'$slug'",1)'
 
 cp --force ${CAM_OUTPUTDIR}/grand_aggregator.root ~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug${slug}/
 
