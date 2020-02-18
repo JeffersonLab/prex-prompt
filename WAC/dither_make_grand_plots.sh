@@ -6,10 +6,20 @@
 # 2: A single number 0, 1, or 2 for the spectrometers enabled. This is usually 0. 0 for both, 1 for right only, 2 for left only.
 
 slugfile=$1
+if [[ "$slugfile" != *".list"* && "$slugfile" != *".txt"* ]]; then
+  echo "Must pass a run list .txt or .list file as input"
+  exit
+fi
+
 #hrs=$2
+# If starting point < 0 then it will assume the user has already specified the slugs to do in a text file. See below
 startingpoint=100
-if [ "$#" -eq 2 ]; then
+if [ "$#" -ge 2 ]; then
   startingpoint=$2
+fi
+stub=""
+if [ "$#" -ge 3 ]; then
+  stub=$3
 fi
 
 source ~/PREX/setup_japan.sh
@@ -101,11 +111,16 @@ then
     wien=2
 fi
 
-mkdir ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}
-cp --force $1 ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/
-if [ ! -d /chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering/grandRootfile_$slug ]
+if [ $startingpoint -gt $slug ]; then
+  echo "starting slug number: $startingpoint larger than slug number: $slug"
+  exit 1
+fi
+
+mkdir ~/PREX/prompt/hallaweb_online/dithering${stub}_slug/slug_list/slug${slug}
+cp --force $1 ~/PREX/prompt/hallaweb_online/dithering${stub}_slug/slug_list/slug${slug}/
+if [ ! -d /chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering${stub}/grandRootfile_$slug ]
 then
-    mkdir /chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering/grandRootfile_$slug
+    mkdir /chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering${stub}/grandRootfile_$slug
 fi
 
 #make aggregator plots!
@@ -113,20 +128,20 @@ cd /chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan
 
 #~/PREX/prompt/agg-scripts/agg_prompt_list.sh ~/PREX/prompt/agg-scripts/run_list/slug${slug}.list
 #sleep 900
-~/PREX/prompt/Aggregator/drawPostpan/dithering_accumulate_mini_aggFiles_list.sh slug$slug
+~/PREX/prompt/Aggregator/drawPostpan/dithering_accumulate_mini_aggFiles_list.sh slug$slug ${stub}
 
 
-#cp ~/PREX/prompt/beam-mod/rootfiles_alldet_pass1/plots/cyclenum_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/cycle_slopes_pass1_slug${slug}.pdf
-#cp ~/PREX/prompt/beam-mod/rootfiles_alldet_pass2/plots/cyclenum_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/cycle_slopes_pass2_slug${slug}.pdf
-#cp ~/PREX/prompt/beam-mod/scripts/dit_11X12X_txt/plots/sensitivity_plots_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/
+#cp ~/PREX/prompt/beam-mod/rootfiles_alldet_pass1/plots/cyclenum_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/dithering${stub}_slug/slug_list/slug${slug}/cycle_slopes_pass1_slug${slug}.pdf
+#cp ~/PREX/prompt/beam-mod/rootfiles_alldet_pass2/plots/cyclenum_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/dithering${stub}_slug/slug_list/slug${slug}/cycle_slopes_pass2_slug${slug}.pdf
+#cp ~/PREX/prompt/beam-mod/scripts/dit_11X12X_txt/plots/sensitivity_plots_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/dithering${stub}_slug/slug_list/slug${slug}/
 
 #root -l -b -q copytree_auto.C'('$slug')'
-rm -f /chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering/grandRootfile_$slug/grand_aggregator.root
-export CAM_OUTPUTDIR=/chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering/grandRootfile_$slug/
-root -l -b -q plotAgg.C'("aggRootfiles/slugRootfiles/dithering/minirun_slug","plots/dithering/summary_minirun_slug", '$slug', '$ihwp', '$wien', '$hrs')'
-cp -f plots/dithering/summary_minirun_slug${slug}.txt ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/
-cp -f plots/dithering/summary_minirun_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/
-cp -f plots/dithering/summary_minirun_slug_linear${slug}.txt ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/
+rm -f /chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering${stub}/grandRootfile_$slug/grand_aggregator.root
+export CAM_OUTPUTDIR=/chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering${stub}/grandRootfile_$slug/
+root -l -b -q plotAgg.C'("aggRootfiles/slugRootfiles/dithering'${stub}'/minirun_slug","plots/dithering'${stub}'/summary_minirun_slug", '$slug', '$ihwp', '$wien', '$hrs')'
+cp -f plots/dithering${stub}/summary_minirun_slug${slug}.txt ~/PREX/prompt/hallaweb_online/dithering${stub}_slug/slug_list/slug${slug}/
+cp -f plots/dithering${stub}/summary_minirun_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/dithering${stub}_slug/slug_list/slug${slug}/
+cp -f plots/dithering${stub}/summary_minirun_slug_linear${slug}.txt ~/PREX/prompt/hallaweb_online/dithering${stub}_slug/slug_list/slug${slug}/
 
 
 name="${startingpoint}-${slug}"
@@ -140,13 +155,13 @@ then
 else
   name="`cat ~/PREX/prompt/WAC/grand_slug_plot_name.txt`"
 fi
-./dithering_slug_file_accumulate_list.sh ~/PREX/prompt/WAC/grand_slug_plot_list.txt $name
+./dithering_slug_file_accumulate_list.sh ~/PREX/prompt/WAC/grand_slug_plot_list.txt $name $stub
 
 #make grand agg plots!
-root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering/grandRootfile/grand_'$name'.root","~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug'$slug'/grand_'$name'",0)'
-root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering/grandRootfile/grand_'$name'.root","~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug'$slug'/grand_signed_'$name'",1)'
+root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering'${stub}'/grandRootfile/grand_'$name'.root","~/PREX/prompt/hallaweb_online/dithering'${stub}'_slug/slug_list/slug'$slug'/grand_'$name'",0)'
+root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering'${stub}'/grandRootfile/grand_'$name'.root","~/PREX/prompt/hallaweb_online/dithering'${stub}'_slug/slug_list/slug'$slug'/grand_signed_'$name'",1)'
 
-cp --force ${CAM_OUTPUTDIR}/grand_aggregator.root ~/PREX/prompt/hallaweb_online/dithering_slug/slug_list/slug${slug}/
+cp --force ${CAM_OUTPUTDIR}/grand_aggregator.root ~/PREX/prompt/hallaweb_online/dithering${stub}_slug/slug_list/slug${slug}/
 
 cd $forgetmenot
-./dithering/dither_slug_summary.sh $slug
+./dithering/dither_slug_summary.sh $slug $stub

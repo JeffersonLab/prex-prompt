@@ -6,9 +6,11 @@
 # 2: A single number 0, 1, or 2 for the spectrometers enabled. This is usually 0. 0 for both, 1 for right only, 2 for left only.
 
 slugfile=$1
+if [[ "$slugfile" != *".list"* && "$slugfile" != *".txt"* ]]; then
+  echo "Must pass a run list .txt or .list file as input"
+  exit
+fi
 #hrs=$2
-#startingpoint=4 #Default start on 60, most recent Wien
-#startingpoint=60 #Default start on 60, most recent Wien
 startingpoint=100 #Default start on 60, most recent Wien
 if [ "$#" -eq 2 ]; then
   startingpoint=$2
@@ -52,6 +54,7 @@ wien2=`rcnd $lastrun flip_state`
 if [[ ! "$wien2" =~ FLIP-(LEFT|RIGHT) ]]; then
   wien2="FLIP-RIGHT"
 fi
+#if wien1 == nothing then define it as the right thing -> also check slug number
 
 if [ $slug1 != $slug2 ]
 then
@@ -80,7 +83,7 @@ fi
 slug=$slug1
 hrs=$arm2
 ihwpstring=$ihwp1
-wienstring=$wien1
+wienstring="$wien1"
 
 if [ $ihwpstring == "IN" ]
 then
@@ -92,12 +95,12 @@ then
     ihwp=2
 fi
 
-if [ $wienstring == "FLIP-RIGHT" ]
+if [ "$wienstring" == "FLIP-RIGHT" ]
 then
     wien=1
 fi
 
-if [ $wienstring == "FLIP-LEFT" ]
+if [ "$wienstring" == "FLIP-LEFT" ]
 then
     wien=2
 fi
@@ -131,17 +134,22 @@ cp -f plots/PQB/summary_minirun_slug${slug}.txt ~/PREX/prompt/hallaweb_online/PQ
 cp -f plots/PQB/summary_minirun_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug${slug}/
 cp -f plots/PQB/summary_minirun_slug_linear${slug}.txt ~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug${slug}/
 
-[ -f grand_slug_plot_list.txt ] && rm -f grand_slug_plot_list.txt
-# ignore 105
-for (( i=$startingpoint; i<=$slug; i++ )); do
-  [ "$i" -ne 105 ] && echo $i >> grand_slug_plot_list.txt
-done
-./PQB_slug_file_accumulate_list.sh grand_slug_plot_list.txt
-#cat grand_slug_plot_list.txt  # debugging
+name="${startingpoint}-${slug}"
+if [ $startingpoint -ge 0 ];
+then
+  [ -f ~/PREX/prompt/WAC/grand_slug_plot_list.txt ] && rm -f ~/PREX/prompt/WAC/grand_slug_plot_list.txt
+  # ignore 105
+  for (( i=$startingpoint; i<=$slug; i++ )); do
+    [ "$i" -ne 105 ] && echo $i >> ~/PREX/prompt/WAC/grand_slug_plot_list.txt
+  done
+else
+  name="`cat ~/PREX/prompt/WAC/grand_slug_plot_name.txt`"
+fi
+./PQB_slug_file_accumulate_list.sh ~/PREX/prompt/WAC/grand_slug_plot_list.txt $name
 
 #make grand agg plots!
-root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile/grand_'$startingpoint'-'${slug}'.root","~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug'$slug'/grand_'$startingpoint'-'$slug'",0)'
-root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile/grand_'$startingpoint'-'${slug}'.root","~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug'$slug'/grand_signed_'$startingpoint'-'$slug'",1)'
+root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile/grand_'${name}'.root","~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug'$slug'/grand_'${name}'",0)'
+root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile/grand_'${name}'.root","~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug'$slug'/grand_signed_'${name}'",1)'
 
 cp --force ${CAM_OUTPUTDIR}/grand_aggregator.root ~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug${slug}/
 

@@ -36,7 +36,7 @@ Output Directory:
 #include "QuerySlugNumber.C"
 
 using namespace std;
-void CorrectTreeFast(Int_t run_number=0, Int_t seg_number=0 ){
+void CorrectTreeFast(Int_t run_number=0, std::string stub="" ){
   // Getting Slug Number from RCDB
   Int_t slug_id = QuerySlugNumber(run_number);
   if(slug_id==-1){
@@ -70,8 +70,8 @@ void CorrectTreeFast(Int_t run_number=0, Int_t seg_number=0 ){
 			"diff_bpm4eY",
 			"diff_bpm11X",
 			"diff_bpm12X"};
-  TString rootfile_name = Form("~/PREX/prompt/japanOutput/prexPrompt_pass1_%d.%03d.root",
-  			       run_number,seg_number);
+  TString rootfile_name = Form("~/PREX/prompt/japanOutput/prexPrompt_pass1_%d.000.root",
+  			       run_number);
   TFile *japanOutput = TFile::Open(rootfile_name);
   /*TTree *evt_tree = (TTree*)japanOutput->Get("evt");
   Int_t n_cyc_entries = evt->Draw("bmwcycnum","bmwcycnum>0","goff");
@@ -109,11 +109,11 @@ void CorrectTreeFast(Int_t run_number=0, Int_t seg_number=0 ){
     return;
   }
 
-  TFile* ditherOutput = TFile::Open(Form("/chafs2/work1/apar/BMODextractor/dit_alldet_slopes_slug%d.root",
-  					 slug_id));
+  TFile* ditherOutput = TFile::Open(Form("/chafs2/work1/apar/BMODextractor/dit_alldet_slopes%s_slug%d.root",
+  					 stub.c_str(),slug_id));
   if(ditherOutput==NULL){
     std::cout << "Error: " 
-      << "dit RootFile doesn't exsit!" << std::endl;
+      << "dit RootFile doesn't exist!" << std::endl;
     return;
   }
   TTree *slope_tree = (TTree*)ditherOutput->Get("dit");
@@ -153,7 +153,7 @@ void CorrectTreeFast(Int_t run_number=0, Int_t seg_number=0 ){
   // slope unit: fraction / mm
   // ** which is  1e-3(ppm/um)
 
-  Int_t nCyc = slope_tree->Draw(">>elist1","cyclenum>0");//,run_cut);
+  Int_t nCyc = slope_tree->Draw(">>elist1","cyclenum>0 && flag==1");//,run_cut); // Not including run_cut will do slug averaging
   TEventList *elist = (TEventList*)gDirectory->Get("elist1");
   TString varname;
 
@@ -223,7 +223,7 @@ void CorrectTreeFast(Int_t run_number=0, Int_t seg_number=0 ){
   Ssiz_t length_t = last_t -first_t;
   outputName = rootfile_name(first_t,length_t);
   outputName.ReplaceAll('.','_');
-  outputName = "prexPrompt_dither_" +outputName;
+  outputName = "prexPrompt_dither"+ (TString)stub.c_str() + "_" +outputName;
   outputName +=".root";
   TString output_path="./DitOutputs/";
   std::cout << " -- Writing " << output_path+outputName << std::endl;
