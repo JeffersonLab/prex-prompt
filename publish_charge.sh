@@ -10,6 +10,9 @@ convert charge_mon.pdf -trim +repage charge_mon.png
 convert charge_mon_time.pdf -trim +repage charge_mon_time.png
 /bin/cp --force charge_mon_time.png /group/prex/analysis/www/crex/charge/charge_mon_time.png
 /bin/cp --force charge_mon_time.pdf /group/prex/analysis/www/crex/charge/charge_mon_time.pdf
+convert charge_mon_time_noint.pdf -trim +repage charge_mon_time_noint.png
+/bin/cp --force charge_mon_time_noint.png /group/prex/analysis/www/crex/charge/charge_mon_time_noint.png
+/bin/cp --force charge_mon_time_noint.pdf /group/prex/analysis/www/crex/charge/charge_mon_time_noint.pdf
 convert charge_mon_projected.pdf -trim +repage charge_mon_projected.png
 /bin/cp --force out_shifts.txt /group/prex/analysis/www/crex/charge/out_shifts.txt
 /bin/cp --force charge_mon_projected.png /group/prex/analysis/www/crex/charge/charge_mon_projected.png

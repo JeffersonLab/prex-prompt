@@ -10,7 +10,7 @@ echo "Creating aggregator files for run $1"
 conf="input.txt"
 if [ $(($run_num)) -ge 5337 ]
 then
-  conf="input.5337-6490.conf"
+  conf="input.5337-6490.txt"
 fi
 if [ $(($run_num)) -ge 6491 ]
 then

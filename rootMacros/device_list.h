@@ -18,7 +18,7 @@ vector<const char*> vBCM={"bcm_an_us", "bcm_an_ds",
 			  "bcm_dg_us","bcm_dg_ds"};
 
 vector<const char*> vBPM={"bpm4a","bpm4e",
-			  "bpm4ac","bpm4ec",
+			  "bpm4ac","bpm4ec","bpm1",
 			  "bpm11","bpm12","bpm16",
 			  "bpm0l01","bpm2i01","bpm2i02","bpm1i02","bpm0i02","bpm0i01a"};
 // BPM 11 was 14 before 7/16/2019
@@ -27,7 +27,8 @@ vector<const char*> vBPMXY={"bpm4aX","bpm4aY",
 			    "bpm4eX","bpm4eY",
 			    "bpm4acX","bpm4acY",
 			    "bpm4ecX","bpm4ecY",
-			    "bpm11X","bpm11Y", 
+          "bpm1X","bpm1Y",
+          "bpm11X","bpm11Y", 
 			    "bpm12X","bpm12Y",
 			    "bpm16X","bpm16Y",
           "bpm0l01X","bpm0l01Y"};

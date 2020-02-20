@@ -217,7 +217,7 @@ void PlotSummary(TString filename,TString output_dir="./tmp"){
   // ===== Integrated Convergence 
   Integrated();
   CheckSuperCycle();
-  
+
   //==== Injector BPMs Dx Dy Dr and Ellipticity ====
   // PlotInjBPMS();
   // PlotInjBPMSAq();

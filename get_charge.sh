@@ -35,6 +35,7 @@ fi
     root -b -q ${script_dir}/DrawChargeMon_time.C
     root -b -q ${script_dir}/DrawChargeMon_TGraph.C
     root -b -q ${script_dir}/DrawChargeMon_projected.C
+    root -b -q ${script_dir}/DrawChargeMon_time_noint.C
 if [ $PLOT_FLAG -eq 1 ]; then
     evince charge_mon.pdf&
     evince charge_mon_time.pdf&
