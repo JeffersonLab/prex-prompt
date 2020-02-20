@@ -145,7 +145,8 @@ then
 else
   name="`cat ~/PREX/prompt/WAC/grand_slug_plot_name.txt`"
 fi
-./PQB_slug_file_accumulate_list.sh ~/PREX/prompt/WAC/grand_slug_plot_list.txt $name
+#./PQB_slug_file_accumulate_list.sh ~/PREX/prompt/WAC/grand_slug_plot_list.txt $name
+~/PREX/japan/rootScripts/merger/smartHadd_slug_PQB.sh ~/PREX/prompt/WAC/grand_slug_plot_list.txt $name
 
 #make grand agg plots!
 root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile/grand_'${name}'.root","~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug'$slug'/grand_'${name}'",0)'

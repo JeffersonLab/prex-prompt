@@ -159,7 +159,8 @@ else
 fi
 
 #make grand agg plots!
-./slug_file_accumulate_list.sh ~/PREX/prompt/WAC/grand_slug_plot_list.txt $name
+~/PREX/japan/rootScripts/merger/smartHadd_slug_regression.sh ~/PREX/prompt/WAC/grand_slug_plot_list.txt $name
+#./slug_file_accumulate_list.sh ~/PREX/prompt/WAC/grand_slug_plot_list.txt $name
 root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile/grand_'${name}'.root","~/PREX/prompt/hallaweb_online/slug/slug_list/slug'$slug'/grand_'${name}'",0)'
 root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile/grand_'${name}'.root","~/PREX/prompt/hallaweb_online/slug/slug_list/slug'$slug'/grand_signed_'${name}'",1)'
 

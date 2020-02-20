@@ -34,13 +34,25 @@ echo "\n* To make WAC plots do"
 echo '\e[1;34m'"\t./EZ_WAC.sh run_list/slug###.list"'\e[0m'
 
 echo "\nTo make dithering corrections and associated plots:"
+echo "* First verify and prune out bad runs"
+echo "\t(we are doing Run-wise analysis for CREX online data analysis)"
+echo '\e[1;34m'"\t./dithering/verify_dithering_slopes.sh slugNumber"'\e[0m'
+echo "  - Check on the now uploaded plots labelled as alphas and deltas"
+echo "  - If any given run has a clear deviation, remove it with:"
+echo '\e[1;34m'"\t./dithering/remove_dithering_cycle.sh slugNumber cycleNumber"'\e[0m'
+echo "  - Where cycle number is the X axis on the plots you looked at"
+echo "  - Remake the above plots to verify the change to the slopes file"
+echo "  - Once you are satisfied the slopes are valid do the corrections"
 echo "* Do dithering correction"
-echo '\e[1;34m'"\t./dithering/dither_correct_aggregate run_list/slug###.list StubArg"'\e[0m'
+echo '\e[1;34m'"\t./dithering/dither_correct_aggregate.sh run_list/slug###.list StubArg"'\e[0m'
 echo "  - The StubArg should be left blank for the traditional"
 echo "    4aX, coils 13746 analysis."
-echo "  - For the 1X, coils 13746 analysis give StubArg = '_1X'"
+echo "  - For the 1X, coils 13746 analysis (our new default) give StubArg = '_1X'"
 echo "    Similarly, give such a StubArg to dither_make_grand_plots.sh,"
-echo "    on top of the usual"
+echo "    on top of the original"
+echo "  - Once you are happy that all data is corrected and aggregated"
+echo "    Make the grand plots for by doing (stubArg only needed for _1X):"
+echo '\e[1;34m'"\t./dither_make_grand_plots.sh run_list/slug###.list StubArg"'\e[0m'
 
 echo "\n* To add or update cuts"
 echo "\tGo to the japan_WAC_only JAPAN copy, copy a prior cuts file,"

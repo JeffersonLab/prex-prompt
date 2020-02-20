@@ -155,7 +155,8 @@ then
 else
   name="`cat ~/PREX/prompt/WAC/grand_slug_plot_name.txt`"
 fi
-./dithering_slug_file_accumulate_list.sh ~/PREX/prompt/WAC/grand_slug_plot_list.txt $name $stub
+#./dithering_slug_file_accumulate_list.sh ~/PREX/prompt/WAC/grand_slug_plot_list.txt $name $stub
+~/PREX/japan/rootScripts/merger/smartHadd_slug_dithering.sh ~/PREX/prompt/WAC/grand_slug_plot_list.txt $name $stub
 
 #make grand agg plots!
 root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering'${stub}'/grandRootfile/grand_'$name'.root","~/PREX/prompt/hallaweb_online/dithering'${stub}'_slug/slug_list/slug'$slug'/grand_'$name'",0)'
@@ -163,5 +164,12 @@ root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/ditheri
 
 cp --force ${CAM_OUTPUTDIR}/grand_aggregator.root ~/PREX/prompt/hallaweb_online/dithering${stub}_slug/slug_list/slug${slug}/
 
+
+#./dithering/dither_slug_summary.sh $slug $stub
+# Do that line yourself to get the max input COIL comparison plots
+
+cd ~/PREX/prompt/bmodAna
+root -l -b -q plotAD_13746.C\(\"slopes_run_avg${stub}/dithering_slopes_13746_slug${slug}.root\"\);
+/bin/cp --force ~/PREX/prompt/bmodAna/slopes_run_avg${stub}/dithering_slopes_13746_slug${slug}_alphas-deltas.pdf ~/PREX/prompt/hallaweb_online/dithering${stub}_slug/slug_list/slug${slug}/
+
 cd $forgetmenot
-./dithering/dither_slug_summary.sh $slug $stub
