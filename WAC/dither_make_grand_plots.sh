@@ -32,6 +32,11 @@ lastrun=0
 input="$slugfile"
 while IFS= read -r line
 do
+  if [[ "$line" -eq "" ]]
+  then 
+    echo "Error, don't use empty lines in run list file"
+    exit
+  fi
   if [ $(echo "$line < $firstrun" | bc) -eq 1  ]
     then
         firstrun=$line

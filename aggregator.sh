@@ -1,5 +1,5 @@
 #!/bin/bash
-cd Aggregator/wrapper/
+cd ~/PREX/prompt/Aggregator/wrapper/
 ../setup_camguin.sh
 echo "Deleting any old aggregator files for run $1"
 ls -lsatrH ~/PREX/prompt/aggRootfiles/minirun_aggregator_${1}_*.root

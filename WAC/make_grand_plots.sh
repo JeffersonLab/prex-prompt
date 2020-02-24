@@ -26,6 +26,11 @@ lastrun=0
 input="$slugfile"
 while IFS= read -r line
 do
+  if [[ "$line" -eq "" ]]
+  then 
+    echo "Error, don't use empty lines in run list file"
+    exit
+  fi
   if [ $(echo "$line < $firstrun" | bc) -eq 1  ]
     then
         firstrun=$line
@@ -155,6 +160,7 @@ then
     [ "$i" -ne 105 ] && echo $i >> ~/PREX/prompt/WAC/grand_slug_plot_list.txt
   done
 else
+  # Pass starting point < 0 to use a local text file to pass in the name
   name="`cat ~/PREX/prompt/WAC/grand_slug_plot_name.txt`"
 fi
 
