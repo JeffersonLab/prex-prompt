@@ -43,6 +43,12 @@ echo '\e[1;34m'"\t./dithering/remove_dithering_cycle.sh slugNumber cycleNumber"'
 echo "  - Where cycle number is the X axis on the plots you looked at"
 echo "  - Remake the above plots to verify the change to the slopes file"
 echo "  - Once you are satisfied the slopes are valid do the corrections"
+echo "* Second reclassify segments of the slug for split-slug optics tune changes"
+echo '\e[1;34m'"\t./dithering/segment_dithering_cycles.sh slugNumber cycleToStartAt SegmentNumber"'\e[0m'
+echo "  - This will change the slopes ROOT files themselves to have a 'segment' variable update"
+echo "  - The default segment number is 1, and this script will update to 2 if SegmentNumber is blank"
+echo "  - The cycles at cycleToStartAt and beyond will be updated with this new SegmentNumber"
+echo "  - Ideally we don't need to segment our slugs, but sometimes we do (i.e. slug 145)"
 echo "* Do dithering correction"
 echo '\e[1;34m'"\t./dithering/dither_correct_aggregate.sh run_list/slug###.list StubArg"'\e[0m'
 echo "  - The StubArg should be left blank for the traditional"

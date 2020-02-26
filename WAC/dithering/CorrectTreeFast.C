@@ -152,10 +152,27 @@ void CorrectTreeFast(Int_t run_number=0, std::string stub="" ){
   // In order 4aX, 4aY, 4eX, 4eY, 12X
   // slope unit: fraction / mm
   // ** which is  1e-3(ppm/um)
-
-  Int_t nCyc = slope_tree->Draw(">>elist1","cyclenum>0 && flag==1");//,run_cut); // Not including run_cut will do slug averaging
-  TEventList *elist = (TEventList*)gDirectory->Get("elist1");
+  
+  Int_t nCyc = 0;
+  TEventList *elist;// = (TEventList*)gDirectory->Get("elist1");
   TString varname;
+
+  Int_t segment = 1;
+  if (slope_tree->GetBranch("segment")) {
+    slope_tree->Draw(">>elistSeg",Form("run==%d && flag==1",run_number));//,run_cut); // Not including run_cut will do slug averaging
+    TEventList *elistSeg = (TEventList*)gDirectory->Get("elistSeg");
+    TLeaf* segmentL = slope_tree->GetLeaf("segment");
+    segmentL->GetBranch()->GetEntry(elistSeg->GetEntry(0));
+    segment = segmentL->GetValue(); // Got the segment value of the 1st cycle in run run_number
+
+    Printf("Using segment %d of the slug for slug averaged slope calculation",segment);
+    nCyc = slope_tree->Draw(">>elist1",Form("cyclenum>0 && flag==1 && segment==%d",segment));//,run_cut); // Not including run_cut will do slug averaging
+    elist = (TEventList*)gDirectory->Get("elist1");
+  }
+  else {
+    nCyc = slope_tree->Draw(">>elist1","cyclenum>0 && flag==1");//,run_cut); // Not including run_cut will do slug averaging
+    elist = (TEventList*)gDirectory->Get("elist1");
+  }
 
   //For each run number
   for(int ievt = 0; ievt<nCyc; ievt++){
