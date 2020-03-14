@@ -35,6 +35,15 @@ void CheckBCM(){
       g_buff->SetMarkerSize(0.5);
       // g_buff->SetMarkerStyle(20);
     }
+    g_buff->SetName("GraphFail");
+    evt_tree->Draw(Form("%s:Entry$",device_name),"(ErrorFlag&0xda7e6bff)==0 && ((ErrorFlag&0x9000)==0x9000 )","* same");
+    g_buff = (TGraph*)pad_buff->FindObject("Graph");
+    if(g_buff!=0){
+      g_buff->SetMarkerColor(kCyan);
+      g_buff->SetMarkerSize(0.5);
+      // g_buff->SetMarkerStyle(20);
+    }
+
     //===================================================
     
     pad_buff=c1->cd(2);
