@@ -115,12 +115,16 @@ if [ $startingpoint -gt $slug ]; then
   exit 1
 fi
 
+./auto_slug_list.sh $slug
+
 mkdir ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}
 cp --force $1 ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}/
 if [ ! -d /chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile_$slug ]
 then
     mkdir /chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile_$slug
 fi
+
+/adaqfs/home/apar/PREX/japan/rootScripts/merger/smartHadd_miniruns_regression.sh `readlink -f ${slugfile}`
 
 cd ~/PREX/prompt/
 ./get_charge.sh 5408-${lastrun} 0
@@ -132,13 +136,13 @@ cd ~/PREX/prompt/
 /bin/cp --force charge_plots/charge_mon.pdf hallaweb_online/slug/slug_list/slug${slug}/charge_mon_slug${slug}.pdf
 /bin/cp --force charge_plots/charge_mon.pdf hallaweb_online/charge/slugs/charge_mon_slug${slug}.pdf
 
-#make aggregator plots!
-cd /chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan
-
 #~/PREX/prompt/agg-scripts/agg_prompt_list.sh ~/PREX/prompt/agg-scripts/run_list/slug${slug}.list
 #sleep 900
-~/PREX/prompt/Aggregator/drawPostpan/accumulate_mini_aggFiles_list.sh slug$slug
+#~/PREX/prompt/Aggregator/drawPostpan/accumulate_mini_aggFiles_list.sh slug$slug
 
+#make aggregator plots!
+cd /chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan
+#~/PREX/japan/rootScripts/Aggregator/drawPostpan/accumulate_mini_aggFiles_list.sh slug$slug
 
 #root -l -b -q copytree_auto.C'('$slug')'
 rm -f /chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile_$slug/grand_aggregator.root
@@ -157,7 +161,7 @@ then
   [ -f ~/PREX/prompt/WAC/grand_slug_plot_list.txt ] && rm -f ~/PREX/prompt/WAC/grand_slug_plot_list.txt
   # ignore 105
   for (( i=$startingpoint; i<=$slug; i++ )); do
-    [ "$i" -ne 105 ] && echo $i >> ~/PREX/prompt/WAC/grand_slug_plot_list.txt
+    [ "$i" -ne 105 ] && [ "$i" -ne 117 ] && echo $i >> ~/PREX/prompt/WAC/grand_slug_plot_list.txt
   done
 else
   # Pass starting point < 0 to use a local text file to pass in the name
@@ -167,8 +171,8 @@ fi
 #make grand agg plots!
 ~/PREX/japan/rootScripts/merger/smartHadd_slug_regression.sh ~/PREX/prompt/WAC/grand_slug_plot_list.txt $name
 #./slug_file_accumulate_list.sh ~/PREX/prompt/WAC/grand_slug_plot_list.txt $name
-root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile/grand_'${name}'.root","~/PREX/prompt/hallaweb_online/slug/slug_list/slug'$slug'/grand_'${name}'",0)'
-root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile/grand_'${name}'.root","~/PREX/prompt/hallaweb_online/slug/slug_list/slug'$slug'/grand_signed_'${name}'",1)'
+root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile/grand_'${name}'.root","/adaqfs/home/apar/PREX/prompt/hallaweb_online/slug/slug_list/slug'$slug'/grand_'${name}'",0)'
+root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile/grand_'${name}'.root","/adaqfs/home/apar/PREX/prompt/hallaweb_online/slug/slug_list/slug'$slug'/grand_signed_'${name}'",1)'
 
 cp --force ${CAM_OUTPUTDIR}/grand_aggregator.root ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}/
 

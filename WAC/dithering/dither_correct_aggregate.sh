@@ -2,6 +2,10 @@
 # NEW CREX Run Avg slope calculation
 folder="/adaqfs/home/apar/PREX/prompt/bmodAna/slopes_run_avg"
 outStub=""
+if [ "$#" -eq 0 ]; then
+  echo "Usage: ./dithering/dither_correct_slug_aggregate.sh SLUGNUM STUB"
+  exit
+fi
 if [ "$#" -ge 2 ]; then
   outStub="${2}" # i.e. _1X
 fi

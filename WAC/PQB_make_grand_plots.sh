@@ -122,14 +122,15 @@ then
     mkdir /chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile_$slug
 fi
 
-#make aggregator plots!
-cd /chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan
 
 #~/PREX/prompt/agg-scripts/agg_prompt_list.sh ~/PREX/prompt/agg-scripts/run_list/slug${slug}.list
 #sleep 900
-~/PREX/prompt/Aggregator/drawPostpan/PQB_accumulate_mini_aggFiles_list.sh slug$slug
 
+/adaqfs/home/PREX/japan/rootScripts/merger/smartHadd_miniruns_PQB.sh `readlink -f ${slugfile}`
 
+#make aggregator plots!
+cd /chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan
+#~/PREX/prompt/Aggregator/drawPostpan/PQB_accumulate_mini_aggFiles_list.sh slug$slug
 
 #root -l -b -q copytree_auto.C'('$slug')'
 rm -f /chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile_$slug/grand_aggregator.root
@@ -145,7 +146,7 @@ then
   [ -f ~/PREX/prompt/WAC/grand_slug_plot_list.txt ] && rm -f ~/PREX/prompt/WAC/grand_slug_plot_list.txt
   # ignore 105
   for (( i=$startingpoint; i<=$slug; i++ )); do
-    [ "$i" -ne 105 ] && echo $i >> ~/PREX/prompt/WAC/grand_slug_plot_list.txt
+    [ "$i" -ne 105 ] && [ "$i" -ne 117 ] && echo $i >> ~/PREX/prompt/WAC/grand_slug_plot_list.txt
   done
 else
   name="`cat ~/PREX/prompt/WAC/grand_slug_plot_name.txt`"
@@ -154,8 +155,8 @@ fi
 ~/PREX/japan/rootScripts/merger/smartHadd_slug_PQB.sh ~/PREX/prompt/WAC/grand_slug_plot_list.txt $name
 
 #make grand agg plots!
-root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile/grand_'${name}'.root","~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug'$slug'/grand_'${name}'",0)'
-root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile/grand_'${name}'.root","~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug'$slug'/grand_signed_'${name}'",1)'
+root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile/grand_'${name}'.root","/adaqfs/home/apar/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug'$slug'/grand_'${name}'",0)'
+root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/PQB/grandRootfile/grand_'${name}'.root","/adaqfs/home/apar/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug'$slug'/grand_signed_'${name}'",1)'
 
 cp --force ${CAM_OUTPUTDIR}/grand_aggregator.root ~/PREX/prompt/hallaweb_online/PQB_slug/slug_list/slug${slug}/
 

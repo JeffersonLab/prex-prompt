@@ -128,12 +128,15 @@ then
     mkdir /chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering${stub}/grandRootfile_$slug
 fi
 
-#make aggregator plots!
-cd /chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan
-
 #~/PREX/prompt/agg-scripts/agg_prompt_list.sh ~/PREX/prompt/agg-scripts/run_list/slug${slug}.list
 #sleep 900
-~/PREX/prompt/Aggregator/drawPostpan/dithering_accumulate_mini_aggFiles_list.sh slug$slug ${stub}
+#~/PREX/prompt/Aggregator/drawPostpan/dithering_accumulate_mini_aggFiles_list.sh slug$slug ${stub}
+
+/adaqfs/home/PREX/japan/rootScripts/merger/smartHadd_miniruns_dithering.sh `readlink -f ${slugfile}` minirun_slug${slug}.root ${stub}
+#~/PREX/japan/rootScripts/merger/smartHadd_miniruns_dithering.sh ${slugfile} minirun_slug${slug}.root ${stub}
+
+#make aggregator plots!
+cd /chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan
 
 
 #cp ~/PREX/prompt/beam-mod/rootfiles_alldet_pass1/plots/cyclenum_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/dithering${stub}_slug/slug_list/slug${slug}/cycle_slopes_pass1_slug${slug}.pdf
@@ -155,7 +158,7 @@ then
   [ -f ~/PREX/prompt/WAC/grand_slug_plot_list.txt ] && rm -f ~/PREX/prompt/WAC/grand_slug_plot_list.txt
   # ignore 105
   for (( i=$startingpoint; i<=$slug; i++ )); do
-    [ "$i" -ne 105 ] && echo $i >> ~/PREX/prompt/WAC/grand_slug_plot_list.txt
+    [ "$i" -ne 105 ] && [ "$i" -ne 117 ] && echo $i >> ~/PREX/prompt/WAC/grand_slug_plot_list.txt
   done
 else
   name="`cat ~/PREX/prompt/WAC/grand_slug_plot_name.txt`"
@@ -164,8 +167,8 @@ fi
 ~/PREX/japan/rootScripts/merger/smartHadd_slug_dithering.sh ~/PREX/prompt/WAC/grand_slug_plot_list.txt $name $stub
 
 #make grand agg plots!
-root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering'${stub}'/grandRootfile/grand_'$name'.root","~/PREX/prompt/hallaweb_online/dithering'${stub}'_slug/slug_list/slug'$slug'/grand_'$name'",0)'
-root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering'${stub}'/grandRootfile/grand_'$name'.root","~/PREX/prompt/hallaweb_online/dithering'${stub}'_slug/slug_list/slug'$slug'/grand_signed_'$name'",1)'
+root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering'${stub}'/grandRootfile/grand_'$name'.root","/adaqfs/home/apar/PREX/prompt/hallaweb_online/dithering'${stub}'_slug/slug_list/slug'$slug'/grand_'$name'",0)'
+root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/dithering'${stub}'/grandRootfile/grand_'$name'.root","/adaqfs/home/apar/PREX/prompt/hallaweb_online/dithering'${stub}'_slug/slug_list/slug'$slug'/grand_signed_'$name'",1)'
 
 cp --force ${CAM_OUTPUTDIR}/grand_aggregator.root ~/PREX/prompt/hallaweb_online/dithering${stub}_slug/slug_list/slug${slug}/
 

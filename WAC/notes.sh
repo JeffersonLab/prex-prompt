@@ -50,7 +50,7 @@ echo "  - The default segment number is 1, and this script will update to 2 if S
 echo "  - The cycles at cycleToStartAt and beyond will be updated with this new SegmentNumber"
 echo "  - Ideally we don't need to segment our slugs, but sometimes we do (i.e. slug 145)"
 echo "* Do dithering correction"
-echo '\e[1;34m'"\t./dithering/dither_correct_aggregate.sh run_list/slug###.list StubArg"'\e[0m'
+echo '\e[1;34m'"\t./dithering/dither_correct_aggregate.sh ### StubArg"'\e[0m'
 echo "  - The StubArg should be left blank for the traditional"
 echo "    4aX, coils 13746 analysis."
 echo "  - For the 1X, coils 13746 analysis (our new default) give StubArg = '_1X'"
@@ -58,7 +58,7 @@ echo "    Similarly, give such a StubArg to dither_make_grand_plots.sh,"
 echo "    on top of the original"
 echo "  - Once you are happy that all data is corrected and aggregated"
 echo "    Make the grand plots for by doing (stubArg only needed for _1X):"
-echo '\e[1;34m'"\t./dither_make_grand_plots.sh run_list/slug###.list StubArg"'\e[0m'
+echo '\e[1;34m'"\t./dither_make_grand_plots.sh run_list/slug###.list StartingSlug StubArg"'\e[0m'
 
 echo "\n* To add or update cuts"
 echo "\tGo to the japan_WAC_only JAPAN copy, copy a prior cuts file,"

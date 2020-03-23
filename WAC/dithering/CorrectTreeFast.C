@@ -1,5 +1,5 @@
 /*
-Updated based on Tao and Catherine's DitAlias 
+Updated by Cameron, based on Tao and Catherine's DitAlias 
 
 -- Example  from shell terminal:
 $  root -b 'CorrectTree(3433)'
@@ -159,11 +159,46 @@ void CorrectTreeFast(Int_t run_number=0, std::string stub="" ){
 
   Int_t segment = 1;
   if (slope_tree->GetBranch("segment")) {
-    slope_tree->Draw(">>elistSeg",Form("run==%d && flag==1",run_number));//,run_cut); // Not including run_cut will do slug averaging
+    Int_t nEnts = slope_tree->Draw(">>elistSeg",Form("run>=%d && flag==1",run_number));//,run_cut); run>= cut allows for non-existant runs to be included
     TEventList *elistSeg = (TEventList*)gDirectory->Get("elistSeg");
     TLeaf* segmentL = slope_tree->GetLeaf("segment");
     segmentL->GetBranch()->GetEntry(elistSeg->GetEntry(0));
     segment = segmentL->GetValue(); // Got the segment value of the 1st cycle in run run_number
+    if (segment == 0) {
+      // I can do this kind of time looping test, or I could just add a cut on segment to the above Draw command... I kinda like this loop though
+      for (Int_t n = 0 ; n < nEnts ; n++ ) {
+        segmentL->GetBranch()->GetEntry(elistSeg->GetEntry(n));
+        segment = segmentL->GetValue();
+        if (segment != 0) {
+          // Grab the first non-zero entry to get the probably accurate segment number
+          // This allows us to get corrections for runs with no BMOD cycles in a given slug dithering file
+          break;
+        }
+      }
+    }
+    if (segment==0) 
+    {
+      segment=1;
+      // Just do the whole slug and use the largest segment number for runs >= the current run number
+      Int_t nEnts = slope_tree->Draw(">>elistSeg2","flag==1");//,run_cut); run>= cut allows for non-existant runs to be included
+      TEventList *elistSeg2 = (TEventList*)gDirectory->Get("elistSeg2");
+      TLeaf* segmentL = slope_tree->GetLeaf("segment");
+      TLeaf* runL = slope_tree->GetLeaf("segment");
+      segmentL->GetBranch()->GetEntry(elistSeg2->GetEntry(0));
+      runL->GetBranch()->GetEntry(elistSeg2->GetEntry(0));
+      segment = segmentL->GetValue(); // Got the segment value of the 1st cycle in run run_number
+      for (Int_t j = 0; j<nEnts; j++) {
+        segmentL->GetBranch()->GetEntry(elistSeg2->GetEntry(j));
+        runL->GetBranch()->GetEntry(elistSeg2->GetEntry(j));
+        if (runL->GetValue() <= run_number) 
+        {
+          segment = segmentL->GetValue();
+        }
+      }
+      if (segment == 0) {
+        segment = 1;
+      }
+    }
 
     Printf("Using segment %d of the slug for slug averaged slope calculation",segment);
     nCyc = slope_tree->Draw(">>elist1",Form("cyclenum>0 && flag==1 && segment==%d",segment));//,run_cut); // Not including run_cut will do slug averaging
