@@ -53,7 +53,7 @@ $PROMPT_DIR/qwparity -r $runnum -c prex_prompt.conf \
     --QwLog.loglevel-file 2 \
     --QwLog.logfile $PROMPT_DIR/LogFiles/QwLog_run$runnum\_prompt_pass0_$timenow.txt ;
 
-mv --force max_burst_index.${runnum}.conf Parity/prminput/
+mv --force $PROMPT_DIR/max_burst_index.${runnum}.conf $PROMPT_DIR/Parity/prminput/
 
 $PROMPT_DIR/qwparity -r $runnum -c prex_prompt.conf \
     --rootfile-stem prexPrompt_pass1_ \
