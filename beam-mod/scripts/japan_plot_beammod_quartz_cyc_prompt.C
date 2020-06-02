@@ -68,7 +68,6 @@ int japan_plot_beammod_quartz_cyc_prompt(int runNo=0) {
     supercyc_err[i]=0;
     cout<<"supercycslope="<<supercycslope[i]<<endl;
   }
-  Double_t trim_base[7] = {833,782,845,827,822,844,832};
  // Double_t trim_base[7] = {1683,1582,1708,1670,1662,1709,1686};
   const double trimmin=0.38;
   const double trimmax=0.7;
@@ -96,6 +95,15 @@ int japan_plot_beammod_quartz_cyc_prompt(int runNo=0) {
   
   const int nCoil =7;
   TString wire[nCoil]={"bmod_trim1","bmod_trim2","bmod_trim3","bmod_trim4","bmod_trim5","bmod_trim6","bmod_trim7"};
+  TH1F * hist_trim[7];
+  Double_t trim_base[7]={0};
+ for(int icoil=0;icoil<nCoil;icoil++){
+   tree_R->Draw(Form("%s>>hist_trim%d",wire[icoil].Data(),icoil),"bmod_ramp<0","");
+   hist_trim[icoil] = (TH1F *)gDirectory->Get(Form("hist_trim%d",icoil));
+   int maxbin = hist_trim[icoil]->GetMaximumBin();
+   trim_base[icoil] = hist_trim[icoil]->GetXaxis()->GetBinCenter(maxbin);
+   cout<<"trim_base="<<trim_base[icoil]<<endl;  
+ } 
   TString detname; // A BUFF
   // Replace with input config file for generalization and multiple script-avoidance
   TString det_array[] = {"usl","dsl","usr","dsr"};

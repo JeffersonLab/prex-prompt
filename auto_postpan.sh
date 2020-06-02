@@ -13,7 +13,7 @@ fi
 level="Prompt"
 shopt -s extglob
 # find split file
-rootfile_list=$(ls -1 ./japanOutput/prex$level\_pass1_$runnum.!(*farm*).root);
+rootfile_list=$(ls -1 $QW_ROOTFILES/prex$level\_pass1_$runnum.!(*farm*).root);
 shopt -u extglob
 
 for rootfile  in $rootfile_list
@@ -27,31 +27,25 @@ do
     echo $run_num
 
     postpanConf="std_reg.conf"
-    if [ $(($run_num)) -ge 3390 ]
+    if [ $(($run_num)) -ge 3404 ]
     then
-      postpanConf="std_reg.3390-3802.conf"
+      postpanConf="std_reg.3404-3802.conf"
     fi
     if [ $(($run_num)) -ge 3803 ]
     then
-      postpanConf="std_reg.3803-4294.conf"
-    fi
-    if [ $(($run_num)) -ge 4305 ]
-    then
-      postpanConf="std_reg.4295-.conf"
+      postpanConf="std_reg.3803-.conf"
     fi
 
     ./postpan/redana \
     	-f $rootfile \
     	-c ./postpan/conf/$postpanConf ; 
-    #	-c ./postpan/conf/combo_reg.conf ;
-    # From run 3583- use the 3583-.conf file, manually runranged
 
-    # if [ ! -d ./hallaweb_online/summary_respin/run$run_seg ]; then
-    # 	mkdir ./hallaweb_online/summary_respin/run$run_seg;
+    # if [ ! -d ./hallaweb_online/prex2/summary_respin/run$run_seg ]; then
+    # 	mkdir ./hallaweb_online/prex2/summary_respin/run$run_seg;
     # fi
 
     # cp  ./results/prexPrompt_$run_seg\_postpan_summary.txt \
-    # 	./hallaweb_online/summary_respin/run$run_seg/;
+    # 	./hallaweb_online/prex2/summary_respin/run$run_seg/;
 
 done
 

@@ -13,7 +13,7 @@ fi
 level="Prompt"
 shopt -s extglob
 # find split file
-rootfile_list=$(ls -1 ./japanOutput/prex$level\_pass1_$runnum.!(*farm*).root);
+rootfile_list=$(ls -1 $QW_ROOTFILES/prex$level\_pass1_$runnum.!(*farm*).root);
 shopt -u extglob
 
 for rootfile  in $rootfile_list
@@ -31,16 +31,23 @@ do
       overloadConf="overload_reg.3390-3802.conf"
       comboBPMConf="comboBPM_reg.3390-3802.conf"
     fi
+
     if [ $(($run_num)) -ge 3803 ]
     then
-      overloadConf="overload_reg.3803-4294.conf"
-      comboBPMConf="comboBPM_reg.3803-4294.conf"
+      overloadConf="overload_reg.3803-.conf"
+      comboBPMConf="comboBPM_reg.3803-.conf"
     fi
-    if [ $(($run_num)) -ge 4295 ]
-    then
-      overloadConf="overload_reg.4295-.conf"
-      comboBPMConf="comboBPM_reg.4295-.conf"
-    fi
+
+    # if [ $(($run_num)) -ge 3803 ]
+    # then
+    #   overloadConf="overload_reg.3803-4294.conf"
+    #   comboBPMConf="comboBPM_reg.3803-4294.conf"
+    # fi
+    # if [ $(($run_num)) -ge 4295 ]
+    # then
+    #   overloadConf="overload_reg.4295-.conf"
+    #   comboBPMConf="comboBPM_reg.4295-.conf"
+    # fi
 
     ./postpan/redana \
     	-f $rootfile \

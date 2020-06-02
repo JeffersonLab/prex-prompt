@@ -13,7 +13,7 @@ fi
 level="Prompt"
 shopt -s extglob
 # find split file
-rootfile_list=$(ls -1 ./japanOutput/prex$level\_pass1_$runnum.!(*farm*).root);
+rootfile_list=$(ls -1 $QW_ROOTFILES/prex$level\_pass1_$runnum.!(*farm*).root);
 shopt -u extglob
 
 for rootfile  in $rootfile_list
@@ -38,7 +38,7 @@ do
     fi
 
     ./lagrange/calcit \
-    	-r $run_num \
+    	-f $rootfile \
     	-c ./lagrange/conf/$sensConf ; 
 
 done

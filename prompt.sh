@@ -79,6 +79,7 @@ $PROMPT_DIR/qwparity -r $runnum -c prex_prompt.conf \
 
 # Do aggregation after the second pass of japan is done. Assume all slug aggregation is done by the WAC
 # Aggregator pass 0
+
 ###### No Aggregator in ifarm analysis
 #timenow=$(date +"%Y-%m%d-%H%M");
 #($PROMPT_DIR/aggregator.sh $runnum > /dev/tty ) >& $PROMPT_DIR/LogFiles/Camguin_run$runnum\_$timenow.txt
