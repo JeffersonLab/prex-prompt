@@ -7,7 +7,7 @@ echo -e "\n\n\n\n\n    Starting summary.sh\n\n\n\n\n";
 level="Prompt"
 shopt -s extglob
 # find split file
-rootfile_list=$(ls -1 $PROMPT_DIR/japanOutput/prex$level\_pass1_$runnum.!(*jlab.org*).root);
+rootfile_list=$(ls -1 $PROMPT_DIR/japanOutput/prex$level\_pass2_$runnum.!(*jlab.org*).root);
 shopt -u extglob
 echo " -- summary.sh: checking PREX_PLOT_DIR=" $PREX_PLOT_DIR
 rsync_todo_list="$PROMPT_DIR/rsync-scripts/rsync_todo.list"
@@ -18,7 +18,7 @@ do
     echo "Starting to run summary.sh for $rootfile from "`pwd`
 
     trim=${rootfile%.root}
-    run_dot_seg=${trim#*pass1_}
+    run_dot_seg=${trim#*pass2_}
     run_num=${run_dot_seg%.*}
     run_seg=${run_dot_seg/./_}
 

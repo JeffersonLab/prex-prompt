@@ -32,10 +32,10 @@ if [ ! -d $PREX_PLOT_DIR ]; then
     mkdir $PREX_PLOT_DIR;
 fi
 
-#  Remove the LRB output files if they exist
+# #  Remove the LRB output files if they exist
 shopt -s extglob
 # find split file
-slopefile_list=$(ls -1 $PROMPT_DIR/LRBoutput/blueR$runnum*slope.root);
+slopefile_list=$(ls -1 $PROMPT_DIR/LRBoutput/*blueR$runnum*slope.root);
 shopt -u extglob
 
 for slopefile in $slopefile_list
@@ -48,24 +48,39 @@ done
 timenow=$(date +"%Y-%m%d-%H%M");
 
 $PROMPT_DIR/qwparity -r $runnum -c prex_prompt.conf \
+    --rootfile-stem prexPrompt_pass0_ \
+    --add-config 0.5pass.conf \
+    --QwLog.loglevel-file 2 \
+    --QwLog.logfile $PROMPT_DIR/LogFiles/QwLog_run$runnum\_prompt_pass0_$timenow.txt ;
+
+mv --force $PROMPT_DIR/max_burst_index.${runnum}.conf $PROMPT_DIR/Parity/prminput/
+
+# 1st Pass : no tree/histo rootfile output. Only to get LRB correlators
+$PROMPT_DIR/qwparity -r $runnum -c prex_prompt.conf \
     --rootfile-stem prexPrompt_pass1_ \
+    --add-config 2pass.conf \
+    --disable-trees --disable-histos \
     --QwLog.loglevel-file 2 \
     --QwLog.logfile $PROMPT_DIR/LogFiles/QwLog_run$runnum\_prompt_pass1_$timenow.txt ;
 
-# Postpan regression to the first pass results
+# 2nd Pass: output rootfiles and beam corrections
+$PROMPT_DIR/qwparity -r $runnum -c prex_prompt.conf \
+    --rootfile-stem prexPrompt_pass2_ \
+    --add-config 2pass.conf \
+    --QwLog.loglevel-file 2 \
+    --QwLog.logfile $PROMPT_DIR/LogFiles/QwLog_run$runnum\_prompt_pass2_$timenow.txt ;
+
+# Postpan regression to the 2nd pass results
 $PROMPT_DIR/auto_postpan.sh $runnum;
 $PROMPT_DIR/overload_postpan.sh $runnum;
 $PROMPT_DIR/auto_calcit.sh $runnum;
 $PROMPT_DIR/auto_beammod.sh $runnum;
 
 # Make Summary Plots/Text and sync to HallA onlineWeb
-# now make plots from pass1 and postpan output
-$PROMPT_DIR/summary.sh $runnum;
+# now make plots from pass2 and postpan output
+$PROMPT_DIR/summary.sh $runnum;	
 
-# Do aggregation after the second pass of japan is done. Assume all slug aggregation is done by the WAC
-# Aggregator pass 0
-timenow=$(date +"%Y-%m%d-%H%M");
+#timenow=$(date +"%Y-%m%d-%H%M");
 #($PROMPT_DIR/aggregator.sh $runnum > /dev/tty ) >& $PROMPT_DIR/LogFiles/Camguin_run$runnum\_$timenow.txt
-$PROMPT_DIR/aggregator.sh $runnum >& $PROMPT_DIR/LogFiles/Camguin_run$runnum\_$timenow.txt
 
 echo "Done with prompt for run $runnum";

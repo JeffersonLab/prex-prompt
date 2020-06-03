@@ -27,7 +27,7 @@ using namespace std;
 int japan_plot_beammod_BPMS_cyc_prompt(TString src, int runNo=0) { 
   gStyle->SetOptStat(0); 
   char infile[300];
-  sprintf(infile,"%s/prexPrompt_pass1_%d.000.root",src.Data(),runNo);
+  sprintf(infile,"%s/prexPrompt_pass2_%d.000.root",src.Data(),runNo);
   TFile *file1= TFile::Open(infile);
   if(file1==NULL){
     cout << infile << "doesn't exist!!! Trying quick prompt" << endl;
