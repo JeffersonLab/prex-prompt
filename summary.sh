@@ -18,7 +18,7 @@ do
     echo "Starting to run summary.sh for $rootfile from "`pwd`
 
     trim=${rootfile%.root}
-    run_dot_seg=${trim#*pass1_}
+    run_dot_seg=${trim#*pass2_}
     run_num=${run_dot_seg%.*}
     run_seg=${run_dot_seg/./_}
 

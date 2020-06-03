@@ -32,7 +32,7 @@ if [ ! -d $PREX_PLOT_DIR ]; then
     mkdir $PREX_PLOT_DIR;
 fi
 
-#  Remove the LRB output files if they exist
+# #  Remove the LRB output files if they exist
 shopt -s extglob
 # find split file
 slopefile_list=$(ls -1 $PROMPT_DIR/LRBoutput/*blueR$runnum*slope.root);
@@ -70,17 +70,16 @@ $PROMPT_DIR/qwparity -r $runnum -c prex_prompt.conf \
     --QwLog.loglevel-file 2 \
     --QwLog.logfile $PROMPT_DIR/LogFiles/QwLog_run$runnum\_prompt_pass2_$timenow.txt ;
 
-# # Postpan regression to the 2nd pass results
+# Postpan regression to the 2nd pass results
 $PROMPT_DIR/auto_postpan.sh $runnum;
 $PROMPT_DIR/overload_postpan.sh $runnum;
 $PROMPT_DIR/auto_calcit.sh $runnum;
-# $PROMPT_DIR/auto_beammod.sh $runnum;
+$PROMPT_DIR/auto_beammod.sh $runnum;
 
-# # Make Summary Plots/Text and sync to HallA onlineWeb
-# # now make plots from pass2 and postpan output
+# Make Summary Plots/Text and sync to HallA onlineWeb
+# now make plots from pass2 and postpan output
 $PROMPT_DIR/summary.sh $runnum;	
 
-###### No Aggregator in ifarm analysis
 #timenow=$(date +"%Y-%m%d-%H%M");
 #($PROMPT_DIR/aggregator.sh $runnum > /dev/tty ) >& $PROMPT_DIR/LogFiles/Camguin_run$runnum\_$timenow.txt
 
