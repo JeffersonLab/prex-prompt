@@ -27,7 +27,7 @@ using namespace std;
 int japan_plot_beammod_BPMS_cyc_12X(int runNo=0) { 
   gStyle->SetOptStat(0); 
   char infile[300];
-  sprintf(infile,"/lustre/expphy/volatile/halla/parity/japanOutput/prexPrompt_pass1_%d.000.root",runNo);
+  sprintf(infile,"/lustre/expphy/volatile/halla/parity/japanOutput/prexPrompt_pass2_%d.000.root",runNo);
   TFile *file1= TFile::Open(infile);
   if(file1==NULL){
     cout << infile << "doesn't exist!!!" << endl;
