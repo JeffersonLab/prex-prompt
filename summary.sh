@@ -69,7 +69,7 @@ do
     chgrp -R a-parity $PROMPT_DIR/hallaweb_online/prex2/summary_respin/run$run_seg;
     chmod -R 775 $PROMPT_DIR/hallaweb_online/prex2/summary_respin/run$run_seg;    
     
-    bash 	$PROMPT_DIR/hallaweb_online/prex2/summary_respin/sort_farm.sh ;
+    bash $PROMPT_DIR/hallaweb_online/prex2/summary_respin/sort_farm.sh "run$run_seg";
 
     if [ -f $rsync_todo_list ]; then
 	echo $PREX_PLOT_DIR/run$run_seg >> $rsync_todo_list;

@@ -27,9 +27,9 @@ do
     echo $run_num
 
     postpanConf="std_reg.conf"
-    if [ $(($run_num)) -ge 3404 ]
+    if [ $(($run_num)) -ge 3390 ]
     then
-      postpanConf="std_reg.3404-3802.conf"
+      postpanConf="std_reg.3390-3802.conf"
     fi
     if [ $(($run_num)) -ge 3803 ]
     then
