@@ -24,10 +24,10 @@
 #include <TEntryList.h>
 using namespace std;
 
-int japan_plot_beammod_at_cyc(int runNo=0) { 
+int japan_plot_beammod_at_cyc(TString src, int runNo=0) { 
   gStyle->SetOptStat(0); 
   char infile[300];
-  sprintf(infile,"/lustre/expphy/volatile/halla/parity/japanOutput/prexPrompt_pass1_%d.000.root",runNo);
+  sprintf(infile,"%s/prexPrompt_pass1_%d.000.root",src.Data(),runNo);
   TFile *file1=TFile::Open(infile);
   if(file1==NULL){
     cout << infile << "doesn't exist!!!" << endl;

@@ -24,10 +24,10 @@
 #include <TEntryList.h>
 using namespace std;
 
-int japan_plot_beammod_quartz_cyc_prompt(int runNo=0) { 
+int japan_plot_beammod_quartz_cyc_prompt(TString src, int runNo=0) { 
   gStyle->SetOptStat(0); 
   char infile[300];
-  sprintf(infile,"$QW_ROOTFILES/prexPrompt_pass2_%d.000.root",runNo);
+  sprintf(infile,"%s/prexPrompt_pass2_%d.000.root",src.Data(),runNo);
   TFile *file1=TFile::Open(infile);
     if(file1==NULL){
       cout << infile << "doesn't exist!!!" << endl;
