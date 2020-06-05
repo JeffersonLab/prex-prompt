@@ -87,7 +87,7 @@ int japan_plot_beammod_quartz_cyc_prompt(TString src, int runNo=0) {
   double xbincon=0.0;
   int coilnum=0;
   ostringstream sstr0;
-  sstr0<<"/lustre/expphy/volatile/halla/parity/ditherOutput/dit_11X12X_txt/Quartz_sensitivity_run"<<runNo<<".txt";
+  sstr0<<"/lustre/expphy/volatile/halla/parity/prex-respin2/ditherOutput/dit_11X12X_txt/Quartz_sensitivity_run"<<runNo<<".txt";
   ofstream outfile0(sstr0.str().c_str());
   sstr0.str("");
 

@@ -17,13 +17,13 @@ using namespace std;
 void invertMatrix_alldet_3546(int runNo=0){
   Int_t msize=5;
   char inputfile1[300];
-  sprintf(inputfile1,"/lustre/expphy/volatile/halla/parity/ditherOutput/dit_11X12X_txt/BPMs_sensitivity_run%d.txt",runNo);
+  sprintf(inputfile1,"/lustre/expphy/volatile/halla/parity/prex-respin2/ditherOutput/dit_11X12X_txt/BPMs_sensitivity_run%d.txt",runNo);
 
   char inputfile2[300];
-  sprintf(inputfile2,"/lustre/expphy/volatile/halla/parity/ditherOutput/dit_11X12X_txt/Quartz_sensitivity_run%d.txt",runNo);
+  sprintf(inputfile2,"/lustre/expphy/volatile/halla/parity/prex-respin2/ditherOutput/dit_11X12X_txt/Quartz_sensitivity_run%d.txt",runNo);
 
   char inputfile3[300];
-  sprintf(inputfile3,"/lustre/expphy/volatile/halla/parity/ditherOutput/dit_11X12X_txt/AT_sensitivity_run%d.txt",runNo);
+  sprintf(inputfile3,"/lustre/expphy/volatile/halla/parity/prex-respin2/ditherOutput/dit_11X12X_txt/AT_sensitivity_run%d.txt",runNo);
 
   ifstream infile2(inputfile3);	 
   ifstream infile(inputfile1);	 
@@ -1260,7 +1260,7 @@ void invertMatrix_alldet_3546(int runNo=0){
   Double_t slope[8][5];
   Int_t run_number = runNo;
   Int_t slug_number = QuerySlugNumber(run_number);
-  TString output_path = "/lustre/expphy/volatile/halla/parity/ditherOutput/rootfiles_alldet_pass1/";
+  TString output_path = "/lustre/expphy/volatile/halla/parity/prex-respin2/ditherOutput/rootfiles_alldet_pass1/";
   TString slopeFilename = Form("dit_alldet_slopes_slug%d.root",slug_number);
   
   TFile* ditfile = TFile::Open(output_path+slopeFilename,"UPDATE");
