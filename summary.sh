@@ -42,12 +42,12 @@ do
     #pdfunite $(ls -rt $PREX_PLOT_DIR/run$run_seg/*_summary_*.pdf) \
     # 	$PREX_PLOT_DIR/run$run_seg/run${run_seg}_all.pdf
 
-    if [ ! -d $PROMPT_DIR/hallaweb_online/prex2/summary_respin/run$run_seg ]; then
-	mkdir $PROMPT_DIR/hallaweb_online/prex2/summary_respin/run$run_seg;
+    if [ ! -d $PROMPT_DIR/hallaweb_online/prex2/summary_respin2/run$run_seg ]; then
+	mkdir $PROMPT_DIR/hallaweb_online/prex2/summary_respin2/run$run_seg;
     fi
 
     cp  $PREX_PLOT_DIR/run$run_seg/* \
-    	$PROMPT_DIR/hallaweb_online/prex2/summary_respin/run$run_seg/;
+    	$PROMPT_DIR/hallaweb_online/prex2/summary_respin2/run$run_seg/;
 
     cp $PROMPT_DIR/japanOutput/summary_*$runnum*.txt \
 	$PROMPT_DIR/SummaryText/
@@ -60,16 +60,16 @@ do
 	$PROMPT_DIR/SummaryText/summary_$level_$run_seg.txt \
 
     cp  $PROMPT_DIR/SummaryText/summary_$level_$run_seg.txt \
-	$PROMPT_DIR/hallaweb_online/prex2/summary_respin/run$run_seg/ ;
+	$PROMPT_DIR/hallaweb_online/prex2/summary_respin2/run$run_seg/ ;
     # copying postpan summary
     cp  $PROMPT_DIR/results/prexPrompt_$run_seg\_postpan_summary.txt \
-    	$PROMPT_DIR/hallaweb_online/prex2/summary_respin/run$run_seg/;
+    	$PROMPT_DIR/hallaweb_online/prex2/summary_respin2/run$run_seg/;
 
     #Change user group and permission
-    chgrp -R a-parity $PROMPT_DIR/hallaweb_online/prex2/summary_respin/run$run_seg;
-    chmod -R 775 $PROMPT_DIR/hallaweb_online/prex2/summary_respin/run$run_seg;    
+    chgrp -R a-parity $PROMPT_DIR/hallaweb_online/prex2/summary_respin2/run$run_seg;
+    chmod -R 775 $PROMPT_DIR/hallaweb_online/prex2/summary_respin2/run$run_seg;    
     
-    bash $PROMPT_DIR/hallaweb_online/prex2/summary_respin/sort_farm.sh "run$run_seg";
+    bash $PROMPT_DIR/hallaweb_online/prex2/summary_respin2/sort_farm.sh "run$run_seg";
 
     if [ -f $rsync_todo_list ]; then
 	echo $PREX_PLOT_DIR/run$run_seg >> $rsync_todo_list;
