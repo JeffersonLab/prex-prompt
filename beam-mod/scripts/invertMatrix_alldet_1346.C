@@ -1260,7 +1260,7 @@ void invertMatrix_alldet_1346(int runNo=0){
   Double_t slope[8][5];
   Int_t run_number = runNo;
   Int_t slug_number = QuerySlugNumber(run_number);
-  TString output_path = "/lustre/expphy/volatile/halla/parity/ditherOutput/rootfiles_alldet_pass1/";
+  TString output_path = "/lustre/expphy/volatile/halla/parity/prex-respin2/ditherOutput/rootfiles_alldet_pass1/";
   TString slopeFilename = Form("dit_alldet_slopes_slug%d.root",slug_number);
   
   TFile* ditfile = TFile::Open(output_path+slopeFilename,"UPDATE");
