@@ -11,9 +11,32 @@ Output Directory:
                  ./DitOutputs/prexPrompt_dither_3454_000.root
  */
 
+#include <iostream>
+#include <string>
+#include <stdlib.h>
+#include <stdio.h>
+#include <dirent.h>
+#include <TROOT.h>
+#include <TSystem.h>
+#include <TChain.h>
+#include <TLeaf.h>
+#include <TH1.h>
+#include <TFile.h>
+#include <vector>
+#include <TString.h>
+#include <algorithm>
+#include <iostream>
+#include <TMatrix.h>
+#include <TMatrixD.h>
+#include <TChain.h>
+#include <TEventList.h>
+#include <TCanvas.h>
+#include <TTreeReader.h>
+#include <cmath>
 #include "QuerySlugNumber.C"
 
-void CorrectTree(Int_t run_number=0, Int_t seg_number=0 ){
+using namespace std;
+void CorrectTree(Int_t run_number=0, std::string stub="" ){
   // Getting Slug Number from RCDB
   Int_t slug_id = QuerySlugNumber(run_number);
   if(slug_id==-1){
@@ -47,9 +70,29 @@ void CorrectTree(Int_t run_number=0, Int_t seg_number=0 ){
 			"diff_bpm4eY",
 			"diff_bpm11X",
 			"diff_bpm12X"};
-  TString rootfile_name = Form("~/PREX/prompt/japanOutput/prexPrompt_pass1_%d.%03d.root",
-  			       run_number,seg_number);
-  TFile *japanOutput = TFile::Open(rootfile_name);
+
+  TFile *japanOutput;
+  const char* FILE_PATH = "$QW_ROOTFILES";    //path to folder that contains rootfiles
+
+  TString filename;
+  TString stemlist[5] = {"prexPrompt_pass2_",
+    "prexPrompt_pass1_", 
+    "prexALL_",
+    "prexALLminusR_",
+    "prexinj_"};
+  for  (int i=0; i<5; i++){
+    filename = Form("%s/%s%s.000.root",FILE_PATH,
+        stemlist[i].Data(),runNumber.Data());
+    japanOutput = new TFile(filename);
+    if (japanOutput->IsOpen()) {break;}
+  }
+  if (japanOutput->IsOpen()) {
+    std::cerr << "Opened file "<< filename << std::endl;
+  } else {
+    std::cerr << "No file found for run " << runNumber << " in path " 
+	      << FILE_PATH << std::endl;
+    return NULL;
+  }
   /*TTree *evt_tree = (TTree*)japanOutput->Get("evt");
   Int_t n_cyc_entries = evt->Draw("bmwcycnum","bmwcycnum>0","goff");
   TH1 *bmwcycnum_hist = (TH1*)gROOT->FindObject("htemp");
@@ -86,8 +129,10 @@ void CorrectTree(Int_t run_number=0, Int_t seg_number=0 ){
     return;
   }
 
-  TFile* ditherOutput = TFile::Open(Form("/chafs2/work1/apar/BMODextractor/dit_alldet_slopes_slug%d.root",
-  					 slug_id));
+  // FIXME Update hardcoded path to environment variable for BMOD slopes files
+  TFile* ditherOutput = TFile::Open(Form("/chafs2/work1/apar/BMODextractor/dit_alldet_slopes%s_slug%d.root",
+  					 stub.c_str(),slug_id));
+  // FIXME make stub come from the config files too
   if(ditherOutput==NULL){
     cout << "Error: " 
       << "dit RootFile doesn't exsit!" << endl;
@@ -223,7 +268,9 @@ void CorrectTree(Int_t run_number=0, Int_t seg_number=0 ){
   dit_tree->Branch("CodaEventNumber",&fCodaEventNumber,"CodaEventNumber/D");
   
   Int_t nEntries = mul_tree->GetEntries();
+  Printf("Applying dither corrections, neglecting block level");
   for(int ievt=0;ievt<nEntries;ievt++){
+    if (ievt%((nEntries/10)+1)==0) Printf("%d%% done correcting run %d",100*ievt/nEntries,run_number);
     mul_tree->GetEntry(ievt);
 
     for(int iDet=0;iDet<nDet;iDet++){
@@ -243,13 +290,21 @@ void CorrectTree(Int_t run_number=0, Int_t seg_number=0 ){
           scaleFactor = 1.0;
         }
         else if (iMon < nMon-1) {
-          //scaleFactor = 1.0; // PREX 
-          scaleFactor = 0.0;   // CREX
+          if (run_number < 5000) {
+            scaleFactor = 1.0; // PREX 
+          }
+          else {
+            scaleFactor = 0.0;   // CREX
+          }
         }
         else {
-          //scaleFactor = 0.4; // PREX
-          scaleFactor = 1.0;   // CREX 
-        }
+          if (run_number < 5000) {
+            scaleFactor = 0.4; // PREX
+          }
+          else {
+            scaleFactor = 1.0;   // CREX 
+          }
+
   	DetArray_dit[iDet].hw_sum -= scaleFactor*slopes[iDet][iMon]*MonArray[iMon].hw_sum;
   	DetArray_dit[iDet].block0 -= scaleFactor*slopes[iDet][iMon]*MonArray[iMon].block0;
   	DetArray_dit[iDet].block1 -= scaleFactor*slopes[iDet][iMon]*MonArray[iMon].block1;
