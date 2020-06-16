@@ -132,7 +132,7 @@ fi
 #sleep 900
 #~/PREX/prompt/Aggregator/drawPostpan/dithering_accumulate_mini_aggFiles_list.sh slug$slug ${stub}
 
-/adaqfs/home/PREX/japan/rootScripts/merger/smartHadd_miniruns_dithering.sh `readlink -f ${slugfile}` minirun_slug${slug}.root ${stub}
+/adaqfs/home/apar/PREX/japan/rootScripts/merger/smartHadd_miniruns_dithering.sh `readlink -f ${slugfile}` minirun_slug${slug}.root ${stub}
 #~/PREX/japan/rootScripts/merger/smartHadd_miniruns_dithering.sh ${slugfile} minirun_slug${slug}.root ${stub}
 
 #make aggregator plots!

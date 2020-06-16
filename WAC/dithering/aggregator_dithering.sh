@@ -1,6 +1,6 @@
 #!/bin/bash
 cd ~/PREX/prompt/Aggregator/wrapper/
-../setup_camguin.sh
+source ../setup_camguin.sh
 outStub=""
 if [ "$#" -ge 2 ]; then
   outStub="${2}"

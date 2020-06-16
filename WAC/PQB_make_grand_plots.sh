@@ -126,7 +126,7 @@ fi
 #~/PREX/prompt/agg-scripts/agg_prompt_list.sh ~/PREX/prompt/agg-scripts/run_list/slug${slug}.list
 #sleep 900
 
-/adaqfs/home/PREX/japan/rootScripts/merger/smartHadd_miniruns_PQB.sh `readlink -f ${slugfile}`
+/adaqfs/home/apar/PREX/japan/rootScripts/merger/smartHadd_miniruns_PQB.sh `readlink -f ${slugfile}`
 
 #make aggregator plots!
 cd /chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan

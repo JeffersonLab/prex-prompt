@@ -324,19 +324,27 @@ void CorrectTreeFast(Int_t run_number=0, std::string stub="" ){
           scaleFactor = 1.0;
         }
         else if (iMon < nMon-1) {
-          //scaleFactor = 1.0; // PREX 
-          scaleFactor = 0.0;   // CREX
+          if (run_number < 5000) {
+            scaleFactor = 1.0; // PREX 
+          }
+          else {
+            scaleFactor = 0.0;   // CREX
+          }
         }
         else {
-          //scaleFactor = 0.4; // PREX
-          scaleFactor = 1.0;   // CREX 
+          if (run_number < 5000) {
+            scaleFactor = 0.4; // PREX
+          }
+          else {
+            scaleFactor = 1.0;   // CREX 
+          }
         }
-  	DetArray_dit[iDet].hw_sum -= scaleFactor*slopes[iDet][iMon]*MonArray[iMon].hw_sum;
-  	/*DetArray_dit[iDet].block0 -= scaleFactor*slopes[iDet][iMon]*MonArray[iMon].block0;
-  	DetArray_dit[iDet].block1 -= scaleFactor*slopes[iDet][iMon]*MonArray[iMon].block1;
-  	DetArray_dit[iDet].block2 -= scaleFactor*slopes[iDet][iMon]*MonArray[iMon].block2;
-  	DetArray_dit[iDet].block3 -= scaleFactor*slopes[iDet][iMon]*MonArray[iMon].block3;
-    */
+        DetArray_dit[iDet].hw_sum -= scaleFactor*slopes[iDet][iMon]*MonArray[iMon].hw_sum;
+        /*DetArray_dit[iDet].block0 -= scaleFactor*slopes[iDet][iMon]*MonArray[iMon].block0;
+          DetArray_dit[iDet].block1 -= scaleFactor*slopes[iDet][iMon]*MonArray[iMon].block1;
+          DetArray_dit[iDet].block2 -= scaleFactor*slopes[iDet][iMon]*MonArray[iMon].block2;
+          DetArray_dit[iDet].block3 -= scaleFactor*slopes[iDet][iMon]*MonArray[iMon].block3;
+          */
       }
     }
     dit_tree->Fill();
