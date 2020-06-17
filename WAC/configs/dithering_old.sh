@@ -3,7 +3,7 @@
 ## adaq computer settings
 source ~/PREX/setup_japan.sh
 export JAPAN_DIR=~/PREX/japan
-export CAM_TYPE=""
+export CAM_TYPE="dithering"
 export CAM_CONFIG="input.txt"
 export CAM_OUTPUTDIR=/chafs2/work1/apar/aggRootfiles/${CAM_TYPE}
 
@@ -18,3 +18,7 @@ export LD_LIBRARY_PATH="${ROOTSYS}/lib:${LD_LIBRARY_PATH}"
 export POSTPAN_ROOTFILES=/chafs2/work1/apar/postpan-outputs/
 export LRB_ROOTFILES=/chafs2/work1/apar/LRBoutput/
 export CAM_CUT="Default"
+
+export DITHERING_ROOTFILES=/chafs2/work1/apar/DitherCorrection/
+export DITHERING_ROOTFILES_SLOPES=/chafs2/work1/apar/BMODextractor/
+export DITHERING_STUB=""
