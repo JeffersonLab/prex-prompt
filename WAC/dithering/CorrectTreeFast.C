@@ -129,15 +129,26 @@ void CorrectTreeFast(Int_t run_number=0, std::string stub="" ){
     return;
   }
 
-  // FIXME Update hardcoded path to environment variable for BMOD slopes files
-  TFile* ditherOutput = TFile::Open(Form("/chafs2/work1/apar/BMODextractor/dit_alldet_slopes%s_slug%d.root",
-  					 stub.c_str(),slug_id));
-  // FIXME make stub come from the config files too
+  // Update hardcoded path to environment variable for BMOD slopes files
+  TString ditSlopeFileNamebase = gSystem->Getenv("DITHERING_ROOTFILES_SLOPES");
+  TString ditStub = gSystem->Getenv("DITHERING_STUB");
+  if (stub == "") {
+    stub = (std::string)ditStub;
+  }
+  TString ditSlopeFileName = Form("%s/dit_alldet_slopes%s_slug%d.root",
+             ditSlopeFileNamebase.Data(),stub.c_str(),slug_id);
+  if( gSystem->AccessPathName(ditSlopeFileName) ) {
+    ditSlopeFileName = Form("/chafs2/work1/apar/BMODextractor/dit_alldet_slopes%s_slug%d.root",
+  					 stub.c_str(),slug_id);
+  }
+  TFile* ditherOutput = TFile::Open(ditSlopeFileName);
+
   if(ditherOutput==NULL){
     std::cout << "Error: " 
       << "dit RootFile doesn't exist!" << std::endl;
     return;
   }
+
   TTree *slope_tree = (TTree*)ditherOutput->Get("dit");
 
   if(slope_tree==NULL){
