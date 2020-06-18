@@ -5,7 +5,8 @@ source ~/PREX/setup_japan.sh
 export JAPAN_DIR=~/PREX/japan
 export CAM_TYPE="dithering"
 export CAM_CONFIG="input.txt"
-export CAM_OUTPUTDIR=/chafs2/work1/apar/aggRootfiles/${CAM_TYPE}
+# The ${CAM_TYPE} name is used in subsequent scripts to ammend the ${CAM_OUTPUTDIR} path for convenience
+export CAM_OUTPUTDIR=/chafs2/work1/apar/aggRootfiles/
 
 
 # Making agg-outputs:
@@ -21,4 +22,5 @@ export CAM_CUT="Default"
 
 export DITHERING_ROOTFILES=/chafs2/work1/apar/DitherCorrection/
 export DITHERING_ROOTFILES_SLOPES=/chafs2/work1/apar/BMODextractor/
+# The ${DITHERING_STUB} name is used in subsequent scripts to ammend the default "dithering" name
 export DITHERING_STUB=""

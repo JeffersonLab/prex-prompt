@@ -179,6 +179,14 @@ fi
 plotFolder=${workingFolder}/${nameType_}slug/slug_list/slug${slug}
 aggFolder=${CAM_OUTPUTDIR}/${nameType}
 cp --force $slugfile ${plotFolder}/
+if [ ! -d ${aggFolder}/slugRootfiles ]
+then
+    mkdir ${aggFolder}/slugRootfiles
+fi
+if [ ! -d ${aggFolder}/slugRootfiles/grandRootfile ]
+then
+    mkdir ${aggFolder}/slugRootfiles/grandRootfile
+fi
 if [ ! -d ${aggFolder}/slugRootfiles/grandRootfile_$slug ]
 then
     mkdir ${aggFolder}/slugRootfiles/grandRootfile_$slug

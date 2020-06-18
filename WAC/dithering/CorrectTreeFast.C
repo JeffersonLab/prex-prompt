@@ -81,15 +81,15 @@ void CorrectTreeFast(Int_t run_number=0, std::string stub="" ){
     "prexALLminusR_",
     "prexinj_"};
   for  (int i=0; i<5; i++){
-    filename = Form("%s/%s%s.000.root",FILE_PATH,
-        stemlist[i].Data(),runNumber.Data());
+    filename = Form("%s/%s%d.000.root",FILE_PATH,
+        stemlist[i].Data(),run_number);
     japanOutput = new TFile(filename);
     if (japanOutput->IsOpen()) {break;}
   }
   if (japanOutput->IsOpen()) {
     std::cerr << "Opened file "<< filename << std::endl;
   } else {
-    std::cerr << "No file found for run " << runNumber << " in path " 
+    std::cerr << "No file found for run " << run_number << " in path " 
 	      << FILE_PATH << std::endl;
     return NULL;
   }
@@ -303,10 +303,10 @@ void CorrectTreeFast(Int_t run_number=0, std::string stub="" ){
   mul_tree->SetBranchAddress("ErrorFlag",&fErrorFlag);
   mul_tree->SetBranchAddress("CodaEventNumber",&fCodaEventNumber);
   TString outputName ;
-  Ssiz_t first_t = rootfile_name.Last('_')+1;
-  Ssiz_t last_t = rootfile_name.Last('.');
+  Ssiz_t first_t = filename.Last('_')+1;
+  Ssiz_t last_t = filename.Last('.');
   Ssiz_t length_t = last_t -first_t;
-  outputName = rootfile_name(first_t,length_t);
+  outputName = filename(first_t,length_t);
   outputName.ReplaceAll('.','_');
   outputName = "prexPrompt_dither"+ (TString)stub.c_str() + "_" +outputName;
   outputName +=".root";
