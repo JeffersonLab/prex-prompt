@@ -3,6 +3,7 @@
 ## adaq computer settings
 source ~/PREX/setup_japan.sh
 export JAPAN_DIR=~/cameronc/analyses/ifarm-aggregator/japan-ifarm-aggregator
+export CAM_PLOTSDIR=/u/group/prex/analysis/www/prex2/agg-respin2
 export CAM_TYPE="test"
 export CAM_CONFIG="input.txt"
 # The ${CAM_TYPE} name is used in subsequent scripts to ammend the ${CAM_OUTPUTDIR} path for convenience

@@ -2,7 +2,7 @@
 
 # This script simplifies the producion of plots for a given slug. It runs the scripts to create plots, and copies them to the online directory.
 
-slugfile=$1
+slugfile=${1}
 if [ "$#" -eq 0 ]; then
   echo ""
   echo "WAC's Aggregator slug and grand plotter"
@@ -126,26 +126,28 @@ then
 fi
 
 workingFolder=""
-if [ "$slug" -lt 100 ];
-  # PREX Case
-  startingpoint=0
-  workingFolder=/u/group/prex/analysis/www/prex
-else if [ "$slug" -lt 300 ];
-  # CREX Case
-  startingpoint=100;
-  workingFolder=/u/group/prex/analysis/www/crex
-else if [ "$slug" -lt 550 ];
-  # PREX AT Case
-  startingpoint=500;
-  workingFolder=/u/group/prex/analysis/www/prex
-else if [ "$slug" -lt 4050 ];
-  # CREX AT Case
-  startingpoint=4000;
-  workingFolder=/u/group/prex/analysis/www/crex
+if [[ "${CAM_PLOTSDIR}" == "" ]] ; then
+  if [ "$slug" -lt 100 ]; then
+    # PREX Case
+    startingpoint=0
+    workingFolder=/u/group/prex/analysis/www/prex/agg-respin2
+  elif [ "$slug" -lt 300 ]; then
+    # CREX Case
+    startingpoint=100;
+    workingFolder=/u/group/prex/analysis/www/crex/agg-respin1
+  elif [ "$slug" -lt 550 ]; then
+    # PREX AT Case
+    startingpoint=500;
+    workingFolder=/u/group/prex/analysis/www/prex/agg-respin2
+  elif [ "$slug" -lt 4050 ]; then
+    # CREX AT Case
+    startingpoint=4000;
+    workingFolder=/u/group/prex/analysis/www/crex/agg-respin1
+  fi
 fi
-# If user wants to specify the starting point, or lack of starting point for text file usage scenario (arg $3 == -1):
+# If user wants to specify the starting point, or lack of starting point for text file usage scenario (arg ${3} == -1):
 if [ "$#" -eq 3 ]; then
-  startingpoint=$3
+  startingpoint=${3}
 fi
 
 if [ $startingpoint -gt $slug ]; then
@@ -156,17 +158,17 @@ fi
 ./auto_slug_list.sh $slug
 
 # Prompt charge plots
-if [ "$nameType" -eq "" ]; then
+if [[ "$nameType" == "" ]]; then
   # Default online prompt case
   cd ~/PREX/prompt/
   ./get_charge.sh 5408-${lastrun} 0
   #convert charge_mon.pdf -trim +repage charge_mon.png
-  /bin/cp --force charge_plots/charge_mon.pdf ${plotFolder}/charge_mon.pdf
-  /bin/cp --force charge_plots/charge_mon.pdf ${workingFolder}/charge/slugs/charge_mon_integrated_slug${slug}.pdf
+  cp --force charge_plots/charge_mon.pdf ${plotFolder}/charge_mon.pdf
+  cp --force charge_plots/charge_mon.pdf ${workingFolder}/charge/slugs/charge_mon_integrated_slug${slug}.pdf
   ./get_charge.sh ${firstrun}-${lastrun} 0
   #convert charge_mon.pdf -trim +repage charge_mon.png
-  /bin/cp --force charge_plots/charge_mon.pdf ${plotFolder}/charge_mon_slug${slug}.pdf
-  /bin/cp --force charge_plots/charge_mon.pdf ${workingFolder}/charge/slugs/charge_mon_slug${slug}.pdf
+  cp --force charge_plots/charge_mon.pdf ${plotFolder}/charge_mon_slug${slug}.pdf
+  cp --force charge_plots/charge_mon.pdf ${workingFolder}/charge/slugs/charge_mon_slug${slug}.pdf
   cd $forgetmenot
 fi
 
@@ -188,15 +190,15 @@ if [[ "${CAM_OUTPUTDIR}" != *"${CAM_TYPE}"* ]]; then
 fi
 
 cp --force $slugfile ${plotFolder}/
-if [ ! -d ${aggFolder}/slugRootfiles ]
+if [ ! -d ${aggFolder}/slugRootfiles ] ;
 then
     mkdir ${aggFolder}/slugRootfiles
 fi
-if [ ! -d ${aggFolder}/slugRootfiles/grandRootfile ]
+if [ ! -d ${aggFolder}/slugRootfiles/grandRootfile ] ;
 then
     mkdir ${aggFolder}/slugRootfiles/grandRootfile
 fi
-if [ ! -d ${aggFolder}/slugRootfiles/grandRootfile_$slug ]
+if [ ! -d ${aggFolder}/slugRootfiles/grandRootfile_$slug ] ;
 then
     mkdir ${aggFolder}/slugRootfiles/grandRootfile_$slug
 fi
@@ -220,7 +222,7 @@ cp -f plots/summary_minirun_slug${slug}.pdf ${plotFolder}/
 cp -f plots/summary_minirun_slug_linear${slug}.txt ${plotFolder}/
 
 # Do the blessed dithering alpha/delta plots for the slug
-if [ "$nameType" -eq "" ]; then
+if [[ "$nameType" == "" ]]; then
   # Default online prompt case
   ~/PREX/prompt/agg-scripts/dither_slug_plots.sh ${slug}
 fi
@@ -237,11 +239,12 @@ else
   # Pass starting point < 0 to use a local text file to pass in the name
   name="`cat ${forgetmenot}/grand_slug_plot_name.txt`"
 fi
-  #make grand agg plots!
-  ${JAPAN_DIR}/rootScripts/merger/smartHadd_slug_any_regression.sh ${forgetmenot}/grand_slug_plot_list.txt $name ${aggFolder}
-  root -l -b -q grandAgg.C'("'${aggFolder}'/slugRootfiles/grandRootfile/grand_'${name}'.root","'${plotFolder}'/grand_'${name}'",0)'
-  root -l -b -q grandAgg.C'("'${aggFolder}'/slugRootfiles/grandRootfile/grand_'${name}'.root","'${plotFolder}'/grand_signed_'${name}'",1)'
+#make grand agg plots!
+${JAPAN_DIR}/rootScripts/merger/smartHadd_slug_any_regression.sh ${forgetmenot}/grand_slug_plot_list.txt $name ${aggFolder}
+root -l -b -q grandAgg.C'("'${aggFolder}'/slugRootfiles/grandRootfile/grand_'${name}'.root","'${plotFolder}'/grand_'${name}'",0)'
+root -l -b -q grandAgg.C'("'${aggFolder}'/slugRootfiles/grandRootfile/grand_'${name}'.root","'${plotFolder}'/grand_signed_'${name}'",1)'
 
-  cp --force ${CAM_OUTPUTDIR}/grand_aggregator.root ${plotFolder}/
+cp --force ${CAM_OUTPUTDIR}/grand_aggregator.root ${plotFolder}/
 
-  cd $forgetmenot
+cd $forgetmenot
+
