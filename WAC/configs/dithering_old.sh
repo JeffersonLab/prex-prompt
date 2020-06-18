@@ -6,7 +6,7 @@ export JAPAN_DIR=~/PREX/japan
 export CAM_TYPE="dithering"
 export CAM_CONFIG="input.txt"
 # The ${CAM_TYPE} name is used in subsequent scripts to ammend the ${CAM_OUTPUTDIR} path for convenience
-export CAM_OUTPUTDIR=/chafs2/work1/apar/aggRootfiles/
+export CAM_OUTPUTDIR=/chafs2/work1/apar/aggRootfiles/${CAM_TYPE}
 
 
 # Making agg-outputs:

@@ -22,6 +22,9 @@ startingpoint=-1
 source ${2}
 nameType=${CAM_TYPE} 
 nameType_="${CAM_TYPE}_"
+if [[ ${CAM_TYPE} == "" ]]; then
+  nameType_=""
+fi
 if [ "$#" -eq 1 ]; then
   source configs/prompt_regression.sh
   nameType=""
@@ -176,8 +179,14 @@ fi
 if [ ! -d ${workingFolder}/${nameType_}slug/slug_list/slug${slug} ]; then
   mkdir ${workingFolder}/${nameType_}slug/slug_list/slug${slug}
 fi
+
 plotFolder=${workingFolder}/${nameType_}slug/slug_list/slug${slug}
-aggFolder=${CAM_OUTPUTDIR}/${nameType}
+aggFolder=${CAM_OUTPUTDIR}
+if [[ "${CAM_OUTPUTDIR}" != *"${CAM_TYPE}"* ]]; then
+  # Case where outputdir wasn't defined correctly, fix it here
+  aggFolder=${CAM_OUTPUTDIR}/${nameType}
+fi
+
 cp --force $slugfile ${plotFolder}/
 if [ ! -d ${aggFolder}/slugRootfiles ]
 then
@@ -192,7 +201,7 @@ then
     mkdir ${aggFolder}/slugRootfiles/grandRootfile_$slug
 fi
 
-${JAPAN_DIR}/rootScripts/merger/smartHadd_miniruns_any_regression.sh `readlink -f ${slugfile}` minirun_slug${slug}.root ${aggFolder}/
+${JAPAN_DIR}/rootScripts/merger/smartHadd_miniruns_any_regression.sh `readlink -f ${slugfile}` minirun_slug${slug}.root ${aggFolder}
 
 #~/PREX/prompt/agg-scripts/agg_prompt_list.sh ~/PREX/prompt/agg-scripts/run_list/slug${slug}.list
 #sleep 900
