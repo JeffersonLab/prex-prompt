@@ -28,13 +28,13 @@ fi
 
 makeChargePlots=0
 if [ "$#" -eq 1 ]; then
-  source configs/prompt_reg.sh
-  #source configs/prompt_regression.sh # Default case
+  #source configs/prompt_reg.sh
+  source configs/CREX_prompt_regression.sh # Default case
   nameType=""
   nameType_=""
-  makeChargePlots=1
+  makeChargePlots=1 # -- commenting out for now RR
 fi
-#source ~/PREX/setup_japan.sh
+source ~/PREX/setup_japan.sh
 
 
 forgetmenot=`pwd`
@@ -233,10 +233,10 @@ cd ${JAPAN_DIR}/rootScripts/aggregator/drawPostpan
 rm -f ${aggFolder}/slugRootfiles/grandRootfile_$slug/grand_aggregator.root
 # NEW Output directory for plot making
 export CAM_OUTPUTDIR=${aggFolder}/slugRootfiles/grandRootfile_$slug/
-root -l -b -q plotAgg.C'("'${aggFolder}'/slugRootfiles/minirun_slug","plots/summary_minirun_slug", '$slug', '$ihwp', '$wien', '$hrs')'
-cp -f plots/summary_minirun_slug${slug}.txt ${plotFolder}/
-cp -f plots/summary_minirun_slug${slug}.pdf ${plotFolder}/
-cp -f plots/summary_minirun_slug_linear${slug}.txt ${plotFolder}/
+root -l -b -q plotAgg.C'("'${aggFolder}'/slugRootfiles/minirun_slug","/chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan/plots/summary_minirun_slug", '$slug', '$ihwp', '$wien', '$hrs')'
+cp -f /chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan/plots/summary_minirun_slug${slug}.txt ${plotFolder}/
+cp -f /chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan/plots/summary_minirun_slug${slug}.pdf ${plotFolder}/
+cp -f /chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan/plots/summary_minirun_slug_linear${slug}.txt ${plotFolder}/
 
 # Do the blessed dithering alpha/delta plots for the slug
 if [[ "$nameType" == "" && $makeChargePlots == 1 ]]; then
@@ -251,7 +251,7 @@ then
   # ignore 105
   for (( i=$startingpoint; i<=$slug; i++ )); do
     [ "$i" -ne 105 ] && [ "$i" -ne 117 ] && echo $i >> ${forgetmenot}/grand_slug_plot_list.txt
-  done
+ done
 else
   # Pass starting point < 0 to use a local text file to pass in the name
   name="`cat ${forgetmenot}/grand_slug_plot_name.txt`"

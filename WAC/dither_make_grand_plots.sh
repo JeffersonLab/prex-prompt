@@ -177,7 +177,7 @@ cp --force ${CAM_OUTPUTDIR}/grand_aggregator.root ~/PREX/prompt/hallaweb_online/
 # Do that line yourself to get the max input COIL comparison plots
 
 cd ~/PREX/prompt/bmodAna
-root -l -b -q plotAD_13746.C\(\"slopes_run_avg${stub}/dithering_slopes_13746_slug${slug}.root\"\);
-/bin/cp --force ~/PREX/prompt/bmodAna/slopes_run_avg${stub}/dithering_slopes_13746_slug${slug}_alphas-deltas.pdf ~/PREX/prompt/hallaweb_online/dithering${stub}_slug/slug_list/slug${slug}/
+#root -l -b -q plotAD_13746.C\(\"slopes_run_avg${stub}/dithering_slopes_13746_slug${slug}.root\"\);
+#/bin/cp --force ~/PREX/prompt/bmodAna/slopes_run_avg${stub}/dithering_slopes_13746_slug${slug}_alphas-deltas.pdf ~/PREX/prompt/hallaweb_online/dithering${stub}_slug/slug_list/slug${slug}/
 
 cd $forgetmenot

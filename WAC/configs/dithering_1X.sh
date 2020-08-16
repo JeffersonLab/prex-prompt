@@ -2,10 +2,11 @@
 
 ## adaq computer settings
 source ~/PREX/setup_japan.sh
-export JAPAN_DIR=~/PREX/japan
-export CAM_PLOTSDIR=/u/group/prex/analysis/www/prex2/agg-respin2
+#export JAPAN_DIR=~/PREX/japan
+export JAPAN_DIR=/chafs2/work1/apar/japan-aggregator/
+export CAM_PLOTSDIR=/u/group/prex/analysis/www/crex/
 export CAM_TYPE="dithering_1X"
-export CAM_CONFIG="input.txt"
+export CAM_CONFIG="dithering_1X_input.txt"
 # The ${CAM_TYPE} name is used in subsequent scripts to ammend the ${CAM_OUTPUTDIR} path for convenience
 export CAM_OUTPUTDIR=/chafs2/work1/apar/aggRootfiles/${CAM_TYPE}
 

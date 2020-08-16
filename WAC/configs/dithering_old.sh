@@ -2,7 +2,7 @@
 
 ## adaq computer settings
 source ~/PREX/setup_japan.sh
-export JAPAN_DIR=~/PREX/japan
+export JAPAN_DIR=/chafs2/work1/apar/japan-aggregator/
 export CAM_PLOTSDIR=/u/group/prex/analysis/www/prex2/agg-respin2
 export CAM_TYPE="dithering"
 export CAM_CONFIG="input.txt"

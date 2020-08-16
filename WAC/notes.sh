@@ -59,6 +59,8 @@ echo "    on top of the original"
 echo "  - Once you are happy that all data is corrected and aggregated"
 echo "    Make the grand plots for by doing (stubArg only needed for _1X):"
 echo '\e[1;34m'"\t./dither_make_grand_plots.sh run_list/slug###.list StartingSlug StubArg"'\e[0m'
+echo "  - Or instead use the more convenient and configurable any_make_grand_plots.sh script"
+echo '\e[1;34m'"\t./any_make_grand_plots.sh run_list/slug###.list configs/[configName].sh StartingSlug"'\e[0m'
 
 echo "\n* To add or update cuts"
 echo "\tGo to the japan_WAC_only JAPAN copy, copy a prior cuts file,"
