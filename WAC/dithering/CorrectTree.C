@@ -45,6 +45,17 @@ void CorrectTree(Int_t run_number=0, std::string stub="" ){
     return;
   }
 
+  // Update hardcoded path to environment variable for BMOD slopes files
+  TString ditSlopeFileNamebase = gSystem->Getenv("DITHERING_ROOTFILES_SLOPES");
+  TString ditStub = gSystem->Getenv("DITHERING_STUB");
+  if (stub == "") {
+    stub = (std::string)ditStub;
+  }
+  TString chose_4aX_1X = "4aX";
+  if ( ((TString)stub).Contains("1X") ) {
+    chose_4aX_1X = "1X";
+  }
+
   //  Get Slopes From Dit slope Files
   vector<TString> vDet={"asym_usl",
 			"asym_usr",
@@ -64,7 +75,7 @@ void CorrectTree(Int_t run_number=0, std::string stub="" ){
       "asym_sam8",
   };
 
-  vector<TString> vMon={"diff_bpm4aX",
+  vector<TString> vMon={Form("diff_bpm%s",chose_4aX_1X.Data()),
 			"diff_bpm4aY",
 			"diff_bpm4eX",
 			"diff_bpm4eY",
@@ -129,12 +140,6 @@ void CorrectTree(Int_t run_number=0, std::string stub="" ){
     return;
   }
 
-  // Update hardcoded path to environment variable for BMOD slopes files
-  TString ditSlopeFileNamebase = gSystem->Getenv("DITHERING_ROOTFILES_SLOPES");
-  TString ditStub = gSystem->Getenv("DITHERING_STUB");
-  if (stub == "") {
-    stub = (std::string)ditStub;
-  }
   TString ditSlopeFileName = Form("%s/dit_alldet_slopes%s_slug%d.root",
              ditSlopeFileNamebase.Data(),stub.c_str(),slug_id);
   if( gSystem->AccessPathName(ditSlopeFileName) ) {
@@ -185,10 +190,62 @@ void CorrectTree(Int_t run_number=0, std::string stub="" ){
   // In order 4aX, 4aY, 4eX, 4eY, 12X
   // slope unit: fraction / mm
   // ** which is  1e-3(ppm/um)
-
-  Int_t nCyc = slope_tree->Draw(">>elist1","cyclenum>0");//,run_cut);
-  TEventList *elist = (TEventList*)gDirectory->Get("elist1");
+  
+  Int_t nCyc = 0;
+  TEventList *elist;// = (TEventList*)gDirectory->Get("elist1");
   TString varname;
+
+  Int_t segment = 1;
+  if (slope_tree->GetBranch("segment")) {
+    Int_t nEnts = slope_tree->Draw(">>elistSeg",Form("run>=%d && flag==1",run_number));//,run_cut); run>= cut allows for non-existant runs to be included
+    TEventList *elistSeg = (TEventList*)gDirectory->Get("elistSeg");
+    TLeaf* segmentL = slope_tree->GetLeaf("segment");
+    segmentL->GetBranch()->GetEntry(elistSeg->GetEntry(0));
+    segment = segmentL->GetValue(); // Got the segment value of the 1st cycle in run run_number
+    if (segment == 0) {
+      // I can do this kind of time looping test, or I could just add a cut on segment to the above Draw command... I kinda like this loop though
+      for (Int_t n = 0 ; n < nEnts ; n++ ) {
+        segmentL->GetBranch()->GetEntry(elistSeg->GetEntry(n));
+        segment = segmentL->GetValue();
+        if (segment != 0) {
+          // Grab the first non-zero entry to get the probably accurate segment number
+          // This allows us to get corrections for runs with no BMOD cycles in a given slug dithering file
+          break;
+        }
+      }
+    }
+    if (segment==0) 
+    {
+      segment=1;
+      // Just do the whole slug and use the largest segment number for runs >= the current run number
+      Int_t nEnts = slope_tree->Draw(">>elistSeg2","flag==1");//,run_cut); run>= cut allows for non-existant runs to be included
+      TEventList *elistSeg2 = (TEventList*)gDirectory->Get("elistSeg2");
+      TLeaf* segmentL = slope_tree->GetLeaf("segment");
+      TLeaf* runL = slope_tree->GetLeaf("segment");
+      segmentL->GetBranch()->GetEntry(elistSeg2->GetEntry(0));
+      runL->GetBranch()->GetEntry(elistSeg2->GetEntry(0));
+      segment = segmentL->GetValue(); // Got the segment value of the 1st cycle in run run_number
+      for (Int_t j = 0; j<nEnts; j++) {
+        segmentL->GetBranch()->GetEntry(elistSeg2->GetEntry(j));
+        runL->GetBranch()->GetEntry(elistSeg2->GetEntry(j));
+        if (runL->GetValue() <= run_number) 
+        {
+          segment = segmentL->GetValue();
+        }
+      }
+      if (segment == 0) {
+        segment = 1;
+      }
+    }
+
+    Printf("Using segment %d of the slug for slug averaged slope calculation",segment);
+    nCyc = slope_tree->Draw(">>elist1",Form("cyclenum>0 && flag==1 && segment==%d",segment));//,run_cut); // Not including run_cut will do slug averaging
+    elist = (TEventList*)gDirectory->Get("elist1");
+  }
+  else {
+    nCyc = slope_tree->Draw(">>elist1","cyclenum>0 && flag==1");//,run_cut); // Not including run_cut will do slug averaging
+    elist = (TEventList*)gDirectory->Get("elist1");
+  }
 
   //For each run number
   for(int ievt = 0; ievt<nCyc; ievt++){
@@ -252,7 +309,7 @@ void CorrectTree(Int_t run_number=0, std::string stub="" ){
   Ssiz_t length_t = last_t -first_t;
   outputName = filename(first_t,length_t);
   outputName.ReplaceAll('.','_');
-  outputName = "prexPrompt_dither_" +outputName;
+  outputName = "prexPrompt_dither"+ (TString)stub.c_str() + "_" +outputName;
   outputName +=".root";
   TString output_path="./DitOutputs/";
   cout << " -- Writing " << output_path+outputName << endl;

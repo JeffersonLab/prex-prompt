@@ -45,6 +45,17 @@ void CorrectTreeFast(Int_t run_number=0, std::string stub="" ){
     return;
   }
 
+  // Update hardcoded path to environment variable for BMOD slopes files
+  TString ditSlopeFileNamebase = gSystem->Getenv("DITHERING_ROOTFILES_SLOPES");
+  TString ditStub = gSystem->Getenv("DITHERING_STUB");
+  if (stub == "") {
+    stub = (std::string)ditStub;
+  }
+  TString chose_4aX_1X = "4aX";
+  if ( ((TString)stub).Contains("1X") ) {
+    chose_4aX_1X = "1X";
+  }
+
   //  Get Slopes From Dit slope Files
   vector<TString> vDet={"asym_usl",
 			"asym_usr",
@@ -64,7 +75,7 @@ void CorrectTreeFast(Int_t run_number=0, std::string stub="" ){
       "asym_sam8",
   };
 
-  vector<TString> vMon={"diff_bpm4aX",
+  vector<TString> vMon={Form("diff_bpm%s",chose_4aX_1X.Data()),
 			"diff_bpm4aY",
 			"diff_bpm4eX",
 			"diff_bpm4eY",
@@ -129,12 +140,6 @@ void CorrectTreeFast(Int_t run_number=0, std::string stub="" ){
     return;
   }
 
-  // Update hardcoded path to environment variable for BMOD slopes files
-  TString ditSlopeFileNamebase = gSystem->Getenv("DITHERING_ROOTFILES_SLOPES");
-  TString ditStub = gSystem->Getenv("DITHERING_STUB");
-  if (stub == "") {
-    stub = (std::string)ditStub;
-  }
   TString ditSlopeFileName = Form("%s/dit_alldet_slopes%s_slug%d.root",
              ditSlopeFileNamebase.Data(),stub.c_str(),slug_id);
   if( gSystem->AccessPathName(ditSlopeFileName) ) {

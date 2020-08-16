@@ -11,3 +11,5 @@ fi
 # Assume 1X analysis applies to both for now
 root -l -b -q SegmentTree.C'("slopes_run_avg/dithering_slopes_13746_slug'$1'.root",'${2}','${segment}')'
 root -l -b -q SegmentTree.C'("slopes_run_avg_1X/dithering_slopes_13746_slug'$1'.root",'${2}','${segment}')'
+root -l -b -q SegmentTree.C'("slopes_run_avg_4aX_15746/dithering_slopes_15746_slug'$1'.root",'${2}','${segment}')'
+root -l -b -q SegmentTree.C'("slopes_run_avg_1X_15746/dithering_slopes_15746_slug'$1'.root",'${2}','${segment}')'

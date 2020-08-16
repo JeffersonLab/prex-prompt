@@ -25,10 +25,14 @@ nameType_="${CAM_TYPE}_"
 if [[ ${CAM_TYPE} == "" ]]; then
   nameType_=""
 fi
+
+makeChargePlots=0
 if [ "$#" -eq 1 ]; then
-  source configs/prompt_regression.sh
+  source configs/prompt_reg.sh
+  #source configs/prompt_regression.sh # Default case
   nameType=""
   nameType_=""
+  makeChargePlots=1
 fi
 #source ~/PREX/setup_japan.sh
 
@@ -126,23 +130,35 @@ then
 fi
 
 workingFolder=""
-if [[ "${CAM_PLOTSDIR}" == "" ]] ; then
   if [ "$slug" -lt 100 ]; then
     # PREX Case
     startingpoint=0
-    workingFolder=/u/group/prex/analysis/www/prex/agg-respin2
+    if [[ "${CAM_PLOTSDIR}" == "" ]] ; then
+      workingFolder=/u/group/prex/analysis/www/prex2/agg-respin2
+    fi
   elif [ "$slug" -lt 300 ]; then
     # CREX Case
     startingpoint=100;
-    workingFolder=/u/group/prex/analysis/www/crex/agg-respin1
+    if [[ "${CAM_PLOTSDIR}" == "" ]] ; then
+      workingFolder=/u/group/prex/analysis/www/crex/agg-respin1
+    fi
   elif [ "$slug" -lt 550 ]; then
     # PREX AT Case
     startingpoint=500;
-    workingFolder=/u/group/prex/analysis/www/prex/agg-respin2
+    if [[ "${CAM_PLOTSDIR}" == "" ]] ; then
+      workingFolder=/u/group/prex/analysis/www/prex2/agg-respin2
+    fi
   elif [ "$slug" -lt 4050 ]; then
     # CREX AT Case
     startingpoint=4000;
-    workingFolder=/u/group/prex/analysis/www/crex/agg-respin1
+    if [[ "${CAM_PLOTSDIR}" == "" ]] ; then
+      workingFolder=/u/group/prex/analysis/www/crex/agg-respin1
+    fi
+  fi
+if [[ "${CAM_PLOTSDIR}" != "" ]] ; then
+  workingFolder=$CAM_PLOTSDIR
+  if [ ! -d $workingFolder ] ; then 
+    mkdir $workingFolder
   fi
 fi
 # If user wants to specify the starting point, or lack of starting point for text file usage scenario (arg ${3} == -1):
@@ -153,23 +169,6 @@ fi
 if [ $startingpoint -gt $slug ]; then
   echo "starting slug number: $startingpoint larger than slug number: $slug"
   exit 1
-fi
-
-./auto_slug_list.sh $slug
-
-# Prompt charge plots
-if [[ "$nameType" == "" ]]; then
-  # Default online prompt case
-  cd ~/PREX/prompt/
-  ./get_charge.sh 5408-${lastrun} 0
-  #convert charge_mon.pdf -trim +repage charge_mon.png
-  cp --force charge_plots/charge_mon.pdf ${plotFolder}/charge_mon.pdf
-  cp --force charge_plots/charge_mon.pdf ${workingFolder}/charge/slugs/charge_mon_integrated_slug${slug}.pdf
-  ./get_charge.sh ${firstrun}-${lastrun} 0
-  #convert charge_mon.pdf -trim +repage charge_mon.png
-  cp --force charge_plots/charge_mon.pdf ${plotFolder}/charge_mon_slug${slug}.pdf
-  cp --force charge_plots/charge_mon.pdf ${workingFolder}/charge/slugs/charge_mon_slug${slug}.pdf
-  cd $forgetmenot
 fi
 
 if [ ! -d ${workingFolder}/${nameType_}slug ]; then
@@ -187,6 +186,24 @@ aggFolder=${CAM_OUTPUTDIR}
 if [[ "${CAM_OUTPUTDIR}" != *"${CAM_TYPE}"* ]]; then
   # Case where outputdir wasn't defined correctly, fix it here
   aggFolder=${CAM_OUTPUTDIR}/${nameType}
+fi
+
+./auto_slug_list.sh $slug
+
+# Prompt charge plots
+if [[ $makeChargePlots == 1 ]]; then
+  # Default online prompt case
+  echo "Making charge plots"
+  cd ~/PREX/prompt/
+  ./get_charge.sh 5408-${lastrun} 0
+  #convert charge_mon.pdf -trim +repage charge_mon.png
+  cp --force charge_plots/charge_mon.pdf ${plotFolder}/charge_mon.pdf
+  cp --force charge_plots/charge_mon.pdf ${workingFolder}/charge/slugs/charge_mon_integrated_slug${slug}.pdf
+  ./get_charge.sh ${firstrun}-${lastrun} 0
+  #convert charge_mon.pdf -trim +repage charge_mon.png
+  cp --force charge_plots/charge_mon.pdf ${plotFolder}/charge_mon_slug${slug}.pdf
+  cp --force charge_plots/charge_mon.pdf ${workingFolder}/charge/slugs/charge_mon_slug${slug}.pdf
+  cd $forgetmenot
 fi
 
 cp --force $slugfile ${plotFolder}/
@@ -222,7 +239,7 @@ cp -f plots/summary_minirun_slug${slug}.pdf ${plotFolder}/
 cp -f plots/summary_minirun_slug_linear${slug}.txt ${plotFolder}/
 
 # Do the blessed dithering alpha/delta plots for the slug
-if [[ "$nameType" == "" ]]; then
+if [[ "$nameType" == "" && $makeChargePlots == 1 ]]; then
   # Default online prompt case
   ~/PREX/prompt/agg-scripts/dither_slug_plots.sh ${slug}
 fi
