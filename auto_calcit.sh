@@ -41,5 +41,11 @@ do
     	-f $rootfile \
     	-c ./lagrange/conf/$sensConf ; 
 
+    if [ $(($run_num)) -le 3321 ]
+    then
+	./lagrange/calcit-ramp \
+    	    -f $rootfile \
+    	    -c ./lagrange/conf/$sensConf ; 
+    fi
 done
 

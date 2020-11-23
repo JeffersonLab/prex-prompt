@@ -1,0 +1,71 @@
+ Total Number of run 1123
+ -------- 
+ -- japan_pass1 missing 10 runs
+/lustre/expphy/volatile/halla/parity/japanOutput/
+prexPrompt_pass1_%d.000.root
+	3311
+	4501
+	4502
+	4503
+	4504
+	4505
+	4506
+	4507
+	4508
+	4694
+ -------- 
+ -------- 
+ -- postpan-std missing 9 runs
+/lustre/expphy/volatile/halla/parity/postpan_respin/
+prexPrompt_%d_000_regress_postpan.root
+	3311
+	4501
+	4502
+	4503
+	4504
+	4505
+	4506
+	4507
+	4694
+ -------- 
+ -------- 
+ -- postpan-combo missing 8 runs
+/lustre/expphy/volatile/halla/parity/postpan_respin/
+prexPrompt_%d_000_regress_comboBPM.root
+	4501
+	4502
+	4503
+	4504
+	4505
+	4506
+	4507
+	4694
+ -------- 
+ -------- 
+ -- postpan-overloaded missing 9 runs
+/lustre/expphy/volatile/halla/parity/postpan_respin/
+prexPrompt_%d_000_regress_overload.root
+	3311
+	4501
+	4502
+	4503
+	4504
+	4505
+	4506
+	4507
+	4694
+ -------- 
+ -------- 
+ -- dit-coeff missing 9 runs
+/lustre/expphy/volatile/halla/parity/LagrangeOutput/dit_coeffs/
+prexPrompt_ditcoeffs_%d.root
+	3311
+	4501
+	4502
+	4503
+	4504
+	4505
+	4506
+	4507
+	4694
+ -------- 

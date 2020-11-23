@@ -80,6 +80,7 @@ $PROMPT_DIR/auto_beammod.sh $runnum;
 # now make plots from pass2 and postpan output
 $PROMPT_DIR/summary.sh $runnum;	
 
+
 #timenow=$(date +"%Y-%m%d-%H%M");
 #($PROMPT_DIR/aggregator.sh $runnum > /dev/tty ) >& $PROMPT_DIR/LogFiles/Camguin_run$runnum\_$timenow.txt
 

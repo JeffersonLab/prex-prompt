@@ -94,4 +94,12 @@ void CheckBCM(){
     delete hAq;
   } // end of BCM loop 
   delete c1;
+
+  TCanvas *c2 = new TCanvas("c2","c2",2400,600);
+  c2->Divide(2,1);
+  c2->cd(1);
+  evt_tree->Draw("bcm_an_us-bcm_an_ds","ErrorFlag==0");
+  c2->cd(2);
+  evt_tree->Draw("bcm_an_us-bcm_an_ds:Entry$","ErrorFlag==0");
+  c2->SaveAs(Form("%srun%s_bcm_usds.png", output_path.Data(), run_seg.Data()));
 }

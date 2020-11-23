@@ -5,9 +5,9 @@ Parity
 results
 *.root
 *rootfiles*
-*.list
 *txt*
 *pdf*
 collector
 archive
 lostnfound
+*~
