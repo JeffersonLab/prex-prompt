@@ -13,7 +13,7 @@ void CheckWireSum(){
 
   TTree *mul_tree = (TTree*)gROOT->FindObject("mul");
   
-  TString injBPMs[] = {"asym_bpm2i01WS","asym_bpm0i07WS","asym_bpm0l01WS"};
+  TString injBPMs[] = {"asym_bpm2i01WS","asym_bpm2i02WS","asym_bpm1i02WS","asym_bpm0i07WS","asym_bpm0l01WS","asym_bcm0l02","asym_bcm_an_us"};
   int nBPM = sizeof(injBPMs)/sizeof(*injBPMs);
   
   TCanvas *c1 = new TCanvas("c1","c1",2400,800);

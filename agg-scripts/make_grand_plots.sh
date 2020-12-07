@@ -7,7 +7,7 @@
 
 slugfile=$1
 #hrs=$2
-startingpoint=60 #Default start on 60, most recent Wien
+startingpoint=100
 if [ "$#" -eq 2 ]; then
   startingpoint=$2
 fi
@@ -94,6 +94,19 @@ then
     wien=2
 fi
 
+mkdir ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}
+cp --force $1 ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}/
+
+cd ~/PREX/prompt/
+./get_charge.sh 5408-${lastrun} 0
+#convert charge_mon.pdf -trim +repage charge_mon.png
+/bin/cp --force charge_plots/charge_mon.pdf hallaweb_online/slug/slug_list/slug${slug}/charge_mon.pdf
+/bin/cp --force charge_plots/charge_mon.pdf hallaweb_online/charge/slugs/charge_mon_integrated_slug${slug}.pdf
+./get_charge.sh ${firstrun}-${lastrun} 0
+#convert charge_mon.pdf -trim +repage charge_mon.png
+/bin/cp --force charge_plots/charge_mon.pdf hallaweb_online/slug/slug_list/slug${slug}/charge_mon_slug${slug}.pdf
+/bin/cp --force charge_plots/charge_mon.pdf hallaweb_online/charge/slugs/charge_mon_slug${slug}.pdf
+
 if [ ! -d /chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile_$slug ]
 then
     mkdir /chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile_$slug
@@ -106,7 +119,6 @@ cd /chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan
 #sleep 900
 ~/PREX/prompt/Aggregator/drawPostpan/accumulate_mini_aggFiles_list.sh slug$slug
 
-mkdir ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}
 
 #root -l -b -q copytree_auto.C'('$slug')'
 rm -f /chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile_$slug/grand_aggregator.root
@@ -116,12 +128,32 @@ cp -f plots/summary_minirun_slug${slug}.txt ~/PREX/prompt/hallaweb_online/slug/s
 cp -f plots/summary_minirun_slug${slug}.pdf ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}/
 cp -f plots/summary_minirun_slug_linear${slug}.txt ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}/
 
+# Do the blessed dithering alpha/delta plots for the slug
+~/PREX/prompt/agg-scripts/dither_slug_plots.sh ${slug}
+
 rm -f grand_slug_plot_list.txt
-for i in $(seq $startingpoint $slug); do echo $i>>grand_slug_plot_list.txt; done
-./slug_file_accumulate_list.sh grand_slug_plot_list.txt
+# ignore 105
+if [[ $slug < 105 ]]
+then
+  for i in $(seq $startingpoint $slug); do echo $i>>grand_slug_plot_list.txt; done
+else
+  for i in $(seq $startingpoint 104); do echo $i>>grand_slug_plot_list.txt; done
+fi
+if [[ $slug > 105 ]]
+then
+  if [[ $startingpoint > 105 ]]
+  then
+    for i in $(seq $startingpoint $slug); do echo $i>>grand_slug_plot_list.txt; done
+  else
+    for i in $(seq 106 $slug); do echo $i>>grand_slug_plot_list.txt; done
+  fi
+fi
 
 #make grand agg plots!
-root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile/grand_'$startingpoint'-'${slug}'.root","~/PREX/prompt/hallaweb_online/slug/slug_list/slug'$slug'/grand_'$startingpoint'-'$slug'")'
+./slug_file_accumulate_list.sh grand_slug_plot_list.txt
+root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile/grand_'$startingpoint'-'${slug}'.root","~/PREX/prompt/hallaweb_online/slug/slug_list/slug'$slug'/grand_'$startingpoint'-'$slug'",0)'
+cp --force ${CAM_OUTPUTDIR}/grand_aggregator.root ~/PREX/prompt/hallaweb_online/slug/slug_list/slug${slug}/
+./slug_file_accumulate_list.sh grand_slug_plot_list.txt
+root -l -b -q grandAgg.C'("/chafs2/work1/apar/aggRootfiles/slugRootfiles/grandRootfile/grand_'$startingpoint'-'${slug}'.root","~/PREX/prompt/hallaweb_online/slug/slug_list/slug'$slug'/grand_signed_'$startingpoint'-'$slug'",1)'
 
 cd $forgetmenot
-

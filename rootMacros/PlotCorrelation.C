@@ -99,6 +99,12 @@ void PlotCorrelation(vector<const char* > &DVar_src, vector<const char*> &IVar_s
   // gStyle->SetStatH(0.2);
   // gStyle->SetStatX(1);
   // gStyle->SetStatY(1);
+  Int_t optFit = gStyle->GetOptFit();
+  Int_t optStat = gStyle->GetOptStat();
+  if (draw_opt=="fit") {
+    gStyle->SetOptFit(1);
+    gStyle->SetOptStat(0);
+  }
   
   Int_t nDVar = DVar_src.size();
   Int_t nIVar = IVar_src.size();
@@ -108,12 +114,22 @@ void PlotCorrelation(vector<const char* > &DVar_src, vector<const char*> &IVar_s
 
   for(int i=0; i<nDVar;i++){
     TString buff = TString(DVar_src[i]);
-    buff = prefix_dv+buff;
+    if (((TString)DVar_src[i]).Contains("sam_")) {
+      buff = "mulc.asym_"+buff;
+    }
+    else {
+      buff = prefix_dv+buff;
+    }
     DVar.push_back(buff);
   }
   for(int i=0; i<nIVar;i++){
     TString buff = TString(IVar_src[i]);
-    buff = prefix_iv+buff;
+    if (((TString)IVar_src[i]).Contains("sam_")) {
+      buff = "mulc.asym_"+buff;
+    }
+    else {
+      buff = prefix_iv+buff;
+    }
     IVar.push_back(buff);
   }
 
@@ -125,6 +141,7 @@ void PlotCorrelation(vector<const char* > &DVar_src, vector<const char*> &IVar_s
   pad1->Draw();
   TVirtualPad *pad_buff;
   TH1D* h_buff;
+  TGraph* g_corr_buff;
 
   vector<double> iv_mean;
   vector<double> iv_rms;
@@ -162,6 +179,7 @@ void PlotCorrelation(vector<const char* > &DVar_src, vector<const char*> &IVar_s
   vector<TText * > dv_txt;
   vector<TText * > iv_txt;
 
+  // Rows
   for(int i=0;i<nDVar;i++){
     TText *txt = new TText(0.0,0.4, DVar[i]);
     txt->SetTextFont(22);
@@ -169,10 +187,15 @@ void PlotCorrelation(vector<const char* > &DVar_src, vector<const char*> &IVar_s
     dv_txt.push_back(txt);
   }
 
+  // Columns
   for(int i=0;i<nIVar;i++){
-    TText *txt = new TText(0.0,0.90, IVar[i]);
+    TString tmpTxt = IVar[i];
+    if (tmpTxt.Contains("mulc.")) {
+      tmpTxt = tmpTxt(5,tmpTxt.Length()-5);
+    }
+    TText *txt = new TText(0.0,0.92, tmpTxt);
     txt->SetTextFont(22);
-    txt->SetTextSize(0.15);
+    txt->SetTextSize(0.10);
     txt->SetNDC();
     iv_txt.push_back(txt);
   }
@@ -193,6 +216,20 @@ void PlotCorrelation(vector<const char* > &DVar_src, vector<const char*> &IVar_s
       else if(draw_opt=="fit"){
 	tree->Draw(Form("%s:%s",
 			DVar[irow].Data(),IVar[icol].Data()),
+        cuts,"l");
+  TLatex *cor;
+	g_corr_buff = (TGraph*)pad_buff->FindObject("Graph");
+  if (g_corr_buff) {
+    cor = new TLatex(0,0,Form("Cor factor = %0.4f",g_corr_buff->GetCorrelationFactor()));
+    cor->SetTextFont(42);
+    cor->SetTextSize(0.035);
+    if (abs(g_corr_buff->GetCorrelationFactor())>0.95) {
+      cor->SetTextColor(kRed);
+    }
+  }
+  delete g_corr_buff;
+	tree->Draw(Form("%s:%s",
+			DVar[irow].Data(),IVar[icol].Data()),
 		   cuts,"prof");
 	h_buff = (TH1D*)pad_buff->FindObject("htemp");
 	if(h_buff!=NULL){
@@ -204,21 +241,32 @@ void PlotCorrelation(vector<const char* > &DVar_src, vector<const char*> &IVar_s
 	  TF1 *f1 = h_buff->GetFunction("pol1");
 	  if (f1!=NULL){
 	    Double_t slope = f1->GetParameter(1);
-	    TPaveStats* st = (TPaveStats*)h_buff->FindObject("stats");
-	    st->SetOptFit(1);
-	    st->SetOptStat(0);
+	    //TPaveStats* st = (TPaveStats*)h_buff->FindObject("stats");
+	    TPaveStats* lst = (TPaveStats*)pad_buff->GetPrimitive("stats");
+      lst->SetName("MyStats");
+	    lst->SetOptFit(1);
+	    lst->SetOptStat(0);
 	    if(slope<0){
-	      st->SetX2NDC(1.0);
-	      st->SetY2NDC(0.9);
-	      st->SetX1NDC(0.5);
-	      st->SetY1NDC(0.6);
+	      lst->SetX2NDC(1.0);
+	      lst->SetY2NDC(0.9);
+	      lst->SetX1NDC(0.5);
+	      lst->SetY1NDC(0.6);
 	    }
 	    else{
-	      st->SetX2NDC(0.5);
-	      st->SetY2NDC(0.6);
-	      st->SetX1NDC(0.0);
-	      st->SetY1NDC(0.9);
+	      lst->SetX2NDC(0.5);
+	      lst->SetY2NDC(0.6);
+	      lst->SetX1NDC(0.0);
+	      lst->SetY1NDC(0.9);
 	    }
+      if (cor) {
+        if (DVar[irow] != IVar[icol]) {
+          lst->GetListOfLines()->Add(cor);
+          h_buff->SetStats(0);
+          pad_buff->Modified();
+        }
+      }
+      lst->Draw();
+      // delete lst;
 	  } // end of if f1!=NULL
 	}// end of if h_buff!=NULL
       }
@@ -234,4 +282,6 @@ void PlotCorrelation(vector<const char* > &DVar_src, vector<const char*> &IVar_s
       iv_txt[icol]->Draw("same");
     }
   }
+  gStyle->SetOptFit(optFit);
+  gStyle->SetOptStat(optStat);
 }

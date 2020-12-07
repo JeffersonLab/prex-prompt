@@ -61,8 +61,14 @@ void CheckNormalizedAT(){
 		   "ErrorFlag==0");
     hAq->SetTitle(Form("asym_%s;ppm",device_name));
     pad_buff->Update();
-    TPaveStats *st = (TPaveStats*)hAq->FindObject("stats");
-    st->SetOptStat(111110);
+    // May want you to find pad_buff's GetPrimitive("stats") and adjust that
+    TPaveStats *ast = (TPaveStats*)hAq->FindObject("stats");
+    if (ast) {
+      ast->SetOptStat(111110);
+    }
+    else {
+      Printf("No stats available from hAq in CheckNormalizedAT.C");
+    }
 
     mul_tree->Draw(Form("asym_%s/ppm",device_name),
 		   Form("ErrorFlag==0 && asym_%s.Device_Error_Code!=0",

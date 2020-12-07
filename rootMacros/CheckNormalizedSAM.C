@@ -65,8 +65,13 @@ void CheckNormalizedSAM(){
 		   "ErrorFlag==0");
     hAq->SetTitle(Form("asym_%s;ppm",device_name));
     pad_buff->Update();
-    TPaveStats *st = (TPaveStats*)hAq->FindObject("stats");
-    st->SetOptStat(111110);
+    TPaveStats *sst = (TPaveStats*)hAq->FindObject("stats");
+    if (sst) {
+      sst->SetOptStat(111110);
+    }
+    else {
+      Printf("No stats available from hAq in CheckNormalizedSAM.C");
+    }
 
     mul_tree->Draw(Form("asym_%s/ppm",device_name),
 		   Form("ErrorFlag==0 && asym_%s.Device_Error_Code!=0",

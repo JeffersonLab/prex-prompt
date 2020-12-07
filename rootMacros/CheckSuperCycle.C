@@ -14,7 +14,7 @@ void CheckSuperCycle(){
   TEventList *elist = new TEventList("elist");
   evt_tree->Draw(">>+elist","bmwcycnum>0 && bmod_ramp>0 && bmwobj>0");
   evt_tree->SetEventList(elist);
-  TH1D *hcyc = new TH1D("hcyc","",5000,-0.5,4999.5);
+  TH1D *hcyc = new TH1D("hcyc","",15000,-0.5,14999.5);
   evt_tree->Draw("bmwcycnum>>hcyc","","goff");
   Int_t bin_first = hcyc->FindFirstBinAbove(0);
   Int_t bin_last = hcyc->FindLastBinAbove(0);

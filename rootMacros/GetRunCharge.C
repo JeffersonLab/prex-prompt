@@ -1,41 +1,20 @@
-void GetRunCharge(TString filename){
-  
-  FILE *capacitor_txt = fopen("capacitor.log","a");
+void GetRunCharge(Int_t run_nubmer){
+  TString filename = Form("$QW_ROOTFILES/prexPrompt_pass1_%d.000.root",run_nubmer);
   TFile *rootfile = TFile::Open(filename);
-  
-  Ssiz_t first_t = filename.Last('_')+1;
-  Ssiz_t last_t = filename.Last('.');
-
-  TString run_dot_seg = filename(first_t,last_t-first_t);
-  
-  TString run = run_dot_seg(0,4);
-  TString seg = run_dot_seg(run_dot_seg.First('.')+1,3);
-  
   TTree* mul_tree = (TTree*)rootfile->Get("mul");
-  
-  TString bcm_name = "yield_bcm_dg_ds";
-  
-  TCut goodPatternCut = "ErrorFlag==0 && yield_bcm_dg_ds.Device_Error_Code==0";
+  TCut goodPatternCut = "(ErrorFlag&0xda7e6bff)==0";
   Int_t nGoodPatterns = mul_tree->GetEntries(goodPatternCut);
-  
-  mul_tree->Draw("yield_bcm_an_ds3",goodPatternCut,"goff");
+  mul_tree->Draw("yield_bcm_an_us",goodPatternCut,"goff");
   TH1D* h_buff = (TH1D*)gDirectory->FindObject("htemp");
   Double_t current_mean = h_buff->GetMean();
-  
   Double_t integral_raw = current_mean*nGoodPatterns;
-
-  Double_t integration_time = 4*8.2e-3; //sec // FIXME
+  Double_t pattern_freq = 1.0/30.0; // Hz
   Double_t uA = 1e-6; // Amp
-
-  Double_t charge_in_C = integral_raw*integration_time*uA;
+  Double_t charge_in_C = integral_raw*pattern_freq*uA;
 
   cout << "--nGoodPatterns: " << nGoodPatterns << endl;
+  cout << "--Good Minutes: " << nGoodPatterns*pattern_freq/60 << endl;
   cout << "--Beam Current Mean(uA): " << current_mean << endl;
   cout << "--Integrated Charge(C): " << charge_in_C << endl;
   
-  fprintf(capacitor_txt,
-	  "%s\t%s\t%f\n",
-	  run.Data(),seg.Data(),charge_in_C);
-
-  fclose(capacitor_txt);
 }

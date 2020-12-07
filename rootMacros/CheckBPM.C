@@ -16,7 +16,7 @@ void CheckBPM(){
   Int_t nbpm = vBPM.size();
 
   TCanvas *cbpm = new TCanvas("cbpm","cbpm",2400,1200);
-  cbpm->Divide(4,2);
+  cbpm->Divide(5,2);
   TCanvas *cwiresum = new TCanvas("cwiresum","cwiresum",2400,1200);
   cwiresum->Divide(4,2);
 
@@ -28,6 +28,8 @@ void CheckBPM(){
   TH2D *h2d_buff;
   TVirtualPad* pad_buff;
   TGraph* g_buff;
+  TGraph* g_buff2;
+  TGraph* g_buff3;
   
   pad_buff=cwiresum->cd(1);  
   mul_tree->SetAlias("Aq","asym_bcm_an_ds");
@@ -50,7 +52,8 @@ void CheckBPM(){
 
     for(int ix=0;ix<2;ix++){
       const char* device_name = (TString(vBPM[ibpm])+suffix[ix]).Data();
-      cbpm->cd(4*ix+1);
+    
+      cbpm->cd(5*ix+1);
       evt_tree->Draw(Form("%s/mm:Entry$",device_name),"ErrorFlag==0","");
     
 /*      pad_buff=cbpm->cd(4*ix+2);
@@ -64,7 +67,34 @@ void CheckBPM(){
       if(h_buff!=0)
 	h_buff->SetLineColor(kRed);
 */
-      pad_buff=cbpm->cd(4*ix+2);
+      pad_buff=cbpm->cd(5*ix+2);
+      //g_buff2 = (TGraph*)pad_buff->FindObject("htemp");
+      evt_tree->Draw(Form("%s/mm:Entry$",device_name),
+		     "(ErrorFlag&0xff)==0 && bcm_an_us>5","l");
+      g_buff2 = (TGraph*)pad_buff->FindObject("Graph");
+      if(g_buff2!=NULL)
+        g_buff2->SetName(device_name);
+
+      evt_tree->Draw(Form("%s/mm:Entry$",device_name),"(ErrorFlag&0xffffff00)!=0&&bcm_an_us>5","* same");
+      g_buff2 = (TGraph*)pad_buff->FindObject("Graph");
+      if(g_buff2!=0){
+        g_buff2->SetMarkerColor(kRed);
+        g_buff2->SetMarkerSize(0.5);
+      }
+      /*evt_tree->Draw(Form("%s/mm:Entry$>>g3",device_name),"(ErrorFlag&0x80000000)!=0&&bcm_an_us>5","* same");
+      g_buff3 = (TGraph*)pad_buff->FindObject("g3");
+      //g_buff3 = (TGraph*)gROOT->FindObject("g3");
+      //
+      */
+      evt_tree->Draw(Form("%s/mm:Entry$",device_name),"(ErrorFlag&0x80000000)!=0&&bcm_an_us>5","* same");
+      //g_buff3 = (TGraph*)pad_buff->FindObject("Graph");
+      //g_buff3 = (TGraph*)gROOT->FindObject("Graph");
+      //if(g_buff3!=0){
+      //  g_buff3->SetMarkerColor(kYellow);
+      //  g_buff3->SetMarkerSize(0.3);
+      //}
+
+      pad_buff=cbpm->cd(5*ix+3);
       mul_tree->Draw(Form("diff_%s/um:pattern_number",device_name),"ErrorFlag==0");
 //      h_buff=(TH1D*)pad_buff->FindObject("htemp");
 //      h_buff->SetName("evtTree");
@@ -76,29 +106,28 @@ void CheckBPM(){
 //	h_buff->SetLineColor(kRed);
 
 
-      pad_buff=cbpm->cd(4*ix+3);
+      pad_buff=cbpm->cd(5*ix+4);
       mul_tree->Draw(Form("diff_%s/um:pattern_number",
 			  device_name),
 		     "ErrorFlag==0","COL");
-      TH2F* h2d_buff = (TH2F*)pad_buff->FindObject("htemp");
+      h2d_buff = (TH2D*)pad_buff->FindObject("htemp");
       if(h2d_buff!=NULL)
 	h2d_buff->Draw("candlex3");
 
-      pad_buff=cbpm->cd(4*ix+4);
+      pad_buff=cbpm->cd(5*ix+5);
       mul_tree->Draw(Form("diff_%s/um",device_name),
 		     "ErrorFlag==0");
       h_buff = (TH1D*)pad_buff->FindObject("htemp");
       if(h_buff!=NULL)
-	h_buff->SetName(device_name);
+        h_buff->SetName(device_name);
 
       mul_tree->Draw(Form("diff_%s/um",device_name),
 		     Form("ErrorFlag==0 && diff_%s.Device_Error_Code!=0",
 			  device_name),"same");
       h_buff = (TH1D*)pad_buff->FindObject("htemp");
       if(h_buff!=0)
-	h_buff->SetLineColor(kRed);
+        h_buff->SetLineColor(kRed);
 
-    
     } // end of XY loop
     
     plot_title  = Form("run%s_%s.png",

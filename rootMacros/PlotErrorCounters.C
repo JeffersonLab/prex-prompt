@@ -25,6 +25,7 @@ void PlotErrorCounters(){
 			  "sam5","sam6","sam7","sam8"};
     TString bcm_array[4]={"bcm_an_us","bcm_an_ds","bcm_an_ds3","bcm0l02"};
   
+    TString bpm1_array[4]={"bpm1XM","bpm1XP","bpm1YP","bpm1YM"};
     TString bpm4a_array[4]={"bpm4aXM","bpm4aXP","bpm4aYP","bpm4aYM"};
     TString bpm4e_array[4]={"bpm4eXM","bpm4eXP","bpm4eYP","bpm4eYM"};
     // BPM 16 was 8 before 7/16/2019
@@ -35,9 +36,9 @@ void PlotErrorCounters(){
     // TString bpm14_array[4]={"bpm14XM","bpm14XP","bpm14YP","bpm14YM"};
     TString bpm16_array[4]={"bpm16XM","bpm16XP","bpm16YP","bpm16YM"};
   
-    TString* channels[9]={maindet_array,
+    TString* channels[10]={maindet_array,
 			  sam_array,sam_array+4,
-			  bpm4a_array,bpm4e_array,
+			  bpm1_array,bpm4a_array,bpm4e_array,
 			  bpm12_array,bpm11_array,
 			  bpm16_array};
     tsw.Start();
@@ -49,7 +50,7 @@ void PlotErrorCounters(){
     plot_title = Form("run%s_ErrorCounter_bcm.png",run_seg.Data());
     c2->SaveAs(output_path+ plot_title);
     
-    for(int ich=0;ich<7;ich++){
+    for(int ich=0;ich<9;ich++){
       tsw.Start();
       for(int i=0;i<4;i++){
 	c2->cd(i+1);

@@ -28,9 +28,12 @@ do
       mkdir $PREX_PLOT_DIR/run$run_seg;
     fi
 
+    # Uncomment Err.C if you want the ErrorCounter macro - It's slow and not often looked at normally
+    #root -b -q -l './rootMacros/Err.C("'$rootfile'","'$PREX_PLOT_DIR'")';
     root -b -q -l "$PROMPT_DIR/rootMacros/PlotSummary.C(\"${rootfile}\",\"$PREX_PLOT_DIR\")";
     root -b -q -l "$PROMPT_DIR/postpan/rootmacros/PlotSummary_postpan.C(\"${redfile}\",\"$PREX_PLOT_DIR\")";
-
+    $PROMPT_DIR/dither_summary.sh $runnum
+    
     echo "****  CHECKING THE DIRECTORY STUCTURE"
     pwd
     echo "ls -lrtd $PREX_PLOT_DIR/run$run_seg"
@@ -74,9 +77,7 @@ do
     if [ -f $rsync_todo_list ]; then
 	echo $PREX_PLOT_DIR/run$run_seg >> $rsync_todo_list;
     else 
-	echo $PREX_PLOT_DIR/run$run_seg > $rsync_todo_list;
+      echo $PREX_PLOT_DIR/run$run_seg > $rsync_todo_list;
     fi
 
 done
-
-

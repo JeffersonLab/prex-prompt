@@ -21,6 +21,7 @@ void CheckBCM(){
   TH2D *h2d_buff;
   TVirtualPad* pad_buff;
   TGraph* g_buff;
+  TGraph* g_buff2;
   for(int ibcm=0;ibcm<nbcm;ibcm++){
     const char* device_name = vBCM[ibcm];
     pad_buff = c1->cd(1);
@@ -34,8 +35,17 @@ void CheckBCM(){
       g_buff->SetMarkerSize(0.5);
       // g_buff->SetMarkerStyle(20);
     }
-    //===================================================
+    g_buff->SetName("GraphFail");
+    evt_tree->Draw(Form("%s:Entry$",device_name),"(ErrorFlag&0xda7e6bff)==0 && ((ErrorFlag&0x9000)==0x9000 )","* same");
+    g_buff = (TGraph*)pad_buff->FindObject("Graph");
+    if(g_buff!=0){
+      g_buff->SetMarkerColor(kCyan);
+      g_buff->SetMarkerSize(0.5);
+      // g_buff->SetMarkerStyle(20);
+    }
 
+    //===================================================
+    
     pad_buff=c1->cd(2);
     evt_tree->Draw(Form("%s",device_name),"ErrorFlag==0","");
     h_buff=(TH1D*)pad_buff->FindObject("htemp");
@@ -59,6 +69,7 @@ void CheckBCM(){
     if (h2d_buff!=NULL)
       h2d_buff->Draw("candlex3");
 
+
     //===================================================
 
     pad_buff=c1->cd(4);
@@ -69,7 +80,7 @@ void CheckBCM(){
     pad_buff->Update();
     TPaveStats *st = (TPaveStats*)hAq->FindObject("stats");
     if(st!=NULL)
-      st->SetOptStat(111110);
+      st->SetOptStat(111210);
 
     if(hAq!=0){
       mul_tree->Draw(Form("asym_%s/ppm",device_name),
