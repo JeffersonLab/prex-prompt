@@ -33,7 +33,10 @@ do
     then
       sensConf="sens.3803-.conf"
     fi
-
+    if [ $(($run_num)) -ge 5376 ]
+    then
+      sensConf="sens.5376-.conf"
+    fi  
     ./lagrange/calcit \
     	-f $rootfile \
     	-c ./lagrange/conf/$sensConf ; 

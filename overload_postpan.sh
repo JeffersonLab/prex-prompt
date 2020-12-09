@@ -34,6 +34,10 @@ do
     then
       overloadConf="overload_reg.3803-.conf"
     fi
+    if [ $(($run_num)) -ge 5376 ]
+    then
+      postpanConf="overload_reg.5376-.conf"
+    fi
 
     ./postpan/redana \
     	-f $rootfile \
