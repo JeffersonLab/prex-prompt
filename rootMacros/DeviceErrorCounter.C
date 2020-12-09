@@ -24,6 +24,11 @@ void DeviceErrorCounter(TString device){
   static const UInt_t kErrorFlag_ZeroHW     = 0x20; // in Decimal 32  check to see ADC returning zero
   static const UInt_t kErrorFlag_EventCut_L = 0x40; // in Decimal 64  check to see ADC failed lower limit of the event cut
   static const UInt_t kErrorFlag_EventCut_U = 0x80; // in Decimal 128 check to see ADC failed upper limit of the event cut
+  static const UInt_t kErrorFlag_ADC_Glitch = 0x2e; // merge sample size, software sum
+  static const UInt_t kErrorFlag_Burp       = 0x20000000; // Burp cut flag
+  static const UInt_t kErrorFlag_Stability  = 0x1000000;  // Stability cut flag
+  static const UInt_t kErrorFlag_LocalGlobal= 0x4000000;  // Global (4)
+  
 
   TTree* evt_tree = (TTree*)gROOT->FindObject("evt");
 
@@ -31,36 +36,49 @@ void DeviceErrorCounter(TString device){
   TH1D *hdec = new TH1D("hdec_"+device,device+" Device  Error Counter",nErrorTypes,0,nErrorTypes); 
   Int_t ErrorCounter[nErrorTypes];
   TString ErrorSelection[nErrorTypes];
-  TString ErrorLabel[nErrorTypes] = {"Good",
-				     "Saturation",
-				     "Sample Size",
-				     "Software Sum",
-				     "Sequence",
+  TString ErrorLabel[nErrorTypes] = {
+             "Good",
+				     "ADC Saturation",
+				     "ADC Glitch",
 				     "Same HW",
-				     "Zero HW",
+             //"Sample Size",
+				     //"Software Sum",
+				     //"Sequence",
+				     //"Zero HW",
 				     "Lower Limit",
-				     "Upper Limit"};
+				     "Upper Limit",
+             "Burp Cut",
+				     "Stability Cut",
+				     "In Global",
+            };
 
   UInt_t ErrorCode[nErrorTypes] = {0,
-				   kErrorFlag_VQWK_Sat,
-				   kErrorFlag_sample,
-				   kErrorFlag_SW_HW,
-				   kErrorFlag_Sequence,
-				   kErrorFlag_SameHW,
-				   kErrorFlag_ZeroHW,
-				   kErrorFlag_EventCut_L,
-				   kErrorFlag_EventCut_U};
+				     kErrorFlag_VQWK_Sat,
+				     kErrorFlag_ADC_Glitch,
+				     kErrorFlag_SameHW,
+				     kErrorFlag_EventCut_L,
+				     kErrorFlag_EventCut_U,
+             kErrorFlag_Burp,
+             kErrorFlag_Stability,
+             kErrorFlag_LocalGlobal,
+            };
 
   ErrorSelection[0] = Form("%s.Device_Error_Code==0 ",
 			   device.Data());
   
   if(ErrorSelection[0]==0)
     return;
-  else{
-    for(int i= 1; i<nErrorTypes ; i++)
-      ErrorSelection[i] = Form("(%s.Device_Error_Code & %d )== %d ",
-			       device.Data(),ErrorCode[i],ErrorCode[i]); 
-
+ else{                                                                               
+      for(int i= 1; i<nErrorTypes ; i++){
+        if ( i == 2 ) {
+        ErrorSelection[i] = Form("(%s.Device_Error_Code & %d )!=0",
+                    device.Data(),ErrorCode[i]);
+        }
+        else {
+        ErrorSelection[i] = Form("(%s.Device_Error_Code & %d )==%d",
+                    device.Data(),ErrorCode[i],ErrorCode[i]);
+        }
+      }
     Double_t nTotal = evt_tree->GetEntries();
     for(int i=0;i<nErrorTypes;i++){
       int ibin = nErrorTypes-i;
