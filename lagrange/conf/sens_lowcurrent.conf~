@@ -1,0 +1,91 @@
+input_prefix prexPrompt_pass1_
+output_path /chafs2/work1/apar/lagrange-outputs/
+output_prefix prexPrompt_ditcoeffs_
+bmod_cut (ErrorFlag&0xda7e6bff)==0 && bmod_ramp>0
+device_error_cut on
+
+det usl
+det usr
+det dsl
+det dsr
+det sam1 
+det sam2
+det sam3
+det sam4
+det sam5
+det sam6
+det sam7
+det sam8
+det atl1
+det atl2
+det atr1
+det atr2
+
+mon bpm1X
+mon bpm1Y
+mon bpm16X
+mon bpm16Y
+mon cav4cX
+mon cav4cY
+mon bpm11X
+mon bpm11Y
+mon bpm12Y
+
+[slope]
+tree_name dit_slope_lsq
+mon bpm4aX
+mon bpm4aY
+mon bpm4eX
+mon bpm4eY
+mon bpm12X
+
+coil bmod_trim1
+coil bmod_trim2
+coil bmod_trim3
+coil bmod_trim4
+coil bmod_trim5
+coil bmod_trim6
+coil bmod_trim7
+
+[slope]
+tree_name dit_slope1
+mon bpm4aX
+mon bpm4aY
+mon bpm4eX
+mon bpm4eY
+mon bpm12X
+
+coil bmod_trim1
+coil bmod_trim3
+coil bmod_trim4
+coil bmod_trim6
+coil bmod_trim7
+
+[slope]
+tree_name dit_slope2
+mon bpm4aX
+mon bpm4aY
+mon bpm4eX
+mon bpm4eY
+mon bpm12X
+
+coil bmod_trim1
+coil bmod_trim5
+coil bmod_trim4
+coil bmod_trim6
+coil bmod_trim7
+
+[slope]
+tree_name dit_slope3
+mon bpm4aX
+mon bpm4aY
+mon bpm4eX
+mon bpm4eY
+mon bpm12X
+
+coil bmod_trim3
+coil bmod_trim5
+coil bmod_trim4
+coil bmod_trim6
+coil bmod_trim7
+
