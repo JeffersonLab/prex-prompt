@@ -30,6 +30,7 @@ do
 
     # Uncomment Err.C if you want the ErrorCounter macro - It's slow and not often looked at normally
     #root -b -q -l './rootMacros/Err.C("'$rootfile'","'$PREX_PLOT_DIR'")';
+    root -b -q -l "$PROMPT_DIR/rootMacros/Err.C(\"${rootfile}\",\"$PREX_PLOT_DIR\")";
     root -b -q -l "$PROMPT_DIR/rootMacros/PlotSummary.C(\"${rootfile}\",\"$PREX_PLOT_DIR\")";
     root -b -q -l "$PROMPT_DIR/postpan/rootmacros/PlotSummary_postpan.C(\"${redfile}\",\"$PREX_PLOT_DIR\")";
     $PROMPT_DIR/dither_summary.sh $runnum
