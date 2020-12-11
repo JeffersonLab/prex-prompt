@@ -33,13 +33,13 @@ void DeviceErrorCounter(TString device){
   TTree* evt_tree = (TTree*)gROOT->FindObject("evt");
 
   const Int_t nErrorTypes = 9; // 8+1; Shifted by 1 for Good counts
-  TH1D *hdec = new TH1D("hdec_"+device,device+" Device  Error Counter",nErrorTypes,0,nErrorTypes); 
+  TH1D *hdec = new TH1D("hdec_"+device,device+" Device Error Counter && Not Beam Trip",nErrorTypes,0,nErrorTypes); 
   Int_t ErrorCounter[nErrorTypes];
   TString ErrorSelection[nErrorTypes];
   TString ErrorLabel[nErrorTypes] = {
              "Good",
+				     "Any ADC Glitch",
 				     "ADC Saturation",
-				     "ADC Glitch",
 				     "Same HW",
              //"Sample Size",
 				     //"Software Sum",
@@ -53,8 +53,8 @@ void DeviceErrorCounter(TString device){
             };
 
   UInt_t ErrorCode[nErrorTypes] = {0,
-				     kErrorFlag_VQWK_Sat,
 				     kErrorFlag_ADC_Glitch,
+				     kErrorFlag_VQWK_Sat,
 				     kErrorFlag_SameHW,
 				     kErrorFlag_EventCut_L,
 				     kErrorFlag_EventCut_U,
@@ -63,21 +63,17 @@ void DeviceErrorCounter(TString device){
              kErrorFlag_LocalGlobal,
             };
 
-  ErrorSelection[0] = Form("%s.Device_Error_Code==0 ",
-			   device.Data());
+  ErrorSelection[0] = Form("%s.Device_Error_Code==0 && (ErrorFlag&0x8000000) == 0",
+      device.Data());
+  ErrorSelection[1] = Form("(%s.Device_Error_Code & %d )!=0 && (ErrorFlag&0x8000000) == 0",
+      device.Data(),ErrorCode[1]);
   
   if(ErrorSelection[0]==0)
     return;
- else{                                                                               
-      for(int i= 1; i<nErrorTypes ; i++){
-        if ( i == 2 ) {
-        ErrorSelection[i] = Form("(%s.Device_Error_Code & %d )!=0",
-                    device.Data(),ErrorCode[i]);
-        }
-        else {
-        ErrorSelection[i] = Form("(%s.Device_Error_Code & %d )==%d",
+  else{
+      for(int i= 2; i<nErrorTypes ; i++){
+        ErrorSelection[i] = Form("(%s.Device_Error_Code & %d )==%d && (ErrorFlag&0x8000000) == 0",
                     device.Data(),ErrorCode[i],ErrorCode[i]);
-        }
       }
     Double_t nTotal = evt_tree->GetEntries();
     for(int i=0;i<nErrorTypes;i++){
@@ -86,7 +82,8 @@ void DeviceErrorCounter(TString device){
       if(nTotal==0)
 	hdec->SetBinContent(ibin,0.0);
       else
-	hdec->SetBinContent(ibin,ErrorCounter[i]/nTotal*100.0);
+	hdec->SetBinContent(ibin,ErrorCounter[i]); // Numbers instead of percents
+	//hdec->SetBinContent(ibin,ErrorCounter[i]/nTotal*100.0);
       hdec->GetXaxis()->SetBinLabel(ibin,ErrorLabel[i]);
     }
   

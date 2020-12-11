@@ -38,8 +38,8 @@ Bool_t ErrorFlagDecoder(){
   TTree* evt_tree = (TTree*)gROOT->FindObject("evt");
 
   const Int_t nErrorTypes = 15; // 12+1; Shifted by 1 for Good counts
-  TH1D *hdec = new TH1D("hdec"," Global Error Flag Counter",nErrorTypes,0,nErrorTypes); 
-  TH1D *htotal = new TH1D("htotal","Global Error Flag Counter",nErrorTypes,0,nErrorTypes); 
+  TH1D *hdec = new TH1D("hdec"," Global Error Flag Counter && Not Beam Trip",nErrorTypes,0,nErrorTypes); 
+  TH1D *htotal = new TH1D("htotal","Global Error Flag Counter && Not Beam Trip",nErrorTypes,0,nErrorTypes); 
   Int_t ErrorCounter[nErrorTypes];
 
   Double_t ErrorRatio[nErrorTypes];
@@ -47,22 +47,29 @@ Bool_t ErrorFlagDecoder(){
 
   TString ErrorSelection[nErrorTypes];
   TString ErrorLabel[nErrorTypes] = {"Good / Total",
+				     "All Beam Trip Cut",
+				     "Burp Cut",
+				     "Stability Error",
+				     "Stability Cut",
+				     "Bad Event Range",
+				     "Helicity Error",
 				     "Lower Limit",
 				     "Upper Limit",
 				     "BCM Failure",
 				     "Blinder Failure",
 				     "BPM Failure",
 				     "PMT Failure",
-				     "FFB OFF for Energy Mod",
-				     "BMod Channel Failure",
-				     "Helicity Error",
-				     "Burp Cut",
-				     "Stability Error",
-				     "Beam Trip",
-				     "Stability Cut",
-				     "Bad Event Range"};
+				     "FFB OFF for E Mod",
+				     "BMW Channel Fail",
+            };
 
   UInt_t ErrorCode[nErrorTypes] = {0,
+				   kBeamTripError,
+				   kErrorFlag_BurpCut,
+				   kBeamStabilityError,
+				   kStabilityCut,
+				   kBadEventRangeError,
+				   kErrorFlag_Helicity,
 				   kErrorFlag_EventCut_L,
 				   kErrorFlag_EventCut_U,
 				   kBCMErrorFlag,
@@ -71,19 +78,15 @@ Bool_t ErrorFlagDecoder(){
 				   kPMTErrorFlag,
 				   kBModFFBErrorFlag,
 				   kBModErrorFlag,
-				   kErrorFlag_Helicity,
-				   kErrorFlag_BurpCut,
-				   kBeamStabilityError,
-				   kBeamTripError,
-				   kStabilityCut,
-				   kBadEventRangeError};
+          };
 
 
   Double_t nTotal = evt_tree->Draw("ErrorFlag","","goff");
 
   ErrorSelection[0] = "ErrorFlag==0 ";
-  for(int i= 1; i<nErrorTypes ; i++)
-    ErrorSelection[i] = Form("(ErrorFlag&%d )==%d ",ErrorCode[i],ErrorCode[i]); 
+  ErrorSelection[1] = Form("(ErrorFlag&%d )==%d",ErrorCode[1],ErrorCode[1]); 
+  for(int i= 2; i<nErrorTypes ; i++)
+    ErrorSelection[i] = Form("(ErrorFlag&%d )==%d && (ErrorFlag&%d)==0",ErrorCode[i],ErrorCode[i],kBeamTripError); 
 
   for(int i=0;i<nErrorTypes;i++){
     int ibin = nErrorTypes-i;

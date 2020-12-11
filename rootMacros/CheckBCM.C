@@ -152,7 +152,7 @@ void CheckBCM(){
     //===================================================
 
     pad_buff=c1->cd(4);
-    TH1D *hAq = new TH1D("hAq","",100,-100,100);
+    TH1D *hAq = new TH1D("hAq","",100,-300,300);
     mul_tree->Draw("asym_bcm_an_diff/ppm>>hAq",
        "ErrorFlag==0");
     hAq->SetTitle("asym_bcm_an_diff;ppm");

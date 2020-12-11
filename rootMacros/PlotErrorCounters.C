@@ -24,7 +24,7 @@ void PlotErrorCounters(){
   TString ATdet_array[4]={"atl1","atl2","atr1","atr2"};
     TString sam_array[8]={"sam1","sam2","sam3","sam4",
 			  "sam5","sam6","sam7","sam8"};
-    TString bcm_array[4]={"bcm_an_us","bcm_an_ds","bcm_an_ds3","bcm0l02"};
+    TString bcm_array[4]={"bcm_an_us","bcm_an_ds","bcm_an_diff","bcm0l02"};
   
     TString bpmTarg_array[4]={"bpm4aX","bpm4aY","bpm4eX","bpm4eY"};
     TString bpmE_array[4]={"bpm11X","bpm11Y","bpm12X","bpm12Y"};
