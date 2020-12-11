@@ -96,11 +96,12 @@ void DeviceErrorCounter(TString device){
 
     TText* RatioText[nErrorTypes];
     for(int i=0;i<nErrorTypes;i++){
+      TString mytext = "";
       if (i == 0) {
-        TString mytext = Form("%.2f of %d total events",ErrorCounter[i]*100.0/nTotal,(Int_t)nTotal);
+        mytext = Form("%.2f of %d total events",ErrorCounter[i]*100.0/nTotal,(Int_t)nTotal);
       }
       else{
-        TString mytext = Form("%d",ErrorCounter[i]);
+        mytext = Form("%d",ErrorCounter[i]);
       }
       // OLD
       //TString mytext = Form("%.2f %%",ErrorCounter[i]*100.0/nTotal);
