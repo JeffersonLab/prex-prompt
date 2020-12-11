@@ -42,7 +42,7 @@ void PlotErrorCounters(){
     TString* channels[13]={maindet_array,ATdet_array,
 			  sam_array,sam_array+4,bpmTarg_array,bpmE_array,
 			  bpm1_array,bpm4a_array,bpm4e_array,
-			  bpm12_array,bpm11_array,
+			  bpm11_array,bpm12_array,
 			  bpm16_array};
     tsw.Start();
     for(int i=0;i<4;i++){

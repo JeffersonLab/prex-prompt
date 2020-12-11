@@ -33,11 +33,11 @@ void DeviceErrorCounter(TString device){
   TTree* evt_tree = (TTree*)gROOT->FindObject("evt");
 
   const Int_t nErrorTypes = 9; // 8+1; Shifted by 1 for Good counts
-  TH1D *hdec = new TH1D("hdec_"+device,device+" Device Error Counter && Not Beam Trip",nErrorTypes,0,nErrorTypes); 
+  TH1D *hdec = new TH1D("hdec_"+device,device+"'s Device Error Counter && Not Beam Trip",nErrorTypes,0,nErrorTypes); 
   Int_t ErrorCounter[nErrorTypes];
   TString ErrorSelection[nErrorTypes];
   TString ErrorLabel[nErrorTypes] = {
-             "Good",
+             "Good non-Trip",
 				     "Any ADC Glitch",
 				     "ADC Saturation",
 				     "Same HW",
@@ -89,14 +89,21 @@ void DeviceErrorCounter(TString device){
   
     hdec->SetBarWidth(0.8);
     hdec->SetBarOffset(0.1);
-    hdec->GetYaxis()->SetTitle("in Percentage");
+    hdec->GetYaxis()->SetTitle("Error counts, non-beam trip");
     hdec->GetXaxis()->SetLabelSize(0.06);
     hdec->SetFillColor(49);
     hdec->Draw("hbar");
 
     TText* RatioText[nErrorTypes];
     for(int i=0;i<nErrorTypes;i++){
-      TString mytext = Form("%.2f %%",ErrorCounter[i]*100.0/nTotal);
+      if (i == 0) {
+        TString mytext = Form("%.2f of %d total events",ErrorCounter[i]*100.0/nTotal,(Int_t)nTotal);
+      }
+      else{
+        TString mytext = Form("%d",ErrorCounter[i]);
+      }
+      // OLD
+      //TString mytext = Form("%.2f %%",ErrorCounter[i]*100.0/nTotal);
       RatioText[i]= new TText(5,(nErrorTypes-i-1)+0.2,mytext);
       RatioText[i]->SetNDC(0);
       RatioText[i]->Draw("same");

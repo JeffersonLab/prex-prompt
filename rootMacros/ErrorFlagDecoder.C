@@ -48,6 +48,8 @@ Bool_t ErrorFlagDecoder(){
   TString ErrorSelection[nErrorTypes];
   TString ErrorLabel[nErrorTypes] = {"Good / Total",
 				     "All Beam Trip Cut",
+				     "BMW Active",
+				     "FFB OFF for E Mod",
 				     "Burp Cut",
 				     "Stability Error",
 				     "Stability Cut",
@@ -59,12 +61,12 @@ Bool_t ErrorFlagDecoder(){
 				     "Blinder Failure",
 				     "BPM Failure",
 				     "PMT Failure",
-				     "FFB OFF for E Mod",
-				     "BMW Channel Fail",
             };
 
   UInt_t ErrorCode[nErrorTypes] = {0,
 				   kBeamTripError,
+				   kBModErrorFlag,
+				   kBModFFBErrorFlag,
 				   kErrorFlag_BurpCut,
 				   kBeamStabilityError,
 				   kStabilityCut,
@@ -76,8 +78,6 @@ Bool_t ErrorFlagDecoder(){
 				   kErrorFlag_BlinderFail,
 				   kBPMErrorFlag,
 				   kPMTErrorFlag,
-				   kBModFFBErrorFlag,
-				   kBModErrorFlag,
           };
 
 
@@ -110,7 +110,7 @@ Bool_t ErrorFlagDecoder(){
   hdec->Draw("hbar same ");
 
   for(int i=0;i<nErrorTypes;i++){
-    TString mytext = Form("%.1f %%",ErrorRatio[i]*100);
+    TString mytext = Form("%.2f %%",ErrorRatio[i]*100);
     RatioText[i] = new TText((hdec->GetBinContent(nErrorTypes-i))*1.05,(nErrorTypes-i-1)+0.2,mytext);
     RatioText[i]->SetNDC(0);
     RatioText[i]->Draw("same");
