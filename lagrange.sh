@@ -13,13 +13,13 @@ fi
 level="Prompt"
 shopt -s extglob
 # find split file
-rootfile_list=$(ls -1 ./japanOutput/prex$level\_pass1_$runnum.!(*farm*).root);
+rootfile_list=$(ls -1 $QW_ROOTFILES/prex$level\_pass2_$runnum.!(*farm*).root);
 shopt -u extglob
 
 for rootfile  in $rootfile_list
 do
     trim=${rootfile%.root}
-    run_dot_seg=${trim#*pass1_}
+    run_dot_seg=${trim#*pass2_}
     run_num=${run_dot_seg%.*}
     run_seg=${run_dot_seg/./_}
 

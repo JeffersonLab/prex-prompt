@@ -38,8 +38,8 @@ Bool_t ErrorFlagDecoder(){
   TTree* evt_tree = (TTree*)gROOT->FindObject("evt");
 
   const Int_t nErrorTypes = 15; // 12+1; Shifted by 1 for Good counts
-  TH1D *hdec = new TH1D("hdec"," Global Error Flag Counter && Not Beam Trip",nErrorTypes,0,nErrorTypes); 
-  TH1D *htotal = new TH1D("htotal","Global Error Flag Counter && Not Beam Trip",nErrorTypes,0,nErrorTypes); 
+  TH1D *hdec = new TH1D("hdec"," Global Error Counter && Not (Trip || BMOD)",nErrorTypes,0,nErrorTypes); 
+  TH1D *htotal = new TH1D("htotal","Global Error Counter && Not (Trip || BMOD)",nErrorTypes,0,nErrorTypes); 
   Int_t ErrorCounter[nErrorTypes];
 
   Double_t ErrorRatio[nErrorTypes];
@@ -48,7 +48,7 @@ Bool_t ErrorFlagDecoder(){
   TString ErrorSelection[nErrorTypes];
   TString ErrorLabel[nErrorTypes] = {"Good / Total",
 				     "All Beam Trip Cut",
-				     "BMW Active",
+				     "All BMW Active",
 				     "FFB OFF for E Mod",
 				     "Burp Cut",
 				     "Stability Error",
@@ -85,8 +85,9 @@ Bool_t ErrorFlagDecoder(){
 
   ErrorSelection[0] = "ErrorFlag==0 ";
   ErrorSelection[1] = Form("(ErrorFlag&%d )==%d",ErrorCode[1],ErrorCode[1]); 
-  for(int i= 2; i<nErrorTypes ; i++)
-    ErrorSelection[i] = Form("(ErrorFlag&%d )==%d && (ErrorFlag&%d)==0",ErrorCode[i],ErrorCode[i],kBeamTripError); 
+  ErrorSelection[2] = Form("(ErrorFlag&%d )==%d",ErrorCode[2],ErrorCode[2]); 
+  for(int i= 3; i<nErrorTypes ; i++)
+    ErrorSelection[i] = Form("(ErrorFlag&%d )==%d && (ErrorFlag&%d)==0 && (ErrorFlag&%d)==0",ErrorCode[i],ErrorCode[i],kBeamTripError,kBModErrorFlag); 
 
   for(int i=0;i<nErrorTypes;i++){
     int ibin = nErrorTypes-i;

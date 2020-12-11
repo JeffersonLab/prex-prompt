@@ -7,7 +7,7 @@ echo -e "\n\n\n\n\n    Starting summary.sh\n\n\n\n\n";
 level="Prompt"
 shopt -s extglob
 # find split file
-rootfile_list=$(ls -1 $PROMPT_DIR/japanOutput/prex$level\_pass2_$runnum.!(*jlab.org*).root);
+rootfile_list=$(ls -1 $QW_ROOTFILES/prex$level\_pass2_$runnum.!(*jlab.org*).root);
 shopt -u extglob
 echo " -- summary.sh: checking PREX_PLOT_DIR=" $PREX_PLOT_DIR
 rsync_todo_list="$PROMPT_DIR/rsync-scripts/rsync_todo.list"
@@ -53,11 +53,11 @@ do
     cp  $PREX_PLOT_DIR/run$run_seg/* \
     	$WEB_DIR/run$run_seg/;
 
-    cp $PROMPT_DIR/japanOutput/summary_*$runnum*.txt \
+    cp $QW_ROOTFILES/summary_*$runnum*.txt \
 	$PROMPT_DIR/SummaryText/
 
     # copying prompt summary
-    cp $PROMPT_DIR/japanOutput/summary_*$runnum*.txt \
+    cp $QW_ROOTFILES/summary_*$runnum*.txt \
 	$PROMPT_DIR/SummaryText/
 
     mv  $PROMPT_DIR/SummaryText/summary_$run_num.txt \

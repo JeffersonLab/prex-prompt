@@ -23,6 +23,9 @@ do
     run_num=${run_dot_seg%.*}
     run_seg=${run_dot_seg/./_}
 
+    echo $(($run_num))
+    echo $run_num
+
     overloadConf="overload_reg.conf"
 
     if [ $(($run_num)) -ge 3390 ]

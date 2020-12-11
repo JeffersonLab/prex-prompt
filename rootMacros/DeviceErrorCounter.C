@@ -33,7 +33,7 @@ void DeviceErrorCounter(TString device){
   TTree* evt_tree = (TTree*)gROOT->FindObject("evt");
 
   const Int_t nErrorTypes = 9; // 8+1; Shifted by 1 for Good counts
-  TH1D *hdec = new TH1D("hdec_"+device,device+"'s Device Error Counter && Not Beam Trip",nErrorTypes,0,nErrorTypes); 
+  TH1D *hdec = new TH1D("hdec_"+device,device+"'s Device Error Counter && Not (Trip || BMOD)",nErrorTypes,0,nErrorTypes); 
   Int_t ErrorCounter[nErrorTypes];
   TString ErrorSelection[nErrorTypes];
   TString ErrorLabel[nErrorTypes] = {
@@ -63,16 +63,16 @@ void DeviceErrorCounter(TString device){
              kErrorFlag_LocalGlobal,
             };
 
-  ErrorSelection[0] = Form("%s.Device_Error_Code==0 && (ErrorFlag&0x8000000) == 0",
+  ErrorSelection[0] = Form("%s.Device_Error_Code==0 && (ErrorFlag&0x8008000) == 0",
       device.Data());
-  ErrorSelection[1] = Form("(%s.Device_Error_Code & %d )!=0 && (ErrorFlag&0x8000000) == 0",
+  ErrorSelection[1] = Form("(%s.Device_Error_Code & %d )!=0 && (ErrorFlag&0x8008000) == 0",
       device.Data(),ErrorCode[1]);
   
   if(ErrorSelection[0]==0)
     return;
   else{
       for(int i= 2; i<nErrorTypes ; i++){
-        ErrorSelection[i] = Form("(%s.Device_Error_Code & %d )==%d && (ErrorFlag&0x8000000) == 0",
+        ErrorSelection[i] = Form("(%s.Device_Error_Code & %d )==%d && (ErrorFlag&0x8008000) == 0",
                     device.Data(),ErrorCode[i],ErrorCode[i]);
       }
     Double_t nTotal = evt_tree->GetEntries();
@@ -89,7 +89,7 @@ void DeviceErrorCounter(TString device){
   
     hdec->SetBarWidth(0.8);
     hdec->SetBarOffset(0.1);
-    hdec->GetYaxis()->SetTitle("Error counts, non-beam trip");
+    hdec->GetYaxis()->SetTitle("Error counts, non-(trip or bmod)");
     hdec->GetXaxis()->SetLabelSize(0.06);
     hdec->SetFillColor(49);
     hdec->Draw("hbar");
@@ -98,7 +98,7 @@ void DeviceErrorCounter(TString device){
     for(int i=0;i<nErrorTypes;i++){
       TString mytext = "";
       if (i == 0) {
-        mytext = Form("%.2f of %d total events",ErrorCounter[i]*100.0/nTotal,(Int_t)nTotal);
+        mytext = Form("%.2f %% of %d total events",ErrorCounter[i]*100.0/nTotal,(Int_t)nTotal);
       }
       else{
         mytext = Form("%d",ErrorCounter[i]);
