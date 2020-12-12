@@ -118,7 +118,7 @@ void CheckBCM(){
       // g_buff->SetMarkerStyle(20);
     }   
     g_buff->SetName("GraphFail");
-    evt_tree->Draw("bcm_an_diff:Entry$","ErrorFlag&0x40001c00","* same");
+    evt_tree->Draw("bcm_an_diff:Entry$","(Device_Error_Code&0x40001c00) && (ErrorFlag&0x8000000)==0","* same");
     g_buff = (TGraph*)pad_buff->FindObject("Graph");
     if(g_buff!=0){
       g_buff->SetMarkerColor(kCyan);
@@ -144,7 +144,7 @@ void CheckBCM(){
     //===================================================
 
     pad_buff=c1->cd(3);
-    mul_tree->Draw("asym_bcm_an_diff/ppm:pattern_number",
+    mul_tree->Draw("asym_bcm_an_diff*yield_bcm_an_diff:pattern_number",
        "ErrorFlag==0","COL");
     TH2F* h2d_buff = (TH2F*)pad_buff->FindObject("htemp");
     if (h2d_buff!=NULL)
@@ -152,8 +152,8 @@ void CheckBCM(){
     //===================================================
 
     pad_buff=c1->cd(4);
-    TH1D *hAq = new TH1D("hAq","",100,-300,300);
-    mul_tree->Draw("asym_bcm_an_diff/ppm>>hAq",
+    TH1D *hAq = new TH1D("hAq","",100,-1e-6,1e-6);
+    mul_tree->Draw("asym_bcm_an_diff*yield_bcm_an_diff>>hAq",
        "ErrorFlag==0");
     hAq->SetTitle("asym_bcm_an_diff;ppm");
     pad_buff->Update();
@@ -162,7 +162,7 @@ void CheckBCM(){
       st->SetOptStat(111210);
 
     if(hAq!=0){
-      mul_tree->Draw("asym_bcm_an_diff/ppm",
+      mul_tree->Draw("asym_bcm_an_diff*yield_bcm_an_diff",
          Form("ErrorFlag==0 && asym_bcm_an_diff.Device_Error_Code!=0"),
          "same");
       h_buff = (TH1D*)pad_buff->FindObject("htemp");

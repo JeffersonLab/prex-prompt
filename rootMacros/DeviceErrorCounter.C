@@ -32,7 +32,7 @@ void DeviceErrorCounter(TString device){
 
   TTree* evt_tree = (TTree*)gROOT->FindObject("evt");
 
-  const Int_t nErrorTypes = 9; // 8+1; Shifted by 1 for Good counts
+  const Int_t nErrorTypes = 8; // 7+1; Shifted by 1 for Good counts
   TH1D *hdec = new TH1D("hdec_"+device,device+"'s Device Error Counter && Not (Trip || BMOD)",nErrorTypes,0,nErrorTypes); 
   Int_t ErrorCounter[nErrorTypes];
   TString ErrorSelection[nErrorTypes];
@@ -49,7 +49,7 @@ void DeviceErrorCounter(TString device){
 				     "Upper Limit",
              "Burp Cut",
 				     "Stability Cut",
-				     "In Global",
+				     //"In Global",
             };
 
   UInt_t ErrorCode[nErrorTypes] = {0,
@@ -60,9 +60,10 @@ void DeviceErrorCounter(TString device){
 				     kErrorFlag_EventCut_U,
              kErrorFlag_Burp,
              kErrorFlag_Stability,
-             kErrorFlag_LocalGlobal,
+             //kErrorFlag_LocalGlobal,
             };
 
+  // NOT BMOD or Beam Trip cut
   ErrorSelection[0] = Form("%s.Device_Error_Code==0 && (ErrorFlag&0x8008000) == 0",
       device.Data());
   ErrorSelection[1] = Form("(%s.Device_Error_Code & %d )!=0 && (ErrorFlag&0x8008000) == 0",

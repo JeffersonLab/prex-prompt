@@ -110,9 +110,20 @@ Bool_t ErrorFlagDecoder(){
   hdec->SetFillColor(49);
   hdec->Draw("hbar same ");
 
+  TString mytext = "";
   for(int i=0;i<nErrorTypes;i++){
-    TString mytext = Form("%.2f %%",ErrorRatio[i]*100);
-    RatioText[i] = new TText((hdec->GetBinContent(nErrorTypes-i))*1.05,(nErrorTypes-i-1)+0.2,mytext);
+    if (i == 0) {
+      mytext = Form("%.2f %%, %d of %d",ErrorRatio[i]*100,ErrorCounter[i],(Int_t)nTotal);
+    }
+    else {
+      mytext = Form("%.2f %%, %d events",ErrorRatio[i]*100,ErrorCounter[i]);
+    }
+    if (ErrorRatio[i] > 0.6) {
+      RatioText[i] = new TText(0.05,(nErrorTypes-i-1)+0.2,mytext);
+    }
+    else {
+      RatioText[i] = new TText((hdec->GetBinContent(nErrorTypes-i))*1.05,(nErrorTypes-i-1)+0.2,mytext);
+    }
     RatioText[i]->SetNDC(0);
     RatioText[i]->Draw("same");
   }
