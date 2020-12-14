@@ -11,3 +11,8 @@ results
 collector
 archive
 lostnfound
+postpan/prex-respin1-conf
+postpan/prex-respin2-conf
+lagrange/prex-respin1-conf
+lagrange/prex-respin2-conf
+tree_merge
