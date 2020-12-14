@@ -11,8 +11,8 @@ def main():
     _directory="/lustre/expphy/cache/halla/parity/raw"
     _rootout="/u/home/rradloff/rrvolatile/rootfiles"
     _webout="/u/home/rradloff/rrvolatile/plots"
-    _nrStart=7738
-    _nrStop=7800
+    _nrStart=7710
+    _nrStop=7720
     submit=1
     useSWIF=1 #0: uses jsub 1: uses SWIF+jsub
 
@@ -20,7 +20,7 @@ def main():
     lastrun=0
     _runlist=[]
     _runlist.append(int(_nrStart))
-    runfile=open(_source+"/prex-runlist/simple_list/every.list","r")
+    runfile=open(_source+"/crex-runlist/simple_list/all_crex.list","r")
     #runfile=open(_source+"/prex-runlist/rerun/rerun2_sim.list","r")
     for line in runfile:
         if (len(line) < 4):
@@ -55,8 +55,8 @@ def createXMLfile(mssdir,source,rootout,webout,nStart,nStop,email,workflowID,run
     f.write("<Request>\n")
     f.write("  <Email email=\""+email+"\" request=\"false\" job=\"true\"/>\n")
     f.write("  <Project name=\"prex\"/>\n")
-    f.write("  <Track name=\"debug\"/>\n")
-#    f.write("  <Track name=\"one_pass\"/>\n")
+#    f.write("  <Track name=\"debug\"/>\n")
+    f.write("  <Track name=\"one_pass\"/>\n")
     f.write("  <Name name=\""+workflowID+"\"/>\n")
     f.write("  <OS name=\"centos77\"/>\n")
     f.write("  <Memory space=\"2000\" unit=\"MB\"/>\n")

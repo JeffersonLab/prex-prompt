@@ -9,27 +9,32 @@ def main():
     _mssdir="/mss/halla/parity/raw"
     _source="/u/group/halla/parity/software/japan_offline/prompt/prex-prompt"
     _directory="/lustre/expphy/cache/halla/parity/raw"
-    _rootout="/lustre/expphy/volatile/halla/parity/japanOutput"
-    _nrStart=2000
-    _nrStop=6000
+    _rootout="/lustre/expphy/volatile/halla/parity/crex-respin1/japanOutput/"
+    _nrStart=8400
+    _nrStop=8404
     submit=1
     useSWIF=1 #0: uses jsub 1: uses SWIF+jsub
 
     firstrun=9999
     lastrun=0
     _runlist=[]
+    _runlist.append(int(_nrStart))
+    runfile=open(_source+"/crex-runlist/simple_list/all_crex.list","r")
     # runfile=open(_source+"/prex-runlist/simple_list/extra_march9.list","r")
     # runfile=open(_source+"/prex-runlist/good_list/test.list","r")
     #runfile=open(_source+"/prex-runlist/simple_list/extra_feb28.list","r")
-    runfile=open(_source+"/prex-runlist/simple_list/slug3.list","r")
+    #runfile=open(_source+"/prex-runlist/simple_list/slug3.list","r")
     for line in runfile:
-        _runlist.append(int(line))
+        if (len(line) < 4):
+            continue
+        if int(_nrStart) != int(line):
+          _runlist.append(int(line))
         if (firstrun >= int(line) and _nrStart <= int(line)):
-            firstrun=int(line)
+          firstrun=int(line)
         if (lastrun <= int(line) and _nrStop >= int(line)):
-            lastrun=int(line)
+          lastrun=int(line)
     runfile.close()
-                
+
     _workflowID="Postpan_"+str(firstrun)+"_"+str(lastrun)
 
     createXMLfile(_mssdir,_source,_rootout,_nrStart,_nrStop,_email,_workflowID,_runlist)
@@ -41,9 +46,9 @@ def main():
         elif useSWIF==0:
             print "submitting position sampled with id between ",firstrun,lastrun
             call(["jsub","-xml",_directory+"/"+_workflowID+".xml"])
-        else:
-            print "NOT submitting position sampled with id between ",firstrun,lastrun
-            
+    else:
+        print "NOT submitting position sampled with id between ",firstrun,lastrun
+
     print "I am all done"
 
 
@@ -53,10 +58,10 @@ def createXMLfile(mssdir,source,rootout,nStart,nStop,email,workflowID,runlist):
     f.write("<Request>\n")
     f.write("  <Email email=\""+email+"\" request=\"false\" job=\"true\"/>\n")
     f.write("  <Project name=\"prex\"/>\n")
-    #    f.write("  <Track name=\"debug\"/>\n")
-    f.write("  <Track name=\"one_pass\"/>\n")
+    f.write("  <Track name=\"debug\"/>\n")
+    #f.write("  <Track name=\"one_pass\"/>\n")
     f.write("  <Name name=\""+workflowID+"\"/>\n")
-    f.write("  <OS name=\"centos7\"/>\n")
+    f.write("  <OS name=\"centos77\"/>\n")
     f.write("  <Memory space=\"2000\" unit=\"MB\"/>\n")
 
     # for nr in range(nStart,nStop+1): # repeat for nr jobs
@@ -73,16 +78,17 @@ def createXMLfile(mssdir,source,rootout,nStart,nStop,email,workflowID,runlist):
         #     datName="mss:"+mssdir+"/"+"parity_ALL"+"_%04d"%(nr)+".dat."+str(partfile)
         # f.write("    <Input src=\""+datName+"\" dest=\"parity_ALL"+"_%04d"%(nr)+".dat."+str(partfile)+"\"/>\n")
         f.write("    <Command><![CDATA[\n")
+        f.write("    source /site/12gev_phys/softenv.csh 2.3\n")
         f.write("    echo \"Setting the current directory to QW_DATA.\"\n")
         f.write("    setenv QW_DATA `pwd`\n")
         f.write("    setenv PREX_PLOT_DIR `pwd`/tmp \n")
         f.write("    cd "+source+"\n")
         f.write("    echo \"Switching to the prompt directory.\"\n")
-        f.write("    setenv QW_PRMINPUT "+source+"/Parity/prminput\n")
+        #f.write("    setenv QW_PRMINPUT "+source+"/Parity/prminput\n")
         f.write("    setenv QW_ROOTFILES "+rootout+"\n")
         f.write("    echo \"Set up these environment variables:\"\n")
         f.write("    echo \"QW_DATA = $QW_DATA\"\n")
-        f.write("    echo \"QW_PRMINPUT = $QW_PRMINPUT\"\n")
+        #f.write("    echo \"QW_PRMINPUT = $QW_PRMINPUT\"\n")
         f.write("    echo \"QW_ROOTFILES = $QW_ROOTFILES\"\n")
         f.write("    echo \"PREX_PLOT_DIR = $PREX_PLOT_DIR\"\n")
         f.write("    "+source+"/auto_postpan.sh "+str(nr)+"; \n")

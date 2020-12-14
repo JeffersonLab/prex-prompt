@@ -34,7 +34,7 @@ if [ "$#" -eq 1 ]; then
   nameType_=""
   makeChargePlots=1 # -- commenting out for now RR
 fi
-source ~/PREX/setup_japan.sh
+#source ~/PREX/setup_japan.sh
 
 
 forgetmenot=`pwd`
@@ -188,7 +188,12 @@ if [[ "${CAM_OUTPUTDIR}" != *"${CAM_TYPE}"* ]]; then
   aggFolder=${CAM_OUTPUTDIR}/${nameType}
 fi
 
-./auto_slug_list.sh $slug
+if [ -f crex-runlist/auto_slug_list.sh ];
+then
+  crex-runlist/auto_slug_list.sh $slug
+else
+  auto_slug_list.sh $slug
+fi
 
 # Prompt charge plots
 if [[ $makeChargePlots == 1 ]]; then
@@ -233,10 +238,10 @@ cd ${JAPAN_DIR}/rootScripts/aggregator/drawPostpan
 rm -f ${aggFolder}/slugRootfiles/grandRootfile_$slug/grand_aggregator.root
 # NEW Output directory for plot making
 export CAM_OUTPUTDIR=${aggFolder}/slugRootfiles/grandRootfile_$slug/
-root -l -b -q plotAgg.C'("'${aggFolder}'/slugRootfiles/minirun_slug","/chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan/plots/summary_minirun_slug", '$slug', '$ihwp', '$wien', '$hrs')'
-cp -f /chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan/plots/summary_minirun_slug${slug}.txt ${plotFolder}/
-cp -f /chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan/plots/summary_minirun_slug${slug}.pdf ${plotFolder}/
-cp -f /chafs2/work1/apar/japan-aggregator/rootScripts/aggregator/drawPostpan/plots/summary_minirun_slug_linear${slug}.txt ${plotFolder}/
+root -l -b -q plotAgg.C'("'${aggFolder}'/slugRootfiles/minirun_slug","'${PWD}'/plots/summary_minirun_slug", '$slug', '$ihwp', '$wien', '$hrs')'
+cp -f ${PWD}/plots/summary_minirun_slug${slug}.txt ${plotFolder}/
+cp -f ${PWD}/plots/summary_minirun_slug${slug}.pdf ${plotFolder}/
+cp -f ${PWD}/plots/summary_minirun_slug_linear${slug}.txt ${plotFolder}/
 
 # Do the blessed dithering alpha/delta plots for the slug
 if [[ "$nameType" == "" && $makeChargePlots == 1 ]]; then
@@ -262,6 +267,8 @@ root -l -b -q grandAgg.C'("'${aggFolder}'/slugRootfiles/grandRootfile/grand_'${n
 root -l -b -q grandAgg.C'("'${aggFolder}'/slugRootfiles/grandRootfile/grand_'${name}'.root","'${plotFolder}'/grand_signed_'${name}'",1)'
 
 cp --force ${CAM_OUTPUTDIR}/grand_aggregator.root ${plotFolder}/
+chgrp -R a-parity $workingFolder
+chmod -R g+w $workingFolder
 
 cd $forgetmenot
 

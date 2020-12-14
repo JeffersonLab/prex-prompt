@@ -9,26 +9,29 @@ def main():
     _mssdir="/mss/halla/parity/raw"
     _source="/u/group/halla/parity/software/japan_offline/prompt/prex-prompt"
     _directory="/lustre/expphy/cache/halla/parity/raw"
-    _rootout="/lustre19/expphy/volatile/halla/parity/crex-respin1/japanOutput/"
-    _nrStart=3349
-    _nrStop=4872
+    _rootout="/lustre/expphy/volatile/halla/parity/crex-respin1/japanOutput/"
+    _nrStart=8400
+    _nrStop=8408
     submit=1
     useSWIF=1 #0: uses jsub 1: uses SWIF+jsub
 
     firstrun=9999
-    lastrun=1
+    lastrun=0
     _runlist=[]
+    _runlist.append(int(_nrStart))
     #runfile=open(_source+"/prex-runlist/simple_list/test.list","r")
-    runfile=open(_source+"/prex-runlist/simple_list/failed_agg_runs.list","r")
+    #runfile=open(_source+"/prex-runlist/simple_list/failed_agg_runs.list","r")
     #runfile=open(_source+"/prex-runlist/rerun/rerun2_sim.list","r")
+    runfile=open(_source+"/crex-runlist/simple_list/all_crex.list","r")
     for line in runfile:
         if (len(line) < 4):
             continue
-        _runlist.append(int(line))
+        if int(_nrStart) != int(line):
+          _runlist.append(int(line))
         if (firstrun >= int(line) and _nrStart <= int(line)):
-            firstrun=int(line)
+          firstrun=int(line)
         if (lastrun <= int(line) and _nrStop >= int(line)):
-            lastrun=int(line)
+          lastrun=int(line)
     runfile.close()
     
     _workflowID="Aggregator_"+str(firstrun)+"_"+str(lastrun)
@@ -54,10 +57,10 @@ def createXMLfile(source,rootout,nStart,nStop,email,workflowID,runlist):
     f.write("<Request>\n")
     f.write("  <Email email=\""+email+"\" request=\"false\" job=\"true\"/>\n")
     f.write("  <Project name=\"prex\"/>\n")
-#    f.write("  <Track name=\"debug\"/>\n")
-    f.write("  <Track name=\"analysis\"/>\n")
+    f.write("  <Track name=\"debug\"/>\n")
+#    f.write("  <Track name=\"analysis\"/>\n")
     f.write("  <Name name=\""+workflowID+"\"/>\n")
-    f.write("  <OS name=\"centos7\"/>\n")
+    f.write("  <OS name=\"centos77\"/>\n")
     f.write("  <Memory space=\"2000\" unit=\"MB\"/>\n")
 
     #for nr in range(nStart,nStop+1): # repeat for nr jobs
@@ -68,12 +71,13 @@ def createXMLfile(source,rootout,nStart,nStop,email,workflowID,runlist):
             continue
         f.write("  <Job>\n")
         f.write("    <Command><![CDATA[\n")
+        f.write("    source /site/12gev_phys/softenv.csh 2.3\n")
         f.write("    cd "+source+"\n")
         f.write("    echo \"Switching to the prompt directory.\"\n")
         f.write("    setenv QW_ROOTFILES "+rootout+"\n")
         f.write("    echo \"Set up these environment variables:\"\n")
         f.write("    echo \"QW_ROOTFILES = $QW_ROOTFILES\"\n")
-        f.write("    printenv \n")
+#        f.write("    printenv \n")
         f.write("    "+source+"/respin_agg.sh "+str(nr)+"\n")
         f.write("    ]]></Command>\n")
         f.write("    <Stdout dest=\""+source+"/LogFiles/respinAggregator_ifarmlog"+"_%04d"%(nr)+".out\"/>\n")

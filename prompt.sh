@@ -82,6 +82,7 @@ $PROMPT_DIR/summary.sh $runnum;
 
 
 #timenow=$(date +"%Y-%m%d-%H%M");
-#($PROMPT_DIR/aggregator.sh $runnum > /dev/tty ) >& $PROMPT_DIR/LogFiles/Camguin_run$runnum\_$timenow.txt
+#($PROMPT_DIR/respin_agg.sh $runnum > /dev/tty ) >& $PROMPT_DIR/LogFiles/Camguin_run$runnum\_$timenow.txt
+$PROMPT_DIR/respin_agg.sh $runnum;
 
 echo "Done with prompt for run $runnum";

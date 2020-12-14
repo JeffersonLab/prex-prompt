@@ -9,7 +9,7 @@ def main():
     _mssdir="/mss/halla/parity/raw"
     _source="/u/group/halla/parity/software/japan_offline/prompt/prex-prompt"
     _directory="/lustre/expphy/cache/halla/parity/raw"
-    _rootout="/lustre/expphy/volatile/halla/parity/japanOutput"
+    _rootout="/lustre/expphy/volatile/halla/parity/crex-respin1/japanOutput/"
     _nrStart=2000
     _nrStop=6000
     submit=1
@@ -57,7 +57,7 @@ def createXMLfile(mssdir,source,rootout,nStart,nStop,email,workflowID,runlist):
     #    f.write("  <Track name=\"debug\"/>\n")
     f.write("  <Track name=\"one_pass\"/>\n")
     f.write("  <Name name=\""+workflowID+"\"/>\n")
-    f.write("  <OS name=\"centos7\"/>\n")
+    f.write("  <OS name=\"centos77\"/>\n")
     f.write("  <Memory space=\"2000\" unit=\"MB\"/>\n")
 
     # for nr in range(nStart,nStop+1): # repeat for nr jobs
