@@ -146,8 +146,15 @@ void CheckRegression_postpan(vector<TString > DVar, vector<TString> IVar,
 		   custom_cut,
 		   "goff");
     TH1D *hbuff = (TH1D*)gDirectory->FindObject(Form("hdv%d_lrb",i));
-    dv_mean.push_back( hbuff->GetMean());
-    dv_rms.push_back( hbuff->GetRMS() );
+    if(hbuff!=NULL){
+      dv_mean.push_back( hbuff->GetMean());
+      dv_rms.push_back( hbuff->GetRMS() );
+    }else{
+      dv_mean.push_back(0.0);
+      dv_rms.push_back( 0.0);
+    }
+      
+      
   }
 
   for(int i=0;i<nIVar;i++){

@@ -4,6 +4,7 @@ void GetRunCharge(Int_t run_nubmer){
   TTree* mul_tree = (TTree*)rootfile->Get("mul");
   TCut goodPatternCut = "(ErrorFlag&0xda7e6bff)==0";
   Int_t nGoodPatterns = mul_tree->GetEntries(goodPatternCut);
+  Int_t nTotal = mul_tree->GetEntries();
   mul_tree->Draw("yield_bcm_an_us",goodPatternCut,"goff");
   TH1D* h_buff = (TH1D*)gDirectory->FindObject("htemp");
   Double_t current_mean = h_buff->GetMean();
@@ -14,6 +15,7 @@ void GetRunCharge(Int_t run_nubmer){
 
   cout << "--nGoodPatterns: " << nGoodPatterns << endl;
   cout << "--Good Minutes: " << nGoodPatterns*pattern_freq/60 << endl;
+  cout << "--Total Minutes: " << nTotal*pattern_freq/60 << endl;
   cout << "--Beam Current Mean(uA): " << current_mean << endl;
   cout << "--Integrated Charge(C): " << charge_in_C << endl;
   

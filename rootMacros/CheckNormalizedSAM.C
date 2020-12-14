@@ -23,7 +23,7 @@ void CheckNormalizedSAM(){
   TH2D *h2d_buff;
   TVirtualPad* pad_buff;
   TGraph* g_buff;
-  evt_tree->SetAlias("CurMon","(bcm_dg_ds>2.5 ? bcm_dg_ds:1)");
+  evt_tree->SetAlias("CurMon","(bcm_an_us>2.5 ? bcm_an_us:1)");
   for(int isam=0;isam<nsam;isam++){
     TString det_name;
     if(isam<4)
