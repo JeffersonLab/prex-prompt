@@ -59,6 +59,7 @@ def createXMLfile(mssdir,source,rootout,nStart,nStop,email,workflowID,runlist):
     f.write("  <Name name=\""+workflowID+"\"/>\n")
     f.write("  <OS name=\"centos77\"/>\n")
     f.write("  <Memory space=\"2000\" unit=\"MB\"/>\n")
+    f.write("  <TimeLimit time=\"6\" unit=\"hours\"/>\n")
 
     # for nr in range(nStart,nStop+1): # repeat for nr jobs
     # print "    <Stdout dest=\""+source+"/LogFiles/postpan_ifarmlog"+"_%04d"%(runlist[0])+".out\"/>\n"
