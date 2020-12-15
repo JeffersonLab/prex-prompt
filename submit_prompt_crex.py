@@ -12,7 +12,7 @@ def main():
     _rootout="/lustre/expphy/volatile/halla/parity/crex-respin1/japanOutput/"
     _webout="/u/group/prex/analysis/www/crex/summary_respin1/" #Modify this to port the webplots into a custom directory (Sakib)
     _nrStart=8400
-    _nrStop=8404
+    _nrStop=8408
     submit=1
     useSWIF=1 #0: uses jsub 1: uses SWIF+jsub
 
@@ -60,6 +60,7 @@ def createXMLfile(mssdir,source,rootout,webout,nStart,nStop,email,workflowID,run
     f.write("  <Name name=\""+workflowID+"\"/>\n")
     f.write("  <OS name=\"centos77\"/>\n")
     f.write("  <Memory space=\"2000\" unit=\"MB\"/>\n")
+    f.write("  <TimeLimit time=\"6\" unit=\"hours\"/>\n")
 
     #for nr in range(nStart,nStop+1): # repeat for nr jobs
     #print "    <Stdout dest=\""+source+"/LogFiles/ifarmlog"+"_%04d"%(runlist[0])+".out\"/>\n"
