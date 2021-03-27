@@ -1,18 +1,18 @@
 // Function to Get Run list 
 // Author : Tao Ye
-void GetProductionRunList(TString);
-Int_t ParseSlugNumber(TString);
+void GetProductionRunList(TString,TString);
+Int_t ParseSlugNumber(TString,TString);
 void GenSlugList(TString);
 
-void UpdateSlugList(TString prefix = "crex-respin2/"){
-  GetProductionRunList(prefix);
-  GenSlugList(prefix);
+void UpdateSlugList_AllTypes(TString prefix = "crex-respin2/", TString analysis = "production"){
+  GetProductionRunList(prefix,analysis);
+  GenSlugList(prefix,analysis);
 }
 
-void GenSlugList(TString prefix = "crex-respin2/"){
+void GenSlugList(TString prefix = "crex-respin2/", TString analysis = "production"){
 
   ifstream info_file;
-  info_file.open(Form("%sall_production.list",prefix.Data()));
+  info_file.open(Form("%sall_%s.list",prefix.Data(),analysis.Data()));
 
   TString sline;
   Int_t cur_slug=-1;
@@ -50,7 +50,7 @@ Int_t ParseSlugNumber(TString input){
   return slug_number;
 }
 
-void GetProductionRunList(TString prefix = "crex-respin2/"){
+void GetProductionRunList(TString prefix = "crex-respin2/", TString analysis = "production"){
 
   TSQLResult* res;
   TSQLRow *row;
@@ -82,11 +82,19 @@ void GetProductionRunList(TString prefix = "crex-respin2/"){
     cutinfo2 = " WHERE t1.run_number=t3.run_number AND t1.run_number=t2.run_number AND t1.run_number=t4.run_number AND t1.run_number=t6.run_number AND t1.run_number=t7.run_number  AND t1.run_number=t8.run_number AND (t8.text_value='48Ca' OR t3.int_value>=4000) ";
   }
 
+  TString analysis_str = "";
+  if (analysis == "production"){
+    analysis_str = ", `a-rcdb`.conditions as t4 INNER JOIN `a-rcdb`.condition_types c4 on c4.id=t4.condition_type_id AND c4.name='run_type' AND t4.text_value=='Production' ";
+  }
+  if (analysis == "nonJunk") {
+    analysis_str = ", `a-rcdb`.conditions as t4 INNER JOIN `a-rcdb`.condition_types c4 on c4.id=t4.condition_type_id AND c4.name='run_type' AND t4.text_value!='Junk' ";
+  }
+
   TString query[]={"SELECT t1.run_number,t3.int_value, t7.text_value,CASE WHEN tflag.text_value is NULL THEN 'NoFlag' ELSE tflag.text_value END AS flag_res, t1.text_value, t2.text_value,t6.int_value ",
     " FROM `a-rcdb`.conditions as t1 INNER JOIN `a-rcdb`.condition_types c1 on c1.id= t1.condition_type_id AND c1.name='ihwp' ",
     ", `a-rcdb`.conditions as t2 INNER JOIN `a-rcdb`.condition_types c2 on c2.id=t2.condition_type_id AND c2.name='flip_state' ",
     Form(", `a-rcdb`.conditions as t3 INNER JOIN `a-rcdb`.condition_types c3 on c3.id=t3.condition_type_id AND c3.name='slug' AND t3.int_value %s ",slugrange.Data()),
-    ", `a-rcdb`.conditions as t4 INNER JOIN `a-rcdb`.condition_types c4 on c4.id=t4.condition_type_id AND c4.name='run_type' AND t4.text_value='Production' ",
+    analysis_str,
     " LEFT JOIN ",
     "( SELECT run_number, text_value ",
     " FROM `a-rcdb`.conditions t5 INNER JOIN `a-rcdb`.condition_types c5 on c5.id=t5.condition_type_id AND c5.name='run_flag' ) AS tflag ",
@@ -98,7 +106,7 @@ void GetProductionRunList(TString prefix = "crex-respin2/"){
     " ORDER BY t1.run_number ASC"
   };
 
-  TString listName = Form("%sall_production.list",prefix.Data());
+  TString listName = Form("%sall_%s.list",prefix.Data(),analysis.Data());
 
   int n=sizeof(query)/sizeof(*query);
   TString cmd;
