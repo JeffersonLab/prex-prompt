@@ -12,7 +12,7 @@ def main():
     _rootout="/lustre/expphy/volatile/halla/parity/crex-respin1/japanOutput/"
     _webout="/u/group/prex/analysis/www/crex/summary_respin1/" #Modify this to port the webplots into a custom directory (Sakib)
     _nrStart=8400
-    _nrStop=8404
+    _nrStop=8408
     submit=1
     useSWIF=1 #0: uses jsub 1: uses SWIF+jsub
 

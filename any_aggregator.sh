@@ -20,6 +20,9 @@ if [ ! -d $CAM_OUTPUTDIR ]; then
   mkdir $CAM_OUTPUTDIR
 fi
 echo "Creating aggregator files for run $1, using config $CAM_CONFIG"
-python any-loop-oneRun.py -r ${1} -f ${CAM_CONFIG} -F 1 # Do full runs # -b prexPrompt_pass2
-python any-loop-oneRun.py -r ${1} -f ${CAM_CONFIG} -F 0 # Do mini runs # -b prexPrompt_pass2
-
+if [[ "$CAM_CONFIG" == "input_Pedestals.txt" ]] ; then
+  python any-loop-oneRun.py -r ${1} -f ${CAM_CONFIG} -F 1 # Do full runs # -b prexPrompt_pass2
+else 
+  python any-loop-oneRun.py -r ${1} -f ${CAM_CONFIG} -F 1 # Do full runs # -b prexPrompt_pass2
+  python any-loop-oneRun.py -r ${1} -f ${CAM_CONFIG} -F 0 # Do mini runs # -b prexPrompt_pass2
+fi

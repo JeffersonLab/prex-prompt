@@ -69,6 +69,21 @@ do
     cp  $PROMPT_DIR/results/prexPrompt_$run_seg\_postpan_summary.txt \
     	$WEB_DIR/run$run_seg/;
 
+    # copying bmodAna and dither outputs
+    cp $PROMPT_DIR/bmodAna/slopes_run_avg_1X/dithering_slopes_13746_slug*_run${i}_alphas-deltas.pdf  \
+    	$WEB_DIR/run$run_seg/dithering_slopes_13746_run${i}_runwise_alphas-deltas.pdf
+    cp $PROMPT_DIR/bmodAna/slopes_run_avg_1X/BMOD_sensitivities_13746_run${i}.txt \
+    	$WEB_DIR/run$run_seg/BMOD_sensitivities_13746_run${i}_runwise.txt
+    cp $PROMPT_DIR/bmodAna/slopes_cyclewise_1X/dithering_slopes_13746_slug*_run${i}_alphas-deltas.pdf \
+      $WEB_DIR/run$run_seg/dithering_slopes_13746_run${i}_cyclewise_alphas-deltas.pdf
+    cp $PROMPT_DIR/bmodAna/slopes_cyclewise_1X/BMOD_sensitivities_13746_run${i}.txt \
+    	$WEB_DIR/run$run_seg/BMOD_sensitivities_13746_run${i}_cyclewise.txt
+    cp $PROMPT_DIR/bmodAna/amplitude-check/run${i}*.pdf \
+    	$WEB_DIR/run$run_seg/;
+
+
+
+
     #Change user group and permission
     chgrp -R a-parity $WEB_DIR/run$run_seg;
     chmod -R 775 $WEB_DIR/run$run_seg;    

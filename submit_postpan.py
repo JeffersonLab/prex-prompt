@@ -11,7 +11,7 @@ def main():
     _directory="/lustre/expphy/cache/halla/parity/raw"
     _rootout="/lustre/expphy/volatile/halla/parity/crex-respin1/japanOutput/"
     _nrStart=8400
-    _nrStop=8404
+    _nrStop=8408
     submit=1
     useSWIF=1 #0: uses jsub 1: uses SWIF+jsub
 
