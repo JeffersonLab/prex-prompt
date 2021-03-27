@@ -3,16 +3,16 @@
 typedef struct{Int_t run,slug,arm;
   TString config,flag,ihwp,wien,polarity;} RunInfo;
 void ParseLine(TString, RunInfo&) ;
-void MakeSimpleList(){
+void MakeSimpleList(TString prefix = "crex-respin2/"){
   
   ifstream info_file;
-  info_file.open("all_production.list");
+  info_file.open(Form("%sall_production.list",prefix.Data()));
   
   TString sline;
   Int_t cur_slug=-1;
   RunInfo runinfo;
   Bool_t is_file_open = kFALSE;
-  vector< vector<Int_t> > fSlugArray(95);
+  map< Int_t, vector<Int_t> > fSlugArray;
   while(sline.ReadLine(info_file)){
     ParseLine(sline,runinfo);
     Int_t my_slug =runinfo.slug;
@@ -20,18 +20,22 @@ void MakeSimpleList(){
     if(runinfo.flag != "Bad")
       fSlugArray[my_slug].push_back(my_run);
   }
-  FILE* all_out = fopen("./simple_list/all.list","w");
-  for(int i=0;i<=94;i++){
-    TString new_filename = Form("./simple_list/slug%d.list",i);
+
+  FILE* all_out = fopen(Form("%ssimple_list/all_crex.list",prefix.Data()),"w");
+  auto iter_slug = fSlugArray.begin();
+  while(iter_slug!=fSlugArray.end()){
+    Int_t mySlug = (*iter_slug).first;
+    TString new_filename = Form("%ssimple_list/slug%d.list",prefix.Data(),mySlug);
     FILE* output;
     output=fopen(new_filename.Data(),"w");
-    auto iter=(fSlugArray[i]).begin();
-    while(iter!=fSlugArray[i].end()){
+    auto iter=(*iter_slug).second.begin();
+    while(iter!=(*iter_slug).second.end()){
       fprintf(output,"%d\n",(*iter));
       fprintf(all_out,"%d\n",(*iter));
       iter++;
     }
     fclose(output);
+    iter_slug++;
   }
   fclose(all_out);
 }
