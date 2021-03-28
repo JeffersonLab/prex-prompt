@@ -10,10 +10,8 @@ def main():
     _source="/u/group/halla/parity/software/japan_offline/prompt/prex-prompt"
     _directory="/lustre/expphy/cache/halla/parity/raw"
     _rootout="/lustre/expphy/volatile/halla/parity/crex-respin1/japanOutput/"
-    #_nrStart=5408
-    _nrStart=5000
-    #_nrStop=5414
-    _nrStop=9000
+    _nrStart=8400
+    _nrStop=8408
     submit=1
     useSWIF=1 #0: uses jsub 1: uses SWIF+jsub
 
@@ -24,8 +22,7 @@ def main():
     #runfile=open(_source+"/prex-runlist/simple_list/test.list","r")
     #runfile=open(_source+"/prex-runlist/simple_list/failed_agg_runs.list","r")
     #runfile=open(_source+"/prex-runlist/rerun/rerun2_sim.list","r")
-    #runfile=open(_source+"/crex-runlist/simple_list/all_crex.list","r") # Skip AT, handled separately
-    runfile=open(_source+"/crex-runlist/simple_list/all_nonAT_crex.list","r") # Skip AT, handled separately
+    runfile=open(_source+"/prex-runlist/crex-respin2/simple_list/all_crex.list","r")
     for line in runfile:
         if (len(line) < 4):
             continue
@@ -37,7 +34,7 @@ def main():
           lastrun=int(line)
     runfile.close()
     
-    _workflowID="BMOD_CorrAgg_eig_part_avg"+str(firstrun)+"_"+str(lastrun)
+    _workflowID="Aggregator_"+str(firstrun)+"_"+str(lastrun)
 
     createXMLfile(_source,_rootout,_nrStart,_nrStop,_email,_workflowID,_runlist)
 
@@ -60,12 +57,12 @@ def createXMLfile(source,rootout,nStart,nStop,email,workflowID,runlist):
     f.write("<Request>\n")
     f.write("  <Email email=\""+email+"\" request=\"false\" job=\"true\"/>\n")
     f.write("  <Project name=\"prex\"/>\n")
-    #f.write("  <Track name=\"debug\"/>\n")
-    f.write("  <Track name=\"analysis\"/>\n")
+    f.write("  <Track name=\"debug\"/>\n")
+#    f.write("  <Track name=\"analysis\"/>\n")
     f.write("  <Name name=\""+workflowID+"\"/>\n")
     f.write("  <OS name=\"centos77\"/>\n")
     f.write("  <Memory space=\"2000\" unit=\"MB\"/>\n")
-    f.write("  <TimeLimit time=\"8\" unit=\"hours\"/>\n")
+    f.write("  <TimeLimit time=\"6\" unit=\"hours\"/>\n")
 
     #for nr in range(nStart,nStop+1): # repeat for nr jobs
     #print "    <Stdout dest=\""+source+"/LogFiles/ifarmlog"+"_%04d"%(runlist[0])+".out\"/>\n"
@@ -82,14 +79,10 @@ def createXMLfile(source,rootout,nStart,nStop,email,workflowID,runlist):
         f.write("    echo \"Set up these environment variables:\"\n")
         f.write("    echo \"QW_ROOTFILES = $QW_ROOTFILES\"\n")
 #        f.write("    printenv \n")
-        f.write("    "+source+"/respin_dit_agg_run_avg_eigenvectors_sorted_part_avg_1X.sh "+str(nr)+"\n")
-        # Original, normal prompt version of bmod
-        #f.write("    "+source+"/respin_dit_agg.sh "+str(nr)+"\n")
+        f.write("    "+source+"/respin_agg.sh "+str(nr)+"\n")
         f.write("    ]]></Command>\n")
-        #f.write("    <Stdout dest=\""+source+"/LogFiles/respinAggregator_ifarmlog"+"_%04d"%(nr)+".out\"/>\n")
-        #f.write("    <Stderr dest=\""+source+"/LogFiles/respinAggregator_ifarmlog"+"_%04d"%(nr)+".err\"/>\n")
-        f.write("    <Stdout dest=\""+source+"/LogFiles/respinAggregator_run_avg_eigenvectors_sorted_part_avg_1X_ifarmlog"+"_%04d"%(nr)+".out\"/>\n")
-        f.write("    <Stderr dest=\""+source+"/LogFiles/respinAggregator_run_avg_eigenvectors_sorted_part_avg_1X_ifarmlog"+"_%04d"%(nr)+".err\"/>\n")
+        f.write("    <Stdout dest=\""+source+"/LogFiles/respinAggregator_ifarmlog"+"_%04d"%(nr)+".out\"/>\n")
+        f.write("    <Stderr dest=\""+source+"/LogFiles/respinAggregator_ifarmlog"+"_%04d"%(nr)+".err\"/>\n")
         f.write("  </Job>\n\n")
 
     f.write("</Request>\n")

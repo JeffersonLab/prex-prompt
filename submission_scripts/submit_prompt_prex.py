@@ -5,13 +5,14 @@ import sys,os,time
 
 def main():
     
-    _email="cameronc@jlab.org"
-    _mssdir="/mss/halla/parity/raw"
+    _email="rradloff@jlab.org"
+    _mssdir="/mss/halla/parity/raw" 
     _source="/u/group/halla/parity/software/japan_offline/prompt/prex-prompt"
     _directory="/lustre/expphy/cache/halla/parity/raw"
-    _rootout="/lustre/expphy/volatile/halla/parity/crex-respin1/japanOutput/"
-    _nrStart=5000
-    _nrStop=9000
+    _rootout="/lustre19/expphy/volatile/halla/parity/prex-respin2/japanOutput/"
+    _webout="/u/group/prex/analysis/www/prex2/summary_respin2" #Modify this to port the webplots into a custom directory (Sakib)
+    _nrStart=8523
+    _nrStop=8524
     submit=1
     useSWIF=1 #0: uses jsub 1: uses SWIF+jsub
 
@@ -19,24 +20,21 @@ def main():
     lastrun=0
     _runlist=[]
     _runlist.append(int(_nrStart))
-    #runfile=open(_source+"/prex-runlist/simple_list/test.list","r")
-    #runfile=open(_source+"/prex-runlist/simple_list/failed_agg_runs.list","r")
+    runfile=open(_source+"/prex-runlist/prex-respin2/simple_list/every.list","r")
     #runfile=open(_source+"/prex-runlist/rerun/rerun2_sim.list","r")
-    runfile=open(_source+"/crex-runlist/simple_list/all_crex.list","r")
     for line in runfile:
         if (len(line) < 4):
             continue
-        if int(_nrStart) != int(line):
-          _runlist.append(int(line))
+        _runlist.append(int(line))
         if (firstrun >= int(line) and _nrStart <= int(line)):
-          firstrun=int(line)
+            firstrun=int(line)
         if (lastrun <= int(line) and _nrStop >= int(line)):
-          lastrun=int(line)
+            lastrun=int(line)
     runfile.close()
     
-    _workflowID="PedAgg_2_"+str(firstrun)+"_"+str(lastrun)
+    _workflowID="Prompt_"+str(firstrun)+"_"+str(lastrun)
 
-    createXMLfile(_source,_rootout,_nrStart,_nrStop,_email,_workflowID,_runlist)
+    createXMLfile(_mssdir,_source,_rootout,_webout,_nrStart,_nrStop,_email,_workflowID,_runlist)
 
     if submit==1:
         if useSWIF==1:
@@ -51,18 +49,18 @@ def main():
     print "I am all done"
 
 
-def createXMLfile(source,rootout,nStart,nStop,email,workflowID,runlist):
+def createXMLfile(mssdir,source,rootout,webout,nStart,nStop,email,workflowID,runlist):
 
     f=open(rootout+"/"+workflowID+".xml","w")
     f.write("<Request>\n")
     f.write("  <Email email=\""+email+"\" request=\"false\" job=\"true\"/>\n")
     f.write("  <Project name=\"prex\"/>\n")
-#    f.write("  <Track name=\"debug\"/>\n")
-    f.write("  <Track name=\"analysis\"/>\n")
+    f.write("  <Track name=\"debug\"/>\n")
+#    f.write("  <Track name=\"one_pass\"/>\n")
     f.write("  <Name name=\""+workflowID+"\"/>\n")
     f.write("  <OS name=\"centos77\"/>\n")
     f.write("  <Memory space=\"2000\" unit=\"MB\"/>\n")
-    f.write("  <TimeLimit time=\"8\" unit=\"hours\"/>\n")
+    f.write("  <TimeLimit time=\"6\" unit=\"hours\"/>\n")
 
     #for nr in range(nStart,nStop+1): # repeat for nr jobs
     #print "    <Stdout dest=\""+source+"/LogFiles/ifarmlog"+"_%04d"%(runlist[0])+".out\"/>\n"
@@ -71,18 +69,32 @@ def createXMLfile(source,rootout,nStart,nStop,email,workflowID,runlist):
         if (nr < nStart or nr > nStop):
             continue
         f.write("  <Job>\n")
+        cmd = "ls /mss/halla/parity/raw/parity_ALL_"+str(nr)+".dat.* | sort -t'.' -n -k3 | tail -n 1 | awk -F. '{print $3}'"
+        ps = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+        output = ps.communicate()[0]
+        for partfile in range(0,int(output)+1):
+            datName="mss:"+mssdir+"/"+"parity_ALL"+"_%04d"%(nr)+".dat."+str(partfile)
+            f.write("    <Input src=\""+datName+"\" dest=\"parity_ALL"+"_%04d"%(nr)+".dat."+str(partfile)+"\"/>\n")
         f.write("    <Command><![CDATA[\n")
-        f.write("    source /site/12gev_phys/softenv.csh 2.3\n")
+        f.write("    echo \"Setting the current directory to QW_DATA.\"\n")
+        f.write("    setenv QW_DATA `pwd`\n")
+        f.write("    setenv PREX_PLOT_DIR `pwd`/tmp \n")
         f.write("    cd "+source+"\n")
         f.write("    echo \"Switching to the prompt directory.\"\n")
+        f.write("    setenv QW_PRMINPUT "+source+"/Parity/prminput\n")
         f.write("    setenv QW_ROOTFILES "+rootout+"\n")
+        f.write("    setenv WEB_DIR      "+webout+"\n")
         f.write("    echo \"Set up these environment variables:\"\n")
+        f.write("    echo \"QW_DATA = $QW_DATA\"\n")
+        f.write("    echo \"QW_PRMINPUT = $QW_PRMINPUT\"\n")
         f.write("    echo \"QW_ROOTFILES = $QW_ROOTFILES\"\n")
+        f.write("    echo \"PREX_PLOT_DIR = $PREX_PLOT_DIR\"\n")
+        f.write("    echo \"WEB_DIR= $WEB_DIR\"\n")
 #        f.write("    printenv \n")
-        f.write("    "+source+"/pedestal_agg.sh "+str(nr)+"\n")
+        f.write("    "+source+"/prompt.sh "+str(nr)+"\n")
         f.write("    ]]></Command>\n")
-        f.write("    <Stdout dest=\""+source+"/LogFiles/PedestalAggregator_ifarmlog"+"_%04d"%(nr)+".out\"/>\n")
-        f.write("    <Stderr dest=\""+source+"/LogFiles/PedestalAggregator_ifarmlog"+"_%04d"%(nr)+".err\"/>\n")
+        f.write("    <Stdout dest=\""+source+"/LogFiles/ifarmlog"+"_%04d"%(nr)+".out\"/>\n")
+        f.write("    <Stderr dest=\""+source+"/LogFiles/ifarmlog"+"_%04d"%(nr)+".err\"/>\n")
         f.write("  </Job>\n\n")
 
     f.write("</Request>\n")
