@@ -11,8 +11,8 @@ cd bmodAna
 
 ### Also do the run average analysis
 ### CREX RESPIN scripts
-root -l -b -q bmodAna.C\($1,\"inputs/input_CREX_cyclewise_1X_ifarm.txt\"\);
-root -l -b -q bmodAna.C\($1,\"inputs/input_CREX_run_avg_1X_ifarm.txt\"\);
+root -l -b -q bmodAna.C\($1,\"inputs/input_CREX_cyclewise_1X_ifarm_respin2.txt\"\);
+root -l -b -q bmodAna.C\($1,\"inputs/input_CREX_run_avg_1X_ifarm_respin2.txt\"\);
 root -l -b -q plotAD_13746.C\(\"slopes_cyclewise_1X/dithering_slopes_13746_slug${slug}_run${1}.root\",\"$1\"\);
 root -l -b -q plotAD_13746.C\(\"slopes_run_avg_1X/dithering_slopes_13746_slug${slug}_run${1}.root\",\"$1\"\);
 

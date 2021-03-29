@@ -9,9 +9,9 @@ def main():
     _mssdir="/mss/halla/parity/raw"
     _source="/u/group/halla/parity/software/japan_offline/prompt/prex-prompt"
     _directory="/lustre/expphy/cache/halla/parity/raw"
-    _rootout="/lustre/expphy/volatile/halla/parity/crex-respin1/japanOutput/"
-    _nrStart=8400
-    _nrStop=8408
+    _rootout="/lustre/expphy/volatile/halla/parity/crex-respin2/japanOutput/"
+    _nrStart=5408
+    _nrStop=5410
     submit=1
     useSWIF=1 #0: uses jsub 1: uses SWIF+jsub
 
@@ -35,7 +35,7 @@ def main():
           lastrun=int(line)
     runfile.close()
 
-    _workflowID="Postpan_"+str(firstrun)+"_"+str(lastrun)
+    _workflowID="Postpan_respin2_"+str(firstrun)+"_"+str(lastrun)
 
     createXMLfile(_mssdir,_source,_rootout,_nrStart,_nrStop,_email,_workflowID,_runlist)
 

@@ -10,6 +10,8 @@ then
     exit 1;
 fi    
 
+# Unset jlab CE 2.3 env, reset 2.4 env
+
 level="Prompt"
 shopt -s extglob
 # find split file

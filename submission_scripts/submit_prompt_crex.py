@@ -9,11 +9,12 @@ def main():
     _mssdir="/mss/halla/parity/raw" 
     _source="/u/group/halla/parity/software/japan_offline/prompt/prex-prompt"
     _directory="/lustre/expphy/cache/halla/parity/raw"
-    _rootout="/lustre/expphy/volatile/halla/parity/crex-respin1/japanOutput/"
-    _webout="/u/group/prex/analysis/www/crex/summary_respin1/" #Modify this to port the webplots into a custom directory (Sakib)
-    _nrStart=5000
-    #_nrStart=6000
-    _nrStop=9999
+    _rootout="/lustre/expphy/volatile/halla/parity/crex-respin2/japanOutput/"
+    _webout="/u/group/prex/analysis/www/crex/summary_respin2/" #Modify this to port the webplots into a custom directory (Sakib)
+    #_nrStart=5000
+    #_nrStop=9999
+    _nrStart=5408
+    _nrStop=5410
     submit=1
     useSWIF=1 #0: uses jsub 1: uses SWIF+jsub
 
@@ -33,7 +34,7 @@ def main():
           lastrun=int(line)
     runfile.close()
     
-    _workflowID="Prompt_"+str(firstrun)+"_"+str(lastrun)
+    _workflowID="Prompt_respin2_"+str(firstrun)+"_"+str(lastrun)
 
     createXMLfile(_mssdir,_source,_rootout,_webout,_nrStart,_nrStop,_email,_workflowID,_runlist)
 
@@ -56,8 +57,8 @@ def createXMLfile(mssdir,source,rootout,webout,nStart,nStop,email,workflowID,run
     f.write("<Request>\n")
     f.write("  <Email email=\""+email+"\" request=\"false\" job=\"true\"/>\n")
     f.write("  <Project name=\"prex\"/>\n")
-#    f.write("  <Track name=\"debug\"/>\n")
-    f.write("  <Track name=\"one_pass\"/>\n")
+    f.write("  <Track name=\"debug\"/>\n")
+#    f.write("  <Track name=\"one_pass\"/>\n")
     f.write("  <Name name=\""+workflowID+"\"/>\n")
     f.write("  <OS name=\"centos77\"/>\n")
     f.write("  <Memory space=\"2000\" unit=\"MB\"/>\n")
@@ -77,7 +78,8 @@ def createXMLfile(mssdir,source,rootout,webout,nStart,nStop,email,workflowID,run
             datName="mss:"+mssdir+"/"+"parity_ALL"+"_%04d"%(nr)+".dat."+str(partfile)
             f.write("    <Input src=\""+datName+"\" dest=\"parity_ALL"+"_%04d"%(nr)+".dat."+str(partfile)+"\"/>\n")
         f.write("    <Command><![CDATA[\n")
-        f.write("    source /site/12gev_phys/softenv.csh 2.3\n")
+        f.write("    source /site/12gev_phys/softenv.csh 2.3\n") # Tao recompiled dance to 2.4, so we use 2.4, but manually set PATH, ROOTSYS, and LD_LIBRARY_PATH back to the 2.3 values for all other steps
+        #f.write("    source /site/12gev_phys/softenv.csh 2.3\n")
         f.write("    echo \"Setting the current directory to QW_DATA.\"\n")
         f.write("    setenv QW_DATA `pwd`\n")
         f.write("    setenv PREX_PLOT_DIR `pwd`/tmp \n")
