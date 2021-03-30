@@ -70,15 +70,15 @@ do
     	$WEB_DIR/run$run_seg/;
 
     # copying bmodAna and dither outputs
-    cp $PROMPT_DIR/bmodAna/slopes_run_avg_1X/dithering_slopes_13746_slug*_run${i}_alphas-deltas.pdf  \
-    	$WEB_DIR/run$run_seg/dithering_slopes_13746_run${i}_runwise_alphas-deltas.pdf
-    cp $PROMPT_DIR/bmodAna/slopes_run_avg_1X/BMOD_sensitivities_13746_run${i}.txt \
-    	$WEB_DIR/run$run_seg/BMOD_sensitivities_13746_run${i}_runwise.txt
-    cp $PROMPT_DIR/bmodAna/slopes_cyclewise_1X/dithering_slopes_13746_slug*_run${i}_alphas-deltas.pdf \
-      $WEB_DIR/run$run_seg/dithering_slopes_13746_run${i}_cyclewise_alphas-deltas.pdf
-    cp $PROMPT_DIR/bmodAna/slopes_cyclewise_1X/BMOD_sensitivities_13746_run${i}.txt \
-    	$WEB_DIR/run$run_seg/BMOD_sensitivities_13746_run${i}_cyclewise.txt
-    cp $PROMPT_DIR/bmodAna/amplitude-check/run${i}*.pdf \
+    cp $PROMPT_DIR/bmodAna/slopes_run_avg_1X/dithering_slopes_13746_slug*_run${run_num}_alphas-deltas.pdf  \
+    	$WEB_DIR/run$run_seg/dithering_slopes_13746_run${run_num}_runwise_alphas-deltas.pdf
+    cp $PROMPT_DIR/bmodAna/slopes_run_avg_1X/BMOD_sensitivities_13746_run${run_num}.txt \
+    	$WEB_DIR/run$run_seg/BMOD_sensitivities_13746_run${run_num}_runwise.txt
+    cp $PROMPT_DIR/bmodAna/slopes_cyclewise_1X/dithering_slopes_13746_slug*_run${run_num}_alphas-deltas.pdf \
+      $WEB_DIR/run$run_seg/dithering_slopes_13746_run${run_num}_cyclewise_alphas-deltas.pdf
+    cp $PROMPT_DIR/bmodAna/slopes_cyclewise_1X/BMOD_sensitivities_13746_run${run_num}.txt \
+    	$WEB_DIR/run$run_seg/BMOD_sensitivities_13746_run${run_num}_cyclewise.txt
+    cp $PROMPT_DIR/bmodAna/amplitude-check/run${run_num}*.pdf \
     	$WEB_DIR/run$run_seg/;
 
 

@@ -83,11 +83,13 @@ LD_LIBRARY_PATH_2_4=/site/12gev_phys/2.4/Linux_CentOS7.7.1908-gcc9.2.0/xercesc/3
 ROOTSYS_2_3=/site/12gev_phys/2.3/Linux_CentOS7.7.1908-x86_64-gcc4.8.5/root/6.14.04
 ROOTSYS_2_4=/site/12gev_phys/2.4/Linux_CentOS7.7.1908-gcc9.2.0/root/6.20.04
 ROOTSYS=$ROOTSYS_2_4
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH_2_4
 PATH=$PATH_2_4
 $PROMPT_DIR/auto_calcit.sh $runnum;
-$PROMPT_DIR/auto_beammod.sh $runnum;
 ROOTSYS=$ROOTSYS_2_3
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH_2_3
 PATH=$PATH_2_3
+$PROMPT_DIR/auto_beammod.sh $runnum;
 
 # Make Summary Plots/Text and sync to HallA onlineWeb
 # now make plots from pass2 and postpan output
