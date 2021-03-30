@@ -1,10 +1,10 @@
 // Function to Get Run list 
 // Author : Tao Ye
 void GetProductionRunList(TString,TString);
-Int_t ParseSlugNumber(TString,TString);
-void GenSlugList(TString);
+Int_t ParseSlugNumber(TString);
+void GenSlugList(TString,TString);
 
-void UpdateSlugList_AllTypes(TString prefix = "crex-respin2/", TString analysis = "production"){
+void UpdateSlugList(TString prefix = "crex-respin2/", TString analysis = "production"){
   GetProductionRunList(prefix,analysis);
   GenSlugList(prefix,analysis);
 }
@@ -73,31 +73,38 @@ void GetProductionRunList(TString prefix = "crex-respin2/", TString analysis = "
   }
   TString cutinfo  = "test" ; 
   TString cutinfo2 = "test" ; 
+  TString flagSubstitute = "NoFlag";
   if (prefix.Contains("prex")) {
     cutinfo  = " WHERE t1.run_number=t3.run_number AND t1.run_number=t2.run_number AND t1.run_number=t4.run_number AND t1.run_number=t6.run_number AND t1.run_number=t7.run_number AND t1.run_number<4981";
     cutinfo2 = "";
   }
   if (prefix.Contains("crex")) {
     cutinfo  = ", `a-rcdb`.conditions as t8 INNER JOIN `a-rcdb`.condition_types c8 on c8.id=t8.condition_type_id AND c8.name='target_type'";
-    cutinfo2 = " WHERE t1.run_number=t3.run_number AND t1.run_number=t2.run_number AND t1.run_number=t4.run_number AND t1.run_number=t6.run_number AND t1.run_number=t7.run_number  AND t1.run_number=t8.run_number AND (t8.text_value='48Ca' OR t3.int_value>=4000) ";
+    cutinfo2 = " WHERE t1.run_number=t3.run_number AND t1.run_number=t2.run_number AND t1.run_number=t4.run_number AND t1.run_number=t6.run_number AND t1.run_number=t7.run_number  AND t1.run_number=t8.run_number AND ((t3.int_value BETWEEN 100 and 250) OR t3.int_value>=4000) ";
+    // Include cut on 48Ca Target here
+    //cutinfo2 = " WHERE t1.run_number=t3.run_number AND t1.run_number=t2.run_number AND t1.run_number=t4.run_number AND t1.run_number=t6.run_number AND t1.run_number=t7.run_number  AND t1.run_number=t8.run_number AND (t8.text_value='48Ca' OR t3.int_value>=4000) ";
   }
 
   TString analysis_str = "";
   if (analysis == "production"){
-    analysis_str = ", `a-rcdb`.conditions as t4 INNER JOIN `a-rcdb`.condition_types c4 on c4.id=t4.condition_type_id AND c4.name='run_type' AND t4.text_value=='Production' ";
+    flagSubstitute = "NoFlag";
+    analysis_str = ", `a-rcdb`.conditions as t4 INNER JOIN `a-rcdb`.condition_types c4 on c4.id=t4.condition_type_id AND c4.name='run_type' AND t4.text_value='Production' ";
   }
   if (analysis == "nonJunk") {
-    analysis_str = ", `a-rcdb`.conditions as t4 INNER JOIN `a-rcdb`.condition_types c4 on c4.id=t4.condition_type_id AND c4.name='run_type' AND t4.text_value!='Junk' ";
+    flagSubstitute = "Bad";
+    analysis_str = ", `a-rcdb`.conditions as t4 INNER JOIN `a-rcdb`.condition_types c4 on c4.id=t4.condition_type_id AND c4.name='run_type' AND ( t4.text_value='Calibration' OR t4.text_value='Pedestal' OR t4.text_value='Parityscan' OR t4.text_value='Production' ) ";
+    //analysis_str = ", `a-rcdb`.conditions as t4 INNER JOIN `a-rcdb`.condition_types c4 on c4.id=t4.condition_type_id AND c4.name='run_type' AND t4.text_value!='Junk' ";
   }
 
-  TString query[]={"SELECT t1.run_number,t3.int_value, t7.text_value,CASE WHEN tflag.text_value is NULL THEN 'NoFlag' ELSE tflag.text_value END AS flag_res, t1.text_value, t2.text_value,t6.int_value ",
+  TString query[]={Form("SELECT t1.run_number,t3.int_value, t7.text_value,CASE WHEN tflag.text_value is NULL THEN '%s' ELSE tflag.text_value END AS flag_res, t1.text_value, t2.text_value,t6.int_value ",flagSubstitute.Data()),
     " FROM `a-rcdb`.conditions as t1 INNER JOIN `a-rcdb`.condition_types c1 on c1.id= t1.condition_type_id AND c1.name='ihwp' ",
     ", `a-rcdb`.conditions as t2 INNER JOIN `a-rcdb`.condition_types c2 on c2.id=t2.condition_type_id AND c2.name='flip_state' ",
     Form(", `a-rcdb`.conditions as t3 INNER JOIN `a-rcdb`.condition_types c3 on c3.id=t3.condition_type_id AND c3.name='slug' AND t3.int_value %s ",slugrange.Data()),
     analysis_str,
     " LEFT JOIN ",
     "( SELECT run_number, text_value ",
-    " FROM `a-rcdb`.conditions t5 INNER JOIN `a-rcdb`.condition_types c5 on c5.id=t5.condition_type_id AND c5.name='run_flag' ) AS tflag ",
+    //" FROM `a-rcdb`.conditions t5 INNER JOIN `a-rcdb`.condition_types c5 on c5.id=t5.condition_type_id AND c5.name='run_flag' ) ",
+    " FROM `a-rcdb`.conditions t5 INNER JOIN `a-rcdb`.condition_types c5 on c5.id=t5.condition_type_id AND c5.name='run_flag' AND (t5.text_value='Good' OR t5.text_value='Suspicious' OR t5.text_value='NeedCut') ) AS tflag ",
     " ON tflag.run_number = t4.run_number ",
     ", `a-rcdb`.conditions as t6 INNER JOIN `a-rcdb`.condition_types c6 on c6.id=t6.condition_type_id AND c6.name='arm_flag' ",
     ", `a-rcdb`.conditions as t7 INNER JOIN `a-rcdb`.condition_types c7 on c7.id=t7.condition_type_id AND c7.name='run_config' ",
