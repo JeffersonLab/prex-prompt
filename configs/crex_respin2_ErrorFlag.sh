@@ -4,7 +4,8 @@ cd /u/group/halla/parity/software/japan_offline/prompt/prex-prompt
 source PVDB/environment.sh
 cd -
 
-export ROOTSYS=/u/apps/root/6.18.04/root
+export ROOTSYS=/u/apps/root/6.22.06/root
+#export ROOTSYS=/u/apps/root/6.18.04/root
 export PATH=${ROOTSYS}/bin:${PATH}
 export LD_LIBRARY_PATH="${ROOTSYS}/lib:${LD_LIBRARY_PATH}"
 
@@ -15,7 +16,7 @@ export QW_ROOTFILES=/lustre19/expphy/volatile/halla/parity/crex-respin2/japanOut
 export CAM_TYPE="ErrorFlag"
 export CAM_CONFIG="input_CREX_respin2_mulc.txt"
 export CAM_CUT="Default"
-export CAM_OUTPUTDIR=/lustre19/expphy/volatile/halla/parity/crex-respin2/aggRootfiles/ErrorFlag
+export CAM_OUTPUTDIR=/lustre19/expphy/volatile/halla/parity/crex-respin2/aggRootfiles/${CAM_TYPE}/
 export JAPAN_DIR=/u/group/halla/parity/software/japan_offline/aggregator
 
 export CAM_PLOTSDIR=/u/group/prex/analysis/www/crex/agg-respin2

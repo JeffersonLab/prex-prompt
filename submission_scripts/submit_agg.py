@@ -9,9 +9,11 @@ def main():
     _mssdir="/mss/halla/parity/raw"
     _source="/u/group/halla/parity/software/japan_offline/prompt/prex-prompt"
     _directory="/lustre/expphy/cache/halla/parity/raw"
-    _rootout="/lustre/expphy/volatile/halla/parity/crex-respin1/japanOutput/"
-    _nrStart=8400
-    _nrStop=8408
+    _rootout="/lustre/expphy/volatile/halla/parity/crex-respin2/japanOutput/"
+    #_nrStart=5000
+    #_nrStop=9999
+    _nrStart=6330
+    _nrStop=6332
     submit=1
     useSWIF=1 #0: uses jsub 1: uses SWIF+jsub
 
@@ -57,11 +59,11 @@ def createXMLfile(source,rootout,nStart,nStop,email,workflowID,runlist):
     f.write("<Request>\n")
     f.write("  <Email email=\""+email+"\" request=\"false\" job=\"true\"/>\n")
     f.write("  <Project name=\"prex\"/>\n")
-    f.write("  <Track name=\"debug\"/>\n")
-#    f.write("  <Track name=\"analysis\"/>\n")
+    #f.write("  <Track name=\"debug\"/>\n")
+    f.write("  <Track name=\"analysis\"/>\n")
     f.write("  <Name name=\""+workflowID+"\"/>\n")
     f.write("  <OS name=\"centos77\"/>\n")
-    f.write("  <Memory space=\"2000\" unit=\"MB\"/>\n")
+    f.write("  <Memory space=\"3800\" unit=\"MB\"/>\n")
     f.write("  <TimeLimit time=\"6\" unit=\"hours\"/>\n")
 
     #for nr in range(nStart,nStop+1): # repeat for nr jobs

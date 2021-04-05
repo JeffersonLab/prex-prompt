@@ -5,7 +5,7 @@ import sys,os,time
 
 def main():
     
-    _email="rradloff@jlab.org"
+    _email="cameronc@jlab.org"
     _mssdir="/mss/halla/parity/raw" 
     _source="/u/group/halla/parity/software/japan_offline/prompt/prex-prompt"
     _directory="/lustre/expphy/cache/halla/parity/raw"
@@ -13,8 +13,8 @@ def main():
     _webout="/u/group/prex/analysis/www/crex/summary_respin2/" #Modify this to port the webplots into a custom directory (Sakib)
     #_nrStart=5000
     #_nrStop=9999
-    _nrStart=6333
-    _nrStop=6334
+    _nrStart=6330
+    _nrStop=6332
     submit=1
     useSWIF=1 #0: uses jsub 1: uses SWIF+jsub
 
@@ -61,7 +61,7 @@ def createXMLfile(mssdir,source,rootout,webout,nStart,nStop,email,workflowID,run
 #    f.write("  <Track name=\"one_pass\"/>\n")
     f.write("  <Name name=\""+workflowID+"\"/>\n")
     f.write("  <OS name=\"centos77\"/>\n")
-    f.write("  <Memory space=\"2000\" unit=\"MB\"/>\n")
+    f.write("  <Memory space=\"3800\" unit=\"MB\"/>\n")
     f.write("  <TimeLimit time=\"12\" unit=\"hours\"/>\n")
 
     #for nr in range(nStart,nStop+1): # repeat for nr jobs
