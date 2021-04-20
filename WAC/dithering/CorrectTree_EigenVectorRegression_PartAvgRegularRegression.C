@@ -264,6 +264,7 @@ void CorrectTree_EigenVectorRegression_PartAvgRegularRegression(Int_t run_number
   } slope_struct ;
   std::vector<std::vector<slope_struct>> eig_slope_matrix;
   std::vector<slope_struct> tmp_slopes;
+  Double_t rcdb_arm_flag = 0.0;
 
   for(int idet = 0; idet<eigen_reg_ndet; idet++){
     tmp_slopes.clear();
@@ -281,6 +282,7 @@ void CorrectTree_EigenVectorRegression_PartAvgRegularRegression(Int_t run_number
       mini_tree->SetBranchAddress(slope_varname,&eig_slope_matrix.at(idet).at(imon));
     }
   }
+  mini_tree->SetBranchAddress("rcdb_arm_flag",&rcdb_arm_flag);
   
   Int_t nCyc = 0;
   TEventList *elist;// = (TEventList*)gDirectory->Get("elist1");
@@ -340,7 +342,7 @@ void CorrectTree_EigenVectorRegression_PartAvgRegularRegression(Int_t run_number
     elist = (TEventList*)gDirectory->Get("elist1");
   }
 
-  //For each run number
+  //For each run number in the segment that the current run in question belongs to
   for(int ievt = 0; ievt<nCyc; ievt++){
     Int_t index = elist->GetEntry(ievt);
     slope_tree->GetEntry(index);
@@ -369,7 +371,10 @@ void CorrectTree_EigenVectorRegression_PartAvgRegularRegression(Int_t run_number
         varname = Form("%s_%s",maindet_array[idet].Data(),bpm_array[imon].Data());
         //Get the slope
         Printf("Trying dit tree variable %s",varname.Data());
-        slopes[idet][imon] += (slope_tree->GetLeaf(varname)->GetValue()*1.0e-3)/nCyc; // std::cout << slopes[idet][imon] << "\t";
+        // If LHRS only rcdb_arm_flag == 2, if RHRS only rcdb_arm_flag == 1, idet == 0, 2, 3 are LHRS, 2, 4, 5 are RHRS
+        if (((idet == 0 || idet == 2 || idet == 3 || idet > 5) && rcdb_arm_flag !=1) || ((idet == 1 || idet == 4 || idet == 5 || idet > 5) && rcdb_arm_flag !=2 ) || (idet > 5)) {
+          slopes[idet][imon] += (slope_tree->GetLeaf(varname)->GetValue()*1.0e-3)/nCyc; // std::cout << slopes[idet][imon] << "\t";
+        }
       }
       for(int jmon = 0; jmon<ncompmon; jmon++){
         //Get the combo
@@ -382,15 +387,17 @@ void CorrectTree_EigenVectorRegression_PartAvgRegularRegression(Int_t run_number
       for(int idet = 0; idet<eigen_reg_ndet; idet++){
         varname = Form("%s.%s_%s.hw_sum",eig_slope_tree_name.Data(),eigen_reg_maindet_array[idet].Data(),bpm_array[imon].Data());
         Printf("Trying eig slopes tree variable %s",varname.Data());
-        
-        eigslopes[idet][imon] += eig_slope_matrix.at(idet).at(imon).hw_sum/nCyc;
-        //eigslopes[idet][imon] += (mini_tree->GetLeaf(varname)->GetValue())/nCyc;
+        // If LHRS only rcdb_arm_flag == 2, if RHRS only rcdb_arm_flag == 1, = 0 if both arm running
+        if (((idet == 0) && rcdb_arm_flag !=1) || ((idet == 1) && rcdb_arm_flag !=2 ) || (idet == 2 && rcdb_arm_flag == 0)) {
+          eigslopes[idet][imon] += eig_slope_matrix.at(idet).at(imon).hw_sum/nCyc;
+          //eigslopes[idet][imon] += (mini_tree->GetLeaf(varname)->GetValue())/nCyc;
+        }
       }
       // std::cout << "\n";
     }
   }
   std::cout << " --- Get Segment Averaged Slopes -- " << std::endl;
-  for(int idet = 0; idet<ndet; idet++){
+  for(int idet = 0; idet<ndet; idet++){ 
     std::cout << maindet_array[idet] << " Correction : ";
     for(int imon = 0; imon <nmon; imon++){
       if(imon!=0 && slopes[idet][imon]>0 )
