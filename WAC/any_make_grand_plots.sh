@@ -140,7 +140,7 @@ workingFolder=""
     # CREX Case
     startingpoint=100;
     if [[ "${CAM_PLOTSDIR}" == "" ]] ; then
-      workingFolder=/u/group/prex/analysis/www/crex/agg-respin1
+      workingFolder=/u/group/prex/analysis/www/crex/agg-respin2
     fi
   elif [ "$slug" -lt 550 ]; then
     # PREX AT Case
@@ -152,7 +152,7 @@ workingFolder=""
     # CREX AT Case
     startingpoint=4000;
     if [[ "${CAM_PLOTSDIR}" == "" ]] ; then
-      workingFolder=/u/group/prex/analysis/www/crex/agg-respin1
+      workingFolder=/u/group/prex/analysis/www/crex/agg-respin2
     fi
   fi
 if [[ "${CAM_PLOTSDIR}" != "" ]] ; then
@@ -255,7 +255,7 @@ then
   [ -f ${forgetmenot}/grand_slug_plot_list.txt ] && rm -f ${forgetmenot}/grand_slug_plot_list.txt
   # ignore 105
   for (( i=$startingpoint; i<=$slug; i++ )); do
-    [ "$i" -ne 105 ] && [ "$i" -ne 117 ] && echo $i >> ${forgetmenot}/grand_slug_plot_list.txt
+    [ "$i" -ne 105 ] && [ "$i" -ne 117 ] && [ "$i" -ne 123 ] && echo $i >> ${forgetmenot}/grand_slug_plot_list.txt
  done
 else
   # Pass starting point < 0 to use a local text file to pass in the name
