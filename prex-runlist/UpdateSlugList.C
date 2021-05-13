@@ -87,7 +87,7 @@ void GetProductionRunList(TString prefix = "crex-respin2/", TString analysis = "
 
   TString analysis_str = "";
   if (analysis == "production"){
-    flagSubstitute = "NoFlag";
+    flagSubstitute = "Bad"; // NoFlag // No Flag was a respin2 alpha step to figure out how to work with the no-flag having runs.
     analysis_str = ", `a-rcdb`.conditions as t4 INNER JOIN `a-rcdb`.condition_types c4 on c4.id=t4.condition_type_id AND c4.name='run_type' AND t4.text_value='Production' ";
   }
   if (analysis == "nonJunk") {
