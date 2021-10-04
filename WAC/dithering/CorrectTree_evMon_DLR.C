@@ -37,27 +37,43 @@ Output Directory:
 
 using namespace std;
 void CorrectTree_evMon_DLR(Int_t run_number, TString stub, TString inputFilePath, TString ditSlopeFileName, TString ditTreeName, TString regLagFileName, TString regTreeName, TString lagTreeName, TString comboFileName, TString comboTreeName){
+  Int_t do_dit = 1;
   // Getting Slug Number from RCDB
 
   //  Get Slopes From Dit slope Files
   vector<TString> reg_lagr_vDet={"asym_usl",
       "asym_usr",
-      "asym_us_avg",
-      "asym_us_dd",
 			"asym_atl1",
 			"asym_atl2",
 			"asym_atr1",
 			"asym_atr2",
-  };
-
-  vector<TString> dit_vDet={"asym_usl",
-			"asym_usr",
       "asym_us_avg",
       "asym_us_dd",
-			//"asym_dsl", //PREX 
-			//"asym_dsr", //PREX 
+  };
+
+  vector<TString> tree_dit_vDet={"asym_usl",
+      "asym_usr",
+      "asym_atl1",
+      "asym_atl2",
+      "asym_atr1",
+      "asym_atr2",
+      "asym_sam1",
+      "asym_sam2",
+      "asym_sam3",
+      "asym_sam4",
+      "asym_sam5",
+      "asym_sam6",
+      "asym_sam7",
+      "asym_sam8",
+      "mulc.asym_us_avg",
+      "mulc.asym_us_dd",
+  };
+  vector<TString> dit_vDet={"asym_usl",
+			"asym_usr",
 			"asym_atl1",
 			"asym_atl2",
+			//"asym_dsl", //PREX 
+			//"asym_dsr", //PREX 
 			"asym_atr1",
 			"asym_atr2",
       "asym_sam1",
@@ -67,25 +83,52 @@ void CorrectTree_evMon_DLR(Int_t run_number, TString stub, TString inputFilePath
       "asym_sam5",
       "asym_sam6",
       "asym_sam7",
-      "asym_sam8"
+      "asym_sam8",
+      "asym_us_avg",
+      "asym_us_dd",
   };
 
   // FIXME more hardcoding here - ignores combiner objects
-  vector<TString> evMon_new={
-    "diff_evMon0_new",
-    "diff_evMon1_new",
-    "diff_evMon2_new",
-    "diff_evMon3_new",
-    "diff_evMon4_new"
-  };
+  vector<TString> evMon_new;
+  vector<TString> bpmMon;
 
-  vector<TString> bpmMon={
-    "diff_bpm1X",
-    "diff_bpm4aY",
-    "diff_bpm4eX",
-    "diff_bpm4eY",
-    "diff_bpm12X"
-  };
+  if ( comboTreeName.Contains("allbpms") ){
+    do_dit = 0;
+    bpmMon = {
+      "diff_bpm4aX","diff_bpm4aY","diff_bpm4eX","diff_bpm4eY",
+      "diff_bpm16X","diff_bpm16Y","diff_bpm12X","diff_bpm12Y","diff_bpm11X","diff_bpm11Y",
+      "diff_bpm1X","diff_bpm1Y"};
+    evMon_new ={
+      "diff_evMon0_new",
+      "diff_evMon1_new",
+      "diff_evMon2_new",
+      "diff_evMon3_new",
+      "diff_evMon4_new",
+      "diff_evMon5_new",
+      "diff_evMon6_new",
+      "diff_evMon7_new",
+      "diff_evMon8_new",
+      "diff_evMon9_new",
+      "diff_evMon10_new",
+      "diff_evMon11_new",
+    };
+  }
+  else {
+    bpmMon = {
+      "diff_bpm1X",
+      "diff_bpm4aY",
+      "diff_bpm4eX",
+      "diff_bpm4eY",
+      "diff_bpm12X"
+    };
+    evMon_new ={
+      "diff_evMon0_new",
+      "diff_evMon1_new",
+      "diff_evMon2_new",
+      "diff_evMon3_new",
+      "diff_evMon4_new"
+    };
+  }
 
   TFile *japanOutput;
   const char* FILE_PATH = inputFilePath.Data();    //path to folder that contains rootfiles
@@ -126,21 +169,25 @@ void CorrectTree_evMon_DLR(Int_t run_number, TString stub, TString inputFilePath
   mul_tree->AddFriend(mulc_tree); // Add mulc as friend to automatically allow for us_avg and us_dd grabbing. 
   // WARNING Be careful about the evMon definitions that are in mulc being OLD!!
 
-  TFile* ditherInput = TFile::Open(ditSlopeFileName);
+  TFile* ditherInput;
+  TTree *dit_slope_tree;
+  if (do_dit) {
+    ditherInput = TFile::Open(ditSlopeFileName);
 
-  if(ditherInput==NULL){
-    std::cout << "Error: " 
-      << "dit rootfile " << ditSlopeFileName << " doesn't exist!" << std::endl;
-    return;
-  }
-  TTree *dit_slope_tree = (TTree*)ditherInput->Get(ditTreeName);
+    if(ditherInput==NULL){
+      std::cout << "Error: " 
+        << "dit rootfile " << ditSlopeFileName << " doesn't exist!" << std::endl;
+      return;
+    }
+    dit_slope_tree = (TTree*)ditherInput->Get(ditTreeName);
 
-  if(dit_slope_tree==NULL){
-    std::cout << "Error: " 
-      << "dit slope tree " << ditTreeName << " doesn't exist!" << std::endl;
-    return;
+    if(dit_slope_tree==NULL){
+      std::cout << "Error: " 
+        << "dit slope tree " << ditTreeName << " doesn't exist!" << std::endl;
+      return;
+    }
+    dit_slope_tree->BuildIndex("run","mini");
   }
-  dit_slope_tree->BuildIndex("run","mini");
 
   TFile* evMonRegLagSlopesInput = TFile::Open(regLagFileName);
   TFile* eigenvectorComboInput = TFile::Open(comboFileName);
@@ -189,25 +236,40 @@ void CorrectTree_evMon_DLR(Int_t run_number, TString stub, TString inputFilePath
   //Build variable names
   //dit tree variable names go like "dv_iv", for example: "usr_4eX"
   //// FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME 
-  TString dit_maindet_array[16]={"usl","usr","us_avg","us_dd","atl1","atl2","atr1","atr2","sam1","sam2","sam3","sam4","sam5","sam6","sam7","sam8"}; // CREX
-  TString reg_lagr_maindet_array[8]={"usl","usr","us_avg","us_dd","atl1","atl2","atr1","atr2"};
+  TString dit_maindet_array[16]={"usl","usr","atl1","atl2","atr1","atr2","sam1","sam2","sam3","sam4","sam5","sam6","sam7","sam8","us_avg","us_dd"}; // CREX
+  TString reg_lagr_maindet_array[8]={"usl","usr","atl1","atl2","atr1","atr2","us_avg","us_dd"};
   //TString maindet_array[8]={"usl","usr","dsl","dsr","atl1","atl2","atr1","atr2"}; // PREX 
   //// FIXME needs to not be hardcoded... or smart somehow
   //TString bpm_array[6]={"4aX","4aY","4eX","4eY","11X12X","11X12X"};
   //TString bpm_array[6]={"1X","4aY","4eX","4eY","12X","12X"}; // Extra 12X to placehold for the PREX version's 11X (may return as a 11X12X = EX combo soon)
-  TString monitor_array[5]={"evMon0","evMon1","evMon2","evMon3","evMon4"};
-  TString monitor_array_new[5]={"evMon0_new","evMon1_new","evMon2_new","evMon3_new","evMon4_new"};
-  TString bpm_components_array[5]={"bpm1X","bpm4aY","bpm4eX","bpm4eY","bpm12X"};
+  std::vector <TString> monitor_array;
+  std::vector <TString> monitor_array_new;
+  std::vector <TString> bpm_components_array;
+  if ( comboTreeName.Contains("allbpms") ){
+    // 12 BPM case
+    monitor_array        = {"evMon0","evMon1","evMon2","evMon3","evMon4","evMon5","evMon6","evMon7","evMon8","evMon9","evMon10","evMon11"};
+    monitor_array_new    = {"evMon0_new","evMon1_new","evMon2_new","evMon3_new","evMon4_new","evMon5_new","evMon6_new","evMon7_new","evMon8_new","evMon9_new","evMon10_new","evMon11_new"};
+    bpm_components_array = {
+    "bpm4aX","bpm4aY","bpm4eX","bpm4eY",
+    "bpm16X","bpm16Y","bpm12X","bpm12Y","bpm11X","bpm11Y",
+    "bpm1X","bpm1Y"};
+  }
+  else {
+    // 5 BPM case
+    monitor_array        = {"evMon0","evMon1","evMon2","evMon3","evMon4"};
+    monitor_array_new    = {"evMon0_new","evMon1_new","evMon2_new","evMon3_new","evMon4_new"};
+    bpm_components_array = {"bpm1X","bpm4aY","bpm4eX","bpm4eY","bpm12X"};
+  }
   const Int_t dit_nDet = sizeof(dit_maindet_array)/sizeof(*dit_maindet_array);
   const Int_t eigen_reg_lagr_nDet = sizeof(reg_lagr_maindet_array)/sizeof(*reg_lagr_maindet_array);
-  const Int_t nMon= sizeof(monitor_array)/sizeof(*monitor_array);
-  const Int_t nBPM= sizeof(bpm_components_array)/sizeof(*bpm_components_array);
+  const Int_t nMon = monitor_array.size();
+  const Int_t nBPM = bpm_components_array.size();
 
   //Array for holding slopes. DV (maindets) are the rows, and IV (bpms) are the columns
-  double dit_slopes[dit_nDet][nMon]={0};
-  double reg_slopes[eigen_reg_lagr_nDet][nMon]={0};
-  double lagr_slopes[eigen_reg_lagr_nDet][nMon]={0};
-  double combos[nMon][nBPM]={0};
+  double dit_slopes[dit_nDet][55]={0};   // FIXME replaced "nMon" anf "nBPM" with 25 as an arbitrarily large placeholder array length
+  double reg_slopes[eigen_reg_lagr_nDet][55]={0};
+  double lagr_slopes[eigen_reg_lagr_nDet][55]={0};
+  double combos[55][55]={0};
   // for(int idet=0;idet<dit_nDet;idet++)
   //   for(int imon=0;imon<nMon;imon++)
   //     dit_slopes[idet][imon]=0.0;
@@ -240,11 +302,13 @@ void CorrectTree_evMon_DLR(Int_t run_number, TString stub, TString inputFilePath
     }
     dit_slope_matrix.push_back(tmp_slopes);
   }
-  for(int idet = 0; idet<dit_nDet; idet++){
-    for(int imon = 0; imon <nMon; imon++){
-      TString slope_varname = "";
-      slope_varname = Form("%s_%s_mean",dit_maindet_array[idet].Data(),monitor_array[imon].Data());
-      dit_slope_tree->SetBranchAddress(slope_varname,&dit_slope_matrix.at(idet).at(imon));
+  if (do_dit) {
+    for(int idet = 0; idet<dit_nDet; idet++){
+      for(int imon = 0; imon <nMon; imon++){
+        TString slope_varname = "";
+        slope_varname = Form("%s_%s_mean",dit_maindet_array[idet].Data(),monitor_array[imon].Data());
+        dit_slope_tree->SetBranchAddress(slope_varname,&dit_slope_matrix.at(idet).at(imon));
+      }
     }
   }
   for(int idet = 0; idet<dit_nDet; idet++){
@@ -297,10 +361,15 @@ void CorrectTree_evMon_DLR(Int_t run_number, TString stub, TString inputFilePath
   Double_t fCodaEventNumber;
   Short_t minirun_number;
 
-  for(int iDet=0;iDet<dit_nDet;iDet++)
-    mul_tree->SetBranchAddress(dit_vDet[iDet],&(DetArray[iDet]));
-  for(int iMon=0;iMon<nBPM;iMon++)
+  //if (do_dit) {
+    for(int iDet=0;iDet<dit_nDet;iDet++) {
+      Printf("Finding %s in mul/mulc trees",tree_dit_vDet[iDet].Data());
+      mul_tree->SetBranchAddress(tree_dit_vDet[iDet],&(DetArray[iDet]));
+    }
+  //}
+  for(int iMon=0;iMon<nBPM;iMon++) {
     mul_tree->SetBranchAddress(bpmMon[iMon],&(BPMArray[iMon]));
+  }
   mul_tree->SetBranchAddress("ErrorFlag",&fErrorFlag);
   mul_tree->SetBranchAddress("CodaEventNumber",&fCodaEventNumber);
   mul_tree->SetBranchAddress("BurstCounter",&minirun_number);
@@ -318,10 +387,12 @@ void CorrectTree_evMon_DLR(Int_t run_number, TString stub, TString inputFilePath
   TFile *output = TFile::Open(output_path+outputName,"RECREATE");
   TTree *out_drl_tree = new TTree("drl","BeamMod Correction Tree");
   // Dither slopes (averaged)
-  for(int iDet=0;iDet<dit_nDet;iDet++) {
-    for(int iMon=0;iMon<nMon;iMon++) {
-      out_drl_tree->Branch("eigen_dit_"+dit_maindet_array[iDet]+"_"+monitor_array_new[iMon]+"_slope",
-          &(dit_slopes[iDet][iMon]));
+  if (do_dit) {
+    for(int iDet=0;iDet<dit_nDet;iDet++) {
+      for(int iMon=0;iMon<nMon;iMon++) {
+        out_drl_tree->Branch("eigen_dit_"+dit_maindet_array[iDet]+"_"+monitor_array_new[iMon]+"_slope",
+            &(dit_slopes[iDet][iMon]));
+      }
     }
   }
   // Reg slopes (direct)
@@ -346,10 +417,12 @@ void CorrectTree_evMon_DLR(Int_t run_number, TString stub, TString inputFilePath
     }
   }
   // A dit corrected asym 
-  for(int iDet=0;iDet<dit_nDet;iDet++)
-    out_drl_tree->Branch("eigen_dit_"+dit_vDet[iDet],
+  if (do_dit) {
+    for(int iDet=0;iDet<dit_nDet;iDet++)
+      out_drl_tree->Branch("eigen_dit_"+dit_vDet[iDet],
           &(DetArray_dit[iDet]),
           leaf_list);
+  }
   // A eigen value regression corrected asym 
   for(int iDet=0;iDet<eigen_reg_lagr_nDet;iDet++)
     out_drl_tree->Branch("eigen_reg_"+reg_lagr_vDet[iDet],
@@ -366,15 +439,17 @@ void CorrectTree_evMon_DLR(Int_t run_number, TString stub, TString inputFilePath
            &(DetArray[iDet]),
            leaf_list);
   // A copy of diff bpm 
-  for(int iBPM=0;iBPM<nBPM;iBPM++)
+  for(int iBPM=0;iBPM<nBPM;iBPM++) {
     out_drl_tree->Branch(bpmMon[iBPM],
            &(BPMArray[iBPM]),
            leaf_list);
+  }
   // A copy of corrected evMon's
-  for(int iMon=0;iMon<nMon;iMon++)
-    out_drl_tree->Branch(evMon_new[iMon],
+  for(int iMon=0;iMon<nMon;iMon++) {
+    out_drl_tree->Branch(evMon_new.at(iMon),
            &(MonArray[iMon]),
            leaf_list);
+  }
 
   out_drl_tree->Branch("ErrorFlag",&fErrorFlag,"ErrorFlag/D");
   out_drl_tree->Branch("CodaEventNumber",&fCodaEventNumber,"CodaEventNumber/D");
@@ -391,16 +466,20 @@ void CorrectTree_evMon_DLR(Int_t run_number, TString stub, TString inputFilePath
       old_minirun_number = minirun_number;
       Printf("Filling slopes and combo definitions with minirun %d info, beginning at multiplet %d",minirun_number,ievt);
       mini_tree->GetEntry(mini_tree->GetEntryNumberWithIndex(run_number,minirun_number));
-      dit_slope_tree->GetEntry(dit_slope_tree->GetEntryNumberWithIndex(run_number,minirun_number));
+      if (do_dit) {
+        dit_slope_tree->GetEntry(dit_slope_tree->GetEntryNumberWithIndex(run_number,minirun_number));
+      }
       reg_slope_tree->GetEntry(reg_slope_tree->GetEntryNumberWithIndex(run_number,minirun_number));
       lagr_slope_tree->GetEntry(lagr_slope_tree->GetEntryNumberWithIndex(run_number,minirun_number));
       combo_tree->GetEntry(combo_tree->GetEntryNumberWithIndex(run_number,minirun_number));
 
-      for(int iDet=0;iDet<dit_nDet;iDet++) {
-        for(int iMon=0;iMon<nMon;iMon++) {
-          // Dither slopes (averaged)
-          dit_slope_matrix.at(iDet).at(iMon) = dit_slope_matrix.at(iDet).at(iMon)*1e-3;
-          dit_slopes[iDet][iMon]=dit_slope_matrix.at(iDet).at(iMon);
+      if (do_dit) {
+        for(int iDet=0;iDet<dit_nDet;iDet++) {
+          for(int iMon=0;iMon<nMon;iMon++) {
+            // Dither slopes (averaged)
+            dit_slope_matrix.at(iDet).at(iMon) = dit_slope_matrix.at(iDet).at(iMon)*1e-3;
+            dit_slopes[iDet][iMon]=dit_slope_matrix.at(iDet).at(iMon);
+          }
         }
       }
       for(int iDet=0;iDet<eigen_reg_lagr_nDet;iDet++) {
@@ -437,23 +516,25 @@ void CorrectTree_evMon_DLR(Int_t run_number, TString stub, TString inputFilePath
         MonArray[iMon].block3 += combos[iMon][jBPM]*BPMArray[jBPM].block3;
       }
     }
-    for(int iDet=0;iDet<dit_nDet;iDet++){
-      DetArray_dit[iDet].hw_sum = DetArray[iDet].hw_sum;
-      DetArray_dit[iDet].block0 = DetArray[iDet].block0;
-      DetArray_dit[iDet].block1 = DetArray[iDet].block1;
-      DetArray_dit[iDet].block2 = DetArray[iDet].block2;
-      DetArray_dit[iDet].block3 = DetArray[iDet].block3;
-      DetArray_dit[iDet].num_samples = DetArray[iDet].num_samples;
-      DetArray_dit[iDet].Device_Error_Code = DetArray[iDet].Device_Error_Code;
+    if (do_dit) {
+      for(int iDet=0;iDet<dit_nDet;iDet++){
+        DetArray_dit[iDet].hw_sum = DetArray[iDet].hw_sum;
+        DetArray_dit[iDet].block0 = DetArray[iDet].block0;
+        DetArray_dit[iDet].block1 = DetArray[iDet].block1;
+        DetArray_dit[iDet].block2 = DetArray[iDet].block2;
+        DetArray_dit[iDet].block3 = DetArray[iDet].block3;
+        DetArray_dit[iDet].num_samples = DetArray[iDet].num_samples;
+        DetArray_dit[iDet].Device_Error_Code = DetArray[iDet].Device_Error_Code;
 
-      for(int iMon=0;iMon<nMon;iMon++){
-        // PREX Used 0.4x 12X and 1x 11X, CREX uses just 12X 
-        scaleFactor = 1.0;
-        DetArray_dit[iDet].hw_sum -= scaleFactor*dit_slopes[iDet][iMon]*MonArray[iMon].hw_sum;
-        DetArray_dit[iDet].block0 -= scaleFactor*dit_slopes[iDet][iMon]*MonArray[iMon].block0;
-        DetArray_dit[iDet].block1 -= scaleFactor*dit_slopes[iDet][iMon]*MonArray[iMon].block1;
-        DetArray_dit[iDet].block2 -= scaleFactor*dit_slopes[iDet][iMon]*MonArray[iMon].block2;
-        DetArray_dit[iDet].block3 -= scaleFactor*dit_slopes[iDet][iMon]*MonArray[iMon].block3;
+        for(int iMon=0;iMon<nMon;iMon++){
+          // PREX Used 0.4x 12X and 1x 11X, CREX uses just 12X 
+          scaleFactor = 1.0;
+          DetArray_dit[iDet].hw_sum -= scaleFactor*dit_slopes[iDet][iMon]*MonArray[iMon].hw_sum;
+          DetArray_dit[iDet].block0 -= scaleFactor*dit_slopes[iDet][iMon]*MonArray[iMon].block0;
+          DetArray_dit[iDet].block1 -= scaleFactor*dit_slopes[iDet][iMon]*MonArray[iMon].block1;
+          DetArray_dit[iDet].block2 -= scaleFactor*dit_slopes[iDet][iMon]*MonArray[iMon].block2;
+          DetArray_dit[iDet].block3 -= scaleFactor*dit_slopes[iDet][iMon]*MonArray[iMon].block3;
+        }
       }
     }
 
@@ -495,7 +576,9 @@ void CorrectTree_evMon_DLR(Int_t run_number, TString stub, TString inputFilePath
   }
   
   japanOutput->Close();
-  ditherInput->Close();
+  if (do_dit) {
+    ditherInput->Close();
+  }
   output->cd();
   std::cout << " -- Writing Dithering Corrected Tree "<< std::endl;
   out_drl_tree->Write();
